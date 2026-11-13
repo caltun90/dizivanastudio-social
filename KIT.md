@@ -1,0 +1,168 @@
+# dizivanastudio: üretim kiti
+
+Kanal: **dizivanastudio** (YouTube). Örgü (tığ işi) görünümlü çizgi karakterlerle kısa animasyon diziler. Her gün 1 yeni bölüm. Her dizi 5 bölüm, her bölüm yaklaşık 3 dakika. Bir dizi biter, yenisi başlar. Önce gerilim ve bilimkurgu, sonra komedi.
+
+Bu dosya, bölümü üreten kişinin (çoğu zaman otomatik görev) tek kaynağıdır. Baştan sona oku, sonra işe başla. Cem'e yazılan her şey Türkçe, kısa ve sade olur; uzun tire (em dash) asla kullanılmaz.
+
+## 1. Değişmez kurallar
+1. **Tekrar eden kalıp yok.** Bir dizinin bölümleri aynı yapıyı tekrar etmez (YouTube "tekrar eden içerik" kuralı). Her bölümün yapısı dizinin `DIZI.md` dosyasında yazar; ona uy. Yeni dizi yazarken beş bölüme beş farklı yapı ver (düz anlatım, neredeyse diyalogsuz, tek karakterin gözünden, geri dönüşlü, tek mekân gerçek zamanlı, mektup ya da kayıt biçiminde, tersten anlatım gibi).
+2. **Yüz ifadesi her zaman var.** Gerilim sahnesinde kimse gülmez; `mutlu` yalnızca gündelik sohbet anında kullanılır, sakin duran karakter için `sakin`.
+3. **Yürüme gerçek adım döngüsüdür** (`walk`), zıplama değil. Ayak kaymaz, kollar ters salınır.
+4. **Yön her zaman okunur.** Nereden nereye gidildiği belli olur; hedef (kapı, çıkış) sahnenin başında gösterilir.
+5. **Karakterler bükülür:** `crouch`, `lean`, `belly` birlikte kullanılır. Düz çubuk gibi durmak varsayılan değildir.
+6. **Önce eylem, sonra replik.** "Düğmeler çalışmıyor" denecekse önce biri düğmeye basar ve çalışmadığı görülür.
+7. **Geçişler animasyonla gösterilir** (kapı açılır, ışık söner). Önce karakterin tepkisi (1,5 ile 2 sn sessiz), sonra anlatıcı.
+8. **Dekorda yanıltıcı ya da anlamsız öğe olmaz.** Ekrandaki her yazı ve kapı hikâyeye hizmet eder.
+9. **Mantık açıkça söylenir.** İzleyicinin "neden?" diye soracağı her şey (neden bir üst kata çıkıldı, sayı neden tutmuyor) bir replikle ya da görselle cevaplanır. Sayılar ekranda gösterilir (`tally`, `badge`).
+10. **Sesler net ayrılır.** Çocuk, kadın, erkek ve anons sesleri karışmaz (`VOICE_FX`).
+11. **Kadın karakter kadın gibi görünür** (saç, kirpik, etek gibi). Karakterler özgündür: gerçek kişi, telifli karakter, başka kanalın karakteri çizilmez.
+12. **İsimler uluslararasıdır** (her dilde aynı okunur: Leo, Zoe, Kai, Luna, Sam, Mia, Noa, Max, Eli, Ada, Ren, Nil gibi).
+13. **Süre 2:40 ile 2:55 arası.** 3:00'ı geçen video Shorts olamaz; geçerse yayınlama, kısalt.
+14. Şiddet, kan, korkutucu ayrıntı yok: gerilim ima ile kurulur (karaltı, sönen ışık, kaybolan kişi). Küfür, siyaset, din, tıbbi tavsiye yok.
+15. Kapanışta "yarın" denmez; "bir sonraki bölümde" denir.
+
+## 2. Depo düzeni
+```
+KIT.md                      bu dosya
+log.json                    üretilen ve yayınlanan bölümlerin kaydı
+motor/                      diziden bağımsız araçlar
+  stil.py                   tığ işi çizim temelleri (yarn_limb, yarn_ball), renkler, yazı tipleri
+  orgu.py                   karakter motoru (figure, face, poz), sahne dönüşümü, Timeline, altyazı, kart
+  ses.py                    Gemini TTS, satırlara bölme, yazıya dökerek kontrol, miks
+  uret.py                   iki formatı üretir
+  yayin.py                  Buffer API ve YouTube API
+  sheet.py                  kontrol karelerini tek görselde birleştirir
+  fonts/                    Poppins
+diziler/<dizi>/
+  DIZI.md                   dizinin tamamı: dünya, karakterler, sır, 5 bölümün özeti ve yapısı
+  ortak.py                  dizinin karakterleri, aksesuarları, pozları, dekorları, yardımcıları
+  b01/ b02/ ...             her bölüm: senaryo.py, bolum.py, voice/cuts.json (gerekirse)
+videos/                     yayınlanan mp4 dosyaları (<tarih>-<dizi>-b<no>-<slug>-dikey.mp4 ve -yatay.mp4)
+```
+Depo herkese açıktır. **Hiçbir anahtar, belirteç ya da parola depoya yazılmaz.**
+
+## 3. Günlük akış
+Her çalışmada tek bölüm üretilir ve yayına planlanır.
+
+1. **Hazırlık.** `pip install --break-system-packages skia-python soundfile numpy imageio-ffmpeg`. `git push --dry-run origin HEAD:main` ile yazma yetkisini sına; reddedilirse dur ve Cem'e bildir.
+2. **Sıradaki bölümü bul.** `log.json` içindeki son kayda bak.
+   - Son dizinin 5. bölümü yayınlandıysa: önce o dizinin filmini derle (bölüm 9), sonra **yeni dizi** başlat (bölüm 10).
+   - Değilse aynı dizinin sıradaki bölümü. `diziler/<dizi>/DIZI.md` dosyasını ve önceki bölümlerin `senaryo.py` dosyalarını oku (süreklilik: kim gitti, kim ne biliyor, hangi ipucu verildi).
+   - Bugünün tarihli kayıt varsa ikinci bölüm üretme, dur.
+3. **Senaryo:** `diziler/<dizi>/bNN/senaryo.py` (bölüm 4).
+4. **Ses:** bölüm klasöründe `python ../../../motor/ses.py tts`, `gaps`, `check`, `build` (bölüm 5).
+5. **Sahneler:** `bolum.py` (bölüm 6). Önce `python ../../../motor/ses.py dry` ile sessiz taslak zaman çizelgesi çıkarıp sahneleri onunla da yazabilirsin; gerçek ses gelince `build` üstüne yazar.
+6. **Kare kontrolü** (bölüm 7). Sorun varsa düzelt. Düzelmiyorsa yayınlama, Cem'e bildir.
+7. **Üretim:** `python ../../../motor/uret.py ../../../videos/<tarih>-<dizi>-b<no>-<slug>`. Sonra son kontrol: süre, ses var mı, iki dosyadan 12'şer kare.
+8. **Depo ve yayın** (bölüm 8).
+9. **Rapor:** Cem'e tek kısa mesaj.
+
+## 4. Senaryo (`senaryo.py`)
+Örnek: `diziler/kat13/b01/senaryo.py`. Aynı adlar korunur: `TITLE`, `EP`, `EP_NAME`, `SEQ`, `VOICES`, `NAMES`, `GROUPS`, `LINES`, `SEG_ALIAS`, `VOICE_FX`, `TEMPO`, `GAP_SCALE`, `mix_plan(T)`.
+
+- `SEQ` öğeleri: `('scene', no)`, `('beat', ad, süre_sn)` (sessiz aksiyon), `('line', id, konuşan, metin, vurgu_kelimeleri, sonraki_boşluk_sn)`.
+- Yaklaşık 40 ile 48 replik, 300 ile 340 kelime, 30 ile 38 sn sessiz aksiyon. İlk tahmin için `ses.py dry` toplamına bak; gerçek ses genelde taslaktan uzun çıkar.
+- **Kanca ilk 15 saniyede.** Sonra başlık kartı (`('beat', 'title', 2.5)`). Dizinin ilk bölümü değilse kancadan hemen önce ya da sonra tek cümleyle "Önceki bölümde" hatırlatması.
+- Bitiş: izleyiciye tek soru + sonraki bölümün adı (kart). Dizinin son bölümünde soru yerine kapanış.
+- Replikler kısa, konuşma dilinde. Bir replik en fazla iki cümle. Her karakterin kendine ait bir konuşma biçimi olsun.
+- **Ses grupları (`GROUPS`):** Gemini tek istekte en fazla 2 konuşmacı üretir. Replikleri çiftlere böl; grup içinde konuşanlar **sırayla değişmeli** (aynı kişi art arda iki replik söylemesin, yoksa bölme karışır). Grup, sahne sırasını izlemek zorunda değil. Tek konuşmacılı gruplar olabilir (anlatıcı; çifti olmayan artık replikler). Hedef: bölüm başına **en fazla 5 istek**. Grubu 25 saniyeden uzun tutma (uzun isteklerde 502 gelebilir); gerekirse ikiye böl ama toplam 6'yı geçme.
+- Stil talimatının sonuna "Her replikten sonra bir saniye dur." yaz; tek konuşmacılı grupta "Her paragraftan sonra belirgin biçimde, yaklaşık bir saniye dur:". Alçak sesle söylenecek replik için "net, tane tane" ekle.
+- `VOICE_FX`: `rate>1` daha ince ve hızlı (çocuk), `rate<1` daha kalın, `intercom=True` anons hoparlörü. `TEMPO`: perdeyi bozmadan hızlandırma (`'*'` herkes). `GAP_SCALE`: replik arası boşlukların çarpanı.
+- `mix_plan(T)`: fon akorları (`pads`) ve efektler (`fx`). Efektler: `hum, rumble, snap, tick, whoosh, chime, buzz, ding, slide, steps, ring`. Her görsel olayın (kapı, düğme, adım, ışık) bir sesi olsun; efekt zamanını çizimle aynı vuruştan hesapla.
+
+## 5. Ses (`motor/ses.py`)
+Bölüm klasörünün içinden çalıştırılır. `GEMINI_API_KEY` yalnızca komutta ortam değişkeni olarak verilir.
+
+- `TTS_MODEL=gemini-2.5-flash-preview-tts` kullan. Ücretsiz kota **günde 10 istek** (İstanbul saatiyle 11:00 civarı sıfırlanır). Bir bölüm 5 istek harcar; yeniden deneme hakkın azdır, grubu göndermeden önce metni iki kez oku.
+- `gemini-3.1-flash-tts-preview` kotası **"Demek O Yüzden" kanalıyla ortaktır**; yalnızca 2.5 kotası dolduysa ve en fazla 1 istek için kullan. `gemini-3.8-flash-tts` stil talimatını sesli okur; ona yalnızca düz metin gönder.
+- 429 (kota) gelirse: kalan grupları başka modelle dene; o da olmuyorsa bölümü yayınlama, Cem'e bildir. Para harcatacak hiçbir şey yapma (ücretli katman yok).
+- `python ../../../motor/ses.py tts` (var olan `voice/raw_<grup>.wav` yeniden üretilmez), `gaps`, sonra `CHECK_MODEL=gemini-3.1-flash-lite python ../../../motor/ses.py check`: her satırı yazıya döküp senaryoyla karşılaştırır.
+  - Sayıların rakamla yazılması ("on üç" yerine "13"), isimlerin farklı yazılması (Kai yerine Kay) ve çok kısa parçalar `XX` çıkabilir; sorun değildir.
+  - Bir replik komşusuna kaymışsa `gaps` çıktısına bakıp doğru kesimleri `voice/cuts.json` içine yaz: `{"<grup>": [kesim zamanları]}` (ilk ve son dahil, replik sayısı + 1 değer), sonra `check <grup>` ile doğrula.
+- `python ../../../motor/ses.py build`: `voice/voice.wav`, `voice/mix.wav`, `voice/final.json`. Toplam süre **175 saniyeyi geçmesin**. Geçerse sırayla: sessiz vuruşları kısalt, `GAP_SCALE` düşür (0,6'ya kadar), `TEMPO` artır (en fazla 1,08), en son replik çıkar. Yeni TTS isteği harcamadan çöz.
+
+## 6. Sahneler (`bolum.py`)
+Örnek: `diziler/kat13/b01/bolum.py`. Bölüm dosyası yalnızca sahne fonksiyonlarını yazar; ortak her şey dizinin `ortak.py` dosyasındadır. Yeni dekor ya da yardımcı başka bölümde de işe yarayacaksa `ortak.py` içine ekle.
+
+**Koordinatlar.** Sahneler dikey sahne koordinatlarında yazılır: x 0..1080, zemin `GY=1330`. `with stage(cv): ...` içinde çiz.
+- Dikey (1080x1920): sahne = ekran. Altyazı y≈1560, üst etiket y≈150, sayaç y≈305.
+- Yatay (1920x1080, `STAGE_H=1.0,960,880`): görünen sahne aralığı **x -420..1500, y 450..1530**. Önemli her şey y≥470 olmalı; x<0 ve x>1080 bölgesi yalnızca yatayda görünür (oraları da dekorla doldur, boş duvar bırakma).
+- Ekran koordinatında çizilenler (`tally`, `card`, `tag`, `captions`) `FMT`'ye göre kendileri yerleşir.
+
+**Zaman.** `TL` zaman çizelgesi: `S(id)`, `E(id)` replik başı ve sonu; `B(ad)` vuruş `(baş, son)`; `frac(id, f)` replik içinde oran; `on(ts, id)` replik sürüyor mu; `TL.span(sahne)`; `TL.talk(konuşan, t)` ağız açıklığı. Her sahne `def sceneN(cv, t): ts, k = step(t), kk(t)` ile başlar (12 fps adım; `k` kare sayacı, `alt(k, a, b, hold)` iki değer arasında gidip gelir).
+
+**Karakter.** `actor(cv, ts, kim, ifade, poz, bakış, ...)` ya da toplu `cast(cv, ts, {kim: (ifade, poz, bakış[, ek])})`.
+- İfadeler: `mutlu, sakin, heyecan, panik, bagir, endise, uzgun, aglama, merak, saskin, yorgun, kararli`.
+- Poz sözlüğü: `aL/aR` (dirsek_x, dirsek_y, el_x, el_y; omuza göre), `kL/kR` diz, `fL/fR` ayak (zemine göre), `bob, lean, crouch, belly`. Hazır pozlar `ortak.py` başında (HOLD, COWER, LOOKUP, LEAN_IN, SLUMP, PRESS_A, RANT, HIP...). `mixpose(p, q, u)` iki poz arasında geçiş.
+- `walk(mesafe, ölçek, yön, scared, hold, run, off)` yürüme pozu; `place=(x, gy, s)` ile karakteri kabin dışında bir yere koy. `back=True` arkası dönük. `look` bakış yönü (-2 sol .. 2 sağ).
+- Konuşan karakter kendiliğinden ağzını oynatır ve hafifçe salınır.
+- Çok karakterli sahnede iki sıra kullan (arkada küçük ölçek, önde büyük). Arka sıranın arkasında kalan nesne görünmez; önemli nesneyi başların üstüne ya da kenara koy.
+
+**Dekor (13. Kat için hazır):** `cabin(cv, sh, u, lamp)` asansör kabini (u: kapı açıklığı), `display(...)` kat göstergesi (asansörün sesi konuşurken ses çubukları), `lobby(cv, u)`, `side_corridor(cv, cam, door_x, lamp, k, open_u)` yandan koridor (kamera kayar), `corridor(...)` kapıdan görünen derinlik, `shadow(...)` karaltı, `dark_eyes(...)`, `tally(...)` kişi sayacı, `badge(...)` baş üstü sayı rozeti, `panel_flash(...)`, `phone(...)`, `dim(cv, a)` karartma, `card(...)` kart, `jit(k, amp)` sarsıntı.
+Yeni dekor yazarken: düz renkli yüzeyler + kesik çizgili dikiş (`dashed`) + hafif gürültü dokusu. Keçe ve örgü havası korunur, palet kısık (koyu petrol, bordo, krem, tek vurgu rengi).
+
+**Performans.** Karakterler sprite olarak önbelleğe alınır; her karede değişen poz (yürüyüş) pahalıdır. Uzun yürüyüş sahnelerini 10 ile 15 saniyede tut.
+
+## 7. Kare kontrolü (zorunlu)
+Her sahneden en az 3 kare, **iki formatta da**:
+`FMT=v python bolum.py still chk 3.0 21.5 ...` ve `FMT=h ...`; sonra `python ../../../motor/sheet.py chk/sayfa.jpg 4 640 chk/h_*.png` ve görseli **aç, bak**.
+
+Kontrol listesi:
+- Taşma, üst üste binme, kadraj dışında kalan önemli nesne ya da karakter (özellikle yatayda y<470 ve dikeyde x<0, x>1080).
+- Altyazı doğru kişinin adıyla ve doğru anda mı; altyazı karakterin yüzünü kapatıyor mu.
+- Gerilim sahnesinde gülen var mı. İfade repliğe uyuyor mu.
+- Replikte anlatılan eylem ekranda görünüyor mu (bölüm 1, kural 6).
+- Yatayda yanlar boş mu kalmış; dikeyde alt üçte bir boş mu.
+- Yazılarda Türkçe karakterler doğru mu (ı, İ, ş, ğ, ü, ö, ç).
+
+Üretimden sonra her dosyadan 12 kare çıkarıp bir kez daha bak; süreyi ve ses akışını (`ffmpeg -i`) doğrula.
+
+## 8. Depo ve yayın
+1. Videolar `videos/` altında: `<YYYY-MM-DD>-<dizi>-b<no>-<slug>-dikey.mp4` ve `-yatay.mp4`.
+2. `log.json` içine kayıt ekle: `{"tarih", "dizi", "bolum", "ad", "slug", "baslik", "dikey", "yatay", "sure_sn", "durum"}`. `durum`: `planlandi` ya da hata açıklaması.
+3. Yalnızca şunları commit et: yeni bölüm klasörü (senaryo.py, bolum.py, varsa voice/cuts.json), `ortak.py` ve `DIZI.md` değiştiyse onlar, `videos/` içindeki iki yeni dosya, `log.json`, gerekiyorsa `KIT.md` (yalnızca "Öğrenilenler" bölümü). Ses dosyaları ve sahne parçaları commit edilmez (`.gitignore`). Sonra `git push origin HEAD:main`.
+   - main reddedilir ama `claude/` ile başlayan dala yazılabiliyorsa o dala gönder, adreslerde o dal adını kullan ve Cem'e bildir.
+4. Açık adres: `https://raw.githubusercontent.com/caltun90/dizivanastudio-social/main/videos/<dosya>`. `curl -sI` ile 200 döndüğünü doğrula (gerekirse 1 dakika bekle).
+5. **Buffer (yalnızca API, `motor/yayin.py`).** `BUFFER_API_KEY` ortam değişkeni olarak verilir. Claude'a bağlı Buffer bağlayıcısı (mcp Buffer araçları) başka bir hesaba aittir (Engrow ve Pofu Kids); **o araçları hiç kullanma.**
+   - Önce `python motor/yayin.py liste 2`: bugüne ait planlı ya da gönderilmiş gönderi varsa yenisini ekleme.
+   - Dikey: `python motor/yayin.py planla <dikey_adres> <bugün>T18:00:00+03:00 "<başlık>" <metin_dosyası>` (YouTube bunu Short olarak yayınlar).
+   - Yatay: aynı komut, yatay adresle ve `T18:05:00+03:00` ile (normal video olur).
+   - Şu an 17:30'dan sonraysa `simdi` yaz (5 dakika sonraya planlar). Adres reddedilirse bir kez `https://cdn.jsdelivr.net/gh/caltun90/dizivanastudio-social@main/videos/<dosya>` ile dene.
+   - Sonra `liste` ile ikisinin de `scheduled` olduğunu doğrula.
+6. **Başlık ve açıklama.**
+   - Yatay başlık: `<Dizi adı> | <no>. Bölüm: <bölüm adı>` (örnek: `13. Kat | 1. Bölüm: Asansör`).
+   - Dikey başlık: merak uyandıran tek cümle + dizi ve bölüm (en fazla 90 karakter; örnek: `Asansöre 4 kişi bindi, içeride 5 kişi vardı | 13. Kat 1. Bölüm`).
+   - Açıklama: 2 cümlelik kanca (sürpriz bozmadan), izleyiciye bölümün sorusu, "Yeni bölüm her gün.", en fazla 6 etiket (her zaman `#dizivanastudio` ve dizinin etiketi, örnek `#13kat`).
+
+## 9. Dizi bitince: film
+Beşinci bölüm yayınlandıktan sonraki çalışmada, yeni diziye başlamadan önce:
+- Beş yatay bölümü tek dosyada birleştir (başta 2 sn dizi adı kartı, aralarda 1 sn kararma; `ffmpeg concat`, gerekirse yeniden kodla). Dosya 95 MB'ı geçmesin (geçerse `-crf` yükselt).
+- `videos/<tarih>-<dizi>-film-yatay.mp4` olarak depoya koy, Buffer ile `<Dizi adı>: Tüm Bölümler (Film)` başlığıyla 20:00'a planla, `log.json` içine `"bolum": "film"` kaydı ekle.
+
+## 10. Yeni dizi başlatmak
+1. Aşağıdaki havuzdan sıradaki fikri al (havuz biterse aynı ruhta yenisini bul): tek cümlelik güçlü bir fikir, tek bir kural ya da sır, 4 ile 5 karakter, en fazla 3 mekân.
+2. `diziler/<kısa-ad>/DIZI.md` yaz (`diziler/kat13/DIZI.md` örnek): dünya ve kural, karakterler (renk, tek bir ayırt edici aksesuar, konuşma biçimi, ses), sır ve ipuçları, **beş bölümün özeti ve her birinin farklı yapısı**, dizi bitişi. Sonu baştan belli olsun; her bölüm bir soruyla biter, son bölüm bütün soruları kapatır.
+3. `diziler/<kısa-ad>/ortak.py` yaz (`kat13/ortak.py` örnek): `CAST` (yer, ölçek, renk, seed), `accessories` (her karaktere bir aksesuar; kadın karaktere saç), pozlar, dekorlar, `run`. Kat 13'e özel olmayan yardımcıları oradan kopyalayabilirsin (walk, actor, cast, tally, badge, dim, run).
+4. Karakter renkleri birbirinden net ayrılsın (turkuaz, mercan, lacivert, lila, hardal, açık kahve, yeşil, pembe). Bir önceki dizinin karakterlerini aynen kullanma.
+5. Sesler: Gemini hazır seslerinden seç (Achird anlatıcı için iyi; Kore, Aoede, Leda kadın; Puck, Fenrir, Algenib, Charon, Orus erkek). Her karaktere ayrı ses; benzer çıkanları `VOICE_FX` ile ayır.
+6. İlk bölüm dünyayı ve kuralı ilk 30 saniyede kurar.
+
+**Dizi havuzu (sırayla)**
+1. **13. Kat** (gerilim): asansör olmayan katlara çıkar, her katın bir kuralı vardır. (YAYINDA)
+2. **Son Vagon** (gerilim): gece treninde her istasyonda bir vagon kayboluyor; yolcular en öndeki vagona doğru ilerlemek zorunda. Biletlerde herkesin ineceği istasyon yazıyor, biri hariç.
+3. **Yedek** (bilimkurgu): bir adam sabah uyanır, evde ondan önce uyanmış bir "o" daha vardır. Hangisi yedek?
+4. **Saat 03:03** (gerilim): bir apartmanda herkes her gece 03:03'te uyanıyor ve her gece binadan bir şey eksiliyor: önce bir kapı numarası, sonra bir merdiven, sonra bir komşu.
+5. **Kayıp Eşya Bürosu** (komedi, gizem): kaybolan her şeyin geldiği bir büro. Bir gün rafa bir "pazartesi günü" gelir ve şehirde kimse pazartesiyi hatırlamaz.
+6. **Kiracı Uzaylı** (komedi): öğrenci evine kiracı olarak bir uzaylı taşınır; dünyalı gibi davranmayı kurallar listesinden öğrenmeye çalışır ve her kuralı yanlış anlar.
+
+## 11. Rapor ve hata
+- Başarıyla bitince Cem'e tek kısa mesaj: dizi ve bölüm adı, iki başlık, planlanan saatler, iki videonun depo bağlantısı. Dikey videoyu dosya olarak da gönder ki yayından önce izleyebilsin; beğenmezse Buffer'dan silebileceğini bir cümleyle hatırlat.
+- Herhangi bir adım başarısız ya da yarım kalırsa (anahtar, kota, ses, render, push, Buffer, ağ) sessiz kalma: neyin başarısız olduğunu, hata metnini ve Cem'in bir şey yapması gerekip gerekmediğini tek kısa mesajla bildir. Yarım ya da hatalı bölümü yayınlama.
+
+## 12. Öğrenilenler
+- Gerçek ses, taslak tahminden yaklaşık yüzde 10 ile 15 uzun çıkar. Anlatıcı yavaş okur; anlatıcı cümlelerini kısa tut.
+- TTS cümle içinde 1 saniyelik nefesler bırakır; `ses.py` bunları kendisi sıkıştırır (`squeeze`).
+- Kontrol modeli kısa parçaları ("Kai!") komşusuyla birleştirip numaraları kaydırabilir; süreler doğruysa sorun yoktur.
+- Sayım gösteren sahnede rozet sırası ekrandaki soldan sağa sırayla aynı olmalı.
+- Karanlık sahnede "fazla olan" gibi bir sırrı görselle ele verme (gözler sırayla kırmızı yanar).
+- Windows'ta ffmpeg `imageio-ffmpeg` paketinden gelir; yazı tipi `motor/fonts` içindedir.

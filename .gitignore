@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+scenes_v/
+scenes_h/
+chk*/
+**/voice/*.wav
+**/voice/final.json
+*.tmp.mp4
+.env
