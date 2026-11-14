@@ -3,7 +3,7 @@ Yapi: soguk acilis (lobide dort golge) -> asansor -> 13. kat ve kurali -> yandan
 import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from ortak import *
-from senaryo import feet_plan
+from senaryo import feet_plan, ABONE_END
 
 
 # ============ SAHNE 1: kanca ============
@@ -295,7 +295,8 @@ def scene6(cv, t):
     display(cv, (0, 0), '14', red=True)
     with stage(cv): dark_eyes(cv, who, red=who[(k // 7) % 4])
     a = seg(t, a0 + 0.3, a0 + 0.8)
-    card(cv, [('Asansöre hiç binmeyen kim?', 70, CREAM), ('Yorumlara yaz', 40, (176, 190, 232)), ('2. Bölüm: 14. Kat', 46, (255, 110, 96))], a, cy=450 if FMT == 'v' else 168)
+    card(cv, [('Asansöre hiç binmeyen kim?', 60 if FMT == 'v' else 70, CREAM), ('Yorumlara yaz', 40, (176, 190, 232)), ('2. Bölüm: Sessizlik', 46, (255, 110, 96))], a, cy=450 if FMT == 'v' else 168)
+    abone(cv, t, a0 + ABONE_END, pos=(W / 2, 1235) if FMT == 'v' else (W / 2, 770))
 
 
 if __name__ == '__main__':

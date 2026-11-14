@@ -1,16 +1,22 @@
-"""dizivanastudio yayin araci: Buffer API (YouTube kanalina video planlama) + YouTube Data API (oynatma listesi, uzun film).
+"""dizivanastudio yayin araci.
+
+  DIKEY video  -> Buffer API (YouTube Short olarak yayinlanir). Buffer YouTube'da YALNIZCA Shorts destekler
+                  (dikey 9:16 ya da kare); yatay videoyu Buffer'a verme.
+  YATAY video  -> YouTube Data API (normal video; ozel yuklenir, verilen saatte herkese acilir).
 
 Anahtarlar YALNIZCA ortam degiskeninden okunur; yoksa (Cem'in bilgisayarinda) Windows Kimlik Bilgisi Yoneticisi'nden:
   BUFFER_API_KEY, YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN
 Hicbir anahtar ekrana, dosyaya ya da depoya yazilmaz.
 
   python yayin.py kanal                                   -> Buffer org ve YouTube kanal kimligi
-  python yayin.py liste [gun]                             -> son gunlerin planli/gonderilmis gonderileri
-  python yayin.py planla <video_url> <saat_iso> <baslik> <metin_dosyasi>
-        -> videoyu o saate planlar (saat 'simdi' ise 5 dk sonraya). Dikey video Short, yatay video normal video olur.
+  python yayin.py liste [gun]                             -> Buffer'da son gunlerin planli/gonderilmis gonderileri
+  python yayin.py planla <dikey_video_url> <saat_iso> <baslik> <metin_dosyasi>
+        -> DIKEY videoyu o saate planlar (saat 'simdi' ise 5 dk sonraya)
   python yayin.py sil <post_id>
-  python yayin.py yt-kanal                                -> YouTube API ile kanal ve yukleme sayisi
-  python yayin.py yt-yukle <dosya> <baslik> <metin_dosyasi> [yayin_saati_iso] [oynatma_listesi_id]
+  python yayin.py yt-kanal                                -> YouTube API ile kanal ve video sayisi
+  python yayin.py yt-yukle <yatay_dosya> <baslik> <metin_dosyasi> <yayin_saati_iso | simdi> [etiketler] [oynatma_listesi_id]
+        -> YATAY videoyu yukler. Saat verilirse ozel yuklenir ve o saatte yayinlanir; 'simdi' ise hemen herkese acik.
+  python yayin.py yt-durum <video_id>                     -> gizlilik, yayin saati, yukleme durumu
   python yayin.py yt-liste-olustur <ad> <aciklama>        -> oynatma listesi kimligi
   python yayin.py yt-listeye-ekle <oynatma_listesi_id> <video_id>
   python yayin.py yt-bul <baslik_parcasi>                 -> kanaldaki son videolarda basligi arar (video_id)
@@ -102,11 +108,14 @@ def yt(method, path, body=None, params=None):
         raise SystemExit(f'YouTube API {e.code}: {e.read().decode()[:600]}')
 
 
-def yt_upload(path, title, text, publish_at=None, playlist=None):
+def yt_upload(path, title, text, publish_at=None, playlist=None, tags=None):
     """parcali (resumable) yukleme. publish_at verilirse video ozel yuklenir ve o saatte yayinlanir."""
     status = {'selfDeclaredMadeForKids': False, 'privacyStatus': 'private' if publish_at else 'public'}
-    if publish_at: status['publishAt'] = publish_at
     meta = {'snippet': {'title': title[:100], 'description': text, 'categoryId': '1', 'defaultLanguage': 'tr', 'defaultAudioLanguage': 'tr'}, 'status': status}
+    if tags: meta['snippet']['tags'] = [t.strip() for t in tags.split(',') if t.strip()]
+    if publish_at:                                           # YouTube publishAt'i UTC ister
+        dt = datetime.datetime.fromisoformat(publish_at).astimezone(datetime.timezone.utc)
+        status['publishAt'] = dt.strftime('%Y-%m-%dT%H:%M:%S.000Z')
     size = os.path.getsize(path)
     req = urllib.request.Request('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status', data=json.dumps(meta).encode(), method='POST',
                                  headers={'Authorization': 'Bearer ' + yt_token(), 'Content-Type': 'application/json; charset=UTF-8',
@@ -134,8 +143,11 @@ if __name__ == '__main__':
         c = yt('GET', 'channels', params={'part': 'snippet,statistics', 'mine': 'true'})['items'][0]
         out({'id': c['id'], 'ad': c['snippet']['title'], 'video': c['statistics'].get('videoCount'), 'abone': c['statistics'].get('subscriberCount')})
     elif cmd == 'yt-yukle':
-        r = yt_upload(a[1], a[2], rd(a[3]), a[4] if len(a) > 4 and a[4] != '-' else None, a[5] if len(a) > 5 else None)
-        out({'video_id': r['id'], 'durum': r['status']})
+        r = yt_upload(a[1], a[2], rd(a[3]), None if a[4] in ('simdi', '-') else a[4], a[6] if len(a) > 6 else None, a[5] if len(a) > 5 and a[5] != '-' else None)
+        out({'video_id': r['id'], 'adres': 'https://youtu.be/' + r['id'], 'durum': r['status']})
+    elif cmd == 'yt-durum':
+        v = yt('GET', 'videos', params={'part': 'status,snippet,contentDetails', 'id': a[1]})['items']
+        out({'baslik': v[0]['snippet']['title'], 'durum': v[0]['status'], 'sure': v[0]['contentDetails'].get('duration')} if v else {'hata': 'video yok'})
     elif cmd == 'yt-liste-olustur':
         r = yt('POST', 'playlists', {'snippet': {'title': a[1], 'description': a[2], 'defaultLanguage': 'tr'}, 'status': {'privacyStatus': 'public'}}, {'part': 'snippet,status'})
         out({'playlist_id': r['id']})

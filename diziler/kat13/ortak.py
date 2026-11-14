@@ -17,6 +17,7 @@ import skia
 import orgu
 from orgu import *
 from senaryo import TITLE, EP, EP_NAME
+import senaryo as _sen
 
 def _ffmpeg():
     p = shutil.which('ffmpeg')
@@ -499,6 +500,7 @@ def run(DRAW, no_tag=None):
         DRAW[k](cv, t)
         tb = TL.beats.get('title')
         if not (tb and tb[0] <= t < tb[1]) and k not in no_tag: tag(cv, TITLE, EP)
+        for lid, off in getattr(_sen, 'ABONE', []): abone(cv, t, S(lid) + off)   # abone ol bandi (senaryo.ABONE)
         captions(cv, TL, t)
         a, b = bounds(k)[0] / STEP, bounds(k)[1] / STEP
         f = min(seg(t, a, a + 0.25), 1 - seg(t, b - 0.25, b))
@@ -524,7 +526,7 @@ def run(DRAW, no_tag=None):
         k = int(sys.argv[2]); a, b = bounds(k); os.makedirs(d, exist_ok=True)
         tmp, out = f'{d}/tmp_s{k}.mp4', f'{d}/s{k}.mp4'
         p = subprocess.Popen([FFMPEG, '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', f'{W}x{H}', '-r', str(STEP), '-i', '-',
-                              '-vf', 'fps=30', '-c:v', 'libx264', '-crf', '21', '-preset', 'medium', '-pix_fmt', 'yuv420p', tmp], stdin=subprocess.PIPE)
+                              '-vf', 'fps=30', '-c:v', 'libx264', '-crf', os.environ.get('CRF', '21'), '-preset', os.environ.get('PRESET', 'medium'), '-pix_fmt', 'yuv420p', tmp], stdin=subprocess.PIPE)
         for i in range(a, b):
             frame(cv, i / STEP, k); p.stdin.write(surf.toarray(colorType=skia.kRGBA_8888_ColorType).tobytes())
         p.stdin.close()

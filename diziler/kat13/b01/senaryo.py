@@ -134,6 +134,11 @@ AM = [110.0, 164.81, 220.0, 261.63]
 CM = [130.81, 196.0, 261.63, 329.63]
 LOW = [69.30, 103.83, 138.59, 164.81]
 
+# abone ol bandi: (replik_id, saniye) -> o replik basladiktan su kadar sonra girer. Bitis sahnesindeki ikinci band bolum.py icinde.
+ABONE = [('s1', 0.0)]
+ABONE_END = 1.0                                             # son sahne basladiktan kac sn sonra
+
+
 def feet_plan(feet0, n1_end):
     """lobide asansore giren 4 golge: (baslangic, hiz, [kapiya varis zamanlari]). Cizim ve ses ayni plani kullanir."""
     f0 = feet0 + 0.25; v = (240 + 170 * 3) / max(1.6, n1_end - 0.1 - f0)
@@ -183,4 +188,6 @@ def mix_plan(T):
     for i in range(4): fx.append(('tick', c0 + 0.3 + i * (c1 - c0 - 0.4) / 4, 0.4, dict(f=900)))
     fx.append(('buzz', fr('n7b', 0.5), 0.5, dict(d=0.5)))
     fx.append(('chime', B['end'][0], 0.55, dict(freqs=[293.66, 440.0], d=2.4)))
+    for t0 in [L[i]['start'] + o for i, o in ABONE] + [S[6] + ABONE_END]:                           # abone ol: tik + kisa zil
+        fx.append(('tick', t0 + 2.3, 0.5, dict(f=1200))); fx.append(('chime', t0 + 2.45, 0.32, dict(freqs=[1318.5, 1760.0], d=1.0)))
     return dict(pads=pads, fx=fx)

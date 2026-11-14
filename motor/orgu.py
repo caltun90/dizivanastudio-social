@@ -551,3 +551,76 @@ def card(cv, lines, alpha=1.0, sc_=1.0, cy=None):
     y = cy - hh / 2 + 60 * u
     for tx, sz, c in lines:
         y += sz * u; text(cv, tx, cx, y, sz * u, c, a=255 * alpha); y += sz * 0.35 * u
+
+
+# ---------- abone ol bandi (her dizide ortak) ----------
+_LOGO = {}
+def logo_img():
+    if 'i' not in _LOGO:
+        p = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logo.webp')
+        _LOGO['i'] = skia.Image.open(p) if os.path.exists(p) else None
+    return _LOGO['i']
+
+
+ABONE_DUR = 4.6
+def abone(cv, t, t0, pos=None):
+    """Kanal logosu + ad + kirmizi 'ABONE OL' butonu. Imlec gelir, butona tiklar, buton 'ABONE OLUNDU' olur, zil sallanir.
+    t0: bandin girdigi an. pos=(cx, cy) ekran koordinati; verilmezse dikeyde ust orta, yatayda sol ust.
+    Ses icin senaryo.mix_plan'a t0 + 2.3'te bir 'tick' ve t0 + 2.45'te kisa bir 'chime' ekle."""
+    d = t - t0
+    if d < 0 or d > ABONE_DUR: return
+    u = 1.0 if FMT == 'v' else 0.78
+    bw, bh = 880 * u, 150 * u
+    cx, cy = pos if pos else ((W / 2, 318) if FMT == 'v' else (56 + bw / 2, 196))
+    a = min(smooth(seg(d, 0, 0.4)), 1 - smooth(seg(d, ABONE_DUR - 0.4, ABONE_DUR)))
+    cy -= (1 - a) * 60 * u; A = 255 * a
+    rc = skia.Rect.MakeLTRB(cx - bw / 2, cy - bh / 2, cx + bw / 2, cy + bh / 2)
+    sh = fill((4, 6, 20), 130 * a); sh.setMaskFilter(skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 12))
+    cv.drawRRect(skia.RRect.MakeRectXY(rc.makeOffset(8 * u, 13 * u), bh / 2, bh / 2), sh)
+    cv.drawRRect(skia.RRect.MakeRectXY(rc, bh / 2, bh / 2), fill((30, 36, 78), 250 * a))
+    ds = stroke((206, 214, 246), 3.5 * u, 210 * a, cap=False); ds.setPathEffect(skia.DashPathEffect.Make([14 * u, 10 * u], 0))
+    cv.drawRRect(skia.RRect.MakeRectXY(rc.makeInset(10 * u, 10 * u), bh / 2 - 10 * u, bh / 2 - 10 * u), ds)
+    # logo
+    lr = bh * 0.40; lx = rc.left() + bh * 0.5; img = logo_img()
+    if img:
+        cv.save(); cp = skia.Path(); cp.addCircle(lx, cy, lr); cv.clipPath(cp, True)
+        p = skia.Paint(AntiAlias=True); p.setAlphaf(a); k = lr * 1.02
+        cv.drawImageRect(img, skia.Rect.MakeLTRB(lx - k, cy - k, lx + k, cy + k), skia.SamplingOptions(skia.FilterMode.kLinear, skia.MipmapMode.kLinear), p); cv.restore()
+    else:
+        cv.drawCircle(lx, cy, lr, fill(MUSTARD, A))
+    cv.drawCircle(lx, cy, lr, stroke(CREAM, 4 * u, A))
+    # kanal adi
+    tx = lx + lr + 22 * u
+    text(cv, 'dizivanastudio', tx, cy - 4 * u, 42 * u, CREAM, a=A, align='l')
+    text(cv, 'Her gün yeni bölüm', tx, cy + 36 * u, 25 * u, (176, 190, 232), TFM, a=A, align='l')
+    # buton
+    clicked = d >= 2.4
+    sc_ = 1 + 0.05 * math.sin(clamp((d - 0.6) / 0.8) * math.pi) - 0.09 * math.sin(clamp((d - 2.2) / 0.3) * math.pi)
+    bwid, bhgt = 292 * u * sc_, 80 * u * sc_; bx = rc.right() - 26 * u - 146 * u
+    brc = skia.Rect.MakeLTRB(bx - bwid / 2, cy - bhgt / 2, bx + bwid / 2, cy + bhgt / 2)
+    cv.drawRRect(skia.RRect.MakeRectXY(brc.makeOffset(0, 5 * u), bhgt / 2, bhgt / 2), fill((4, 6, 20), 110 * a))
+    cv.drawRRect(skia.RRect.MakeRectXY(brc, bhgt / 2, bhgt / 2), fill((96, 102, 128) if clicked else (228, 50, 52), A))
+    if clicked:
+        text(cv, 'ABONE OLUNDU', bx + 16 * u, cy + 10 * u, 25 * u * sc_, (250, 248, 240), a=A)
+        ang = 22 * math.sin((d - 2.4) * 24) * math.exp(-(d - 2.4) * 2.4)            # zil sallanir
+        cv.save(); cv.translate(bx - 114 * u, cy - 14 * u); cv.rotate(ang); s_ = u * 1.05
+        bell = skia.Path(); bell.moveTo(-13 * s_, 24 * s_); bell.quadTo(-11 * s_, 2 * s_, 0, 0); bell.quadTo(11 * s_, 2 * s_, 13 * s_, 24 * s_)
+        bell.lineTo(17 * s_, 29 * s_); bell.lineTo(-17 * s_, 29 * s_); bell.close()
+        cv.drawPath(bell, fill(YEL, A)); cv.drawCircle(0, 33 * s_, 4.5 * s_, fill(YEL, A)); cv.drawCircle(0, -2 * s_, 3 * s_, fill(YEL, A)); cv.restore()
+    else:
+        text(cv, 'ABONE OL', bx, cy + 12 * u, 33 * u * sc_, (255, 255, 255), a=A)
+    # imlec: sag alttan gelir, tiklar, cekilir
+    mv = smooth(seg(d, 1.3, 2.15)); away = smooth(seg(d, 2.9, 3.5))
+    px = lerp(bx + 250 * u, bx + 46 * u, mv) + 120 * u * away; py = lerp(cy + 200 * u, cy + 10 * u, mv) + 130 * u * away
+    ca = A * min(seg(d, 1.2, 1.5), 1 - seg(d, 3.2, 3.5))
+    if ca > 0:
+        if 2.25 <= d < 2.6:                                                           # tiklama isigi
+            for an in (-150, -105, -60):
+                r0, r1 = 22 * u, 40 * u; ax_, ay_ = math.cos(math.radians(an)), math.sin(math.radians(an))
+                cv.drawLine(px + ax_ * r0, py + ay_ * r0, px + ax_ * r1, py + ay_ * r1, stroke(YEL, 5 * u, ca))
+        k = u * (1.25 - 0.14 * math.sin(clamp((d - 2.2) / 0.3) * math.pi))
+        pts = [(0, 0), (0, 46), (12, 36), (21, 56), (30, 52), (21, 33), (36, 33)]
+        cur = skia.Path(); cur.moveTo(px, py)
+        for qx, qy in pts[1:]: cur.lineTo(px + qx * k, py + qy * k)
+        cur.close(); cv.drawPath(cur, fill((255, 255, 255), ca)); cv.drawPath(cur, stroke((20, 24, 52), 4 * u, ca))
+

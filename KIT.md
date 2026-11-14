@@ -30,7 +30,7 @@ motor/                      diziden bağımsız araçlar
   orgu.py                   karakter motoru (figure, face, poz), sahne dönüşümü, Timeline, altyazı, kart
   ses.py                    Gemini TTS, satırlara bölme, yazıya dökerek kontrol, miks
   uret.py                   iki formatı üretir
-  yayin.py                  Buffer API ve YouTube API
+  yayin.py                  dikey için Buffer API, yatay için YouTube API
   sheet.py                  kontrol karelerini tek görselde birleştirir
   fonts/                    Poppins
 diziler/<dizi>/
@@ -68,6 +68,7 @@ Her çalışmada tek bölüm üretilir ve yayına planlanır.
 - **Ses grupları (`GROUPS`):** Gemini tek istekte en fazla 2 konuşmacı üretir. Replikleri çiftlere böl; grup içinde konuşanlar **sırayla değişmeli** (aynı kişi art arda iki replik söylemesin, yoksa bölme karışır). Grup, sahne sırasını izlemek zorunda değil. Tek konuşmacılı gruplar olabilir (anlatıcı; çifti olmayan artık replikler). Hedef: bölüm başına **en fazla 5 istek**. Grubu 25 saniyeden uzun tutma (uzun isteklerde 502 gelebilir); gerekirse ikiye böl ama toplam 6'yı geçme.
 - Stil talimatının sonuna "Her replikten sonra bir saniye dur." yaz; tek konuşmacılı grupta "Her paragraftan sonra belirgin biçimde, yaklaşık bir saniye dur:". Alçak sesle söylenecek replik için "net, tane tane" ekle.
 - `VOICE_FX`: `rate>1` daha ince ve hızlı (çocuk), `rate<1` daha kalın, `intercom=True` anons hoparlörü. `TEMPO`: perdeyi bozmadan hızlandırma (`'*'` herkes). `GAP_SCALE`: replik arası boşlukların çarpanı.
+- **Abone ol bandı (her bölümde zorunlu):** `ABONE = [('<replik_id>', 0.0)]` bandın gireceği anı verir (o replik başlarken). Bölümün 20. ile 35. saniyesi arasında, gerilimin düşük olduğu bir replik seç; bant 4,6 saniye sürer, kanal logosunu ve tıklanan "ABONE OL" butonunu gösterir. İkinci bant bitiş sahnesinde: `ABONE_END` (son sahne başladıktan kaç saniye sonra) ve `bolum.py` içinde `abone(cv, t, a0 + ABONE_END, pos=...)`. Her bant için `mix_plan` içine tık ve kısa zil ekle (örnek b01).
 - `mix_plan(T)`: fon akorları (`pads`) ve efektler (`fx`). Efektler: `hum, rumble, snap, tick, whoosh, chime, buzz, ding, slide, steps, ring`. Her görsel olayın (kapı, düğme, adım, ışık) bir sesi olsun; efekt zamanını çizimle aynı vuruştan hesapla.
 
 ## 5. Ses (`motor/ses.py`)
@@ -101,6 +102,8 @@ Bölüm klasörünün içinden çalıştırılır. `GEMINI_API_KEY` yalnızca ko
 **Dekor (13. Kat için hazır):** `cabin(cv, sh, u, lamp)` asansör kabini (u: kapı açıklığı), `display(...)` kat göstergesi (asansörün sesi konuşurken ses çubukları), `lobby(cv, u)`, `side_corridor(cv, cam, door_x, lamp, k, open_u)` yandan koridor (kamera kayar), `corridor(...)` kapıdan görünen derinlik, `shadow(...)` karaltı, `dark_eyes(...)`, `tally(...)` kişi sayacı, `badge(...)` baş üstü sayı rozeti, `panel_flash(...)`, `phone(...)`, `dim(cv, a)` karartma, `card(...)` kart, `jit(k, amp)` sarsıntı.
 Yeni dekor yazarken: düz renkli yüzeyler + kesik çizgili dikiş (`dashed`) + hafif gürültü dokusu. Keçe ve örgü havası korunur, palet kısık (koyu petrol, bordo, krem, tek vurgu rengi).
 
+**Abone ol bandı.** `abone(cv, t, t0, pos=None)` (motor/orgu.py). `senaryo.ABONE` içindekileri `run` kendisi çizer (dikeyde üst orta, yatayda sol üst); o anda o bölgede önemli bir şey (sayaç, yazı) olmasın. Bitiş sahnesinde `pos` ile kartın ve gözlerin arasına, altyazının üstüne yerleştir. Logo `motor/logo.webp`.
+
 **Performans.** Karakterler sprite olarak önbelleğe alınır; her karede değişen poz (yürüyüş) pahalıdır. Uzun yürüyüş sahnelerini 10 ile 15 saniyede tut.
 
 ## 7. Kare kontrolü (zorunlu)
@@ -119,25 +122,30 @@ Kontrol listesi:
 
 ## 8. Depo ve yayın
 1. Videolar `videos/` altında: `<YYYY-MM-DD>-<dizi>-b<no>-<slug>-dikey.mp4` ve `-yatay.mp4`.
-2. `log.json` içine kayıt ekle: `{"tarih", "dizi", "bolum", "ad", "slug", "baslik", "dikey", "yatay", "sure_sn", "durum"}`. `durum`: `planlandi` ya da hata açıklaması.
+2. `log.json` içine kayıt ekle: `{"tarih", "dizi", "bolum", "ad", "slug", "baslik", "dikey", "yatay", "sure_sn", "playlist", "yatay_youtube", "durum"}`. `durum`: `planlandi` ya da hata açıklaması.
 3. Yalnızca şunları commit et: yeni bölüm klasörü (senaryo.py, bolum.py, varsa voice/cuts.json), `ortak.py` ve `DIZI.md` değiştiyse onlar, `videos/` içindeki iki yeni dosya, `log.json`, gerekiyorsa `KIT.md` (yalnızca "Öğrenilenler" bölümü). Ses dosyaları ve sahne parçaları commit edilmez (`.gitignore`). Sonra `git push origin HEAD:main`.
    - main reddedilir ama `claude/` ile başlayan dala yazılabiliyorsa o dala gönder, adreslerde o dal adını kullan ve Cem'e bildir.
 4. Açık adres: `https://raw.githubusercontent.com/caltun90/dizivanastudio-social/main/videos/<dosya>`. `curl -sI` ile 200 döndüğünü doğrula (gerekirse 1 dakika bekle).
-5. **Buffer (yalnızca API, `motor/yayin.py`).** `BUFFER_API_KEY` ortam değişkeni olarak verilir. Claude'a bağlı Buffer bağlayıcısı (mcp Buffer araçları) başka bir hesaba aittir (Engrow ve Pofu Kids); **o araçları hiç kullanma.**
+5. **Yayın (`motor/yayin.py`).** İki video iki ayrı yoldan gider:
+   - **Dikey: Buffer API** (YouTube Short olur). Buffer YouTube'da yalnızca Shorts destekler; **yatay videoyu Buffer'a verme, yayınlayamaz.**
+   - **Yatay: YouTube Data API** (normal video). Özel yüklenir, verilen saatte kendiliğinden herkese açılır.
+   - Anahtarlar ortam değişkeni olarak verilir: `BUFFER_API_KEY`, `YT_CLIENT_ID`, `YT_CLIENT_SECRET`, `YT_REFRESH_TOKEN`. Claude'a bağlı Buffer bağlayıcısı (mcp Buffer araçları) başka bir hesaba aittir (Engrow ve Pofu Kids); **o araçları hiç kullanma.**
    - Önce `python motor/yayin.py liste 2`: bugüne ait planlı ya da gönderilmiş gönderi varsa yenisini ekleme.
-   - Dikey: `python motor/yayin.py planla <dikey_adres> <bugün>T18:00:00+03:00 "<başlık>" <metin_dosyası>` (YouTube bunu Short olarak yayınlar).
-   - Yatay: aynı komut, yatay adresle ve `T18:05:00+03:00` ile (normal video olur).
-   - Şu an 17:30'dan sonraysa `simdi` yaz (5 dakika sonraya planlar). Adres reddedilirse bir kez `https://cdn.jsdelivr.net/gh/caltun90/dizivanastudio-social@main/videos/<dosya>` ile dene.
-   - Sonra `liste` ile ikisinin de `scheduled` olduğunu doğrula.
+   - Dikey: `python motor/yayin.py planla <dikey_adres> <bugün>T18:00:00+03:00 "<dikey başlık>" <bölüm>/aciklama.txt`. Adres reddedilirse bir kez `https://cdn.jsdelivr.net/gh/caltun90/dizivanastudio-social@main/videos/<dosya>` ile dene. Sonra `liste` ile `scheduled` olduğunu doğrula.
+   - Yatay: `python motor/yayin.py yt-yukle videos/<yatay_dosya> "<yatay başlık>" <bölüm>/aciklama.txt <bugün>T18:05:00+03:00 "<etiketler, virgülle>" <oynatma_listesi_id>`. Çıktıdaki `video_id` değerini `log.json` kaydına `yatay_youtube` olarak yaz. Sonra `python motor/yayin.py yt-durum <video_id>` ile yüklemenin bittiğini ve yayın saatinin doğru olduğunu gör.
+   - Şu an 17:30'dan sonraysa iki komutta da saat yerine `simdi` yaz.
+   - **Oynatma listesi:** her dizinin bir listesi olur. Dizinin ilk bölümünde `yt-liste-olustur "<Dizi adı>" "<tek cümle>"` ile oluştur ve kimliği o dizinin `log.json` kayıtlarına `playlist` olarak yaz; sonraki bölümlerde aynı kimliği kullan.
+   - YouTube API günlük kotası sınırlıdır (bir yükleme yaklaşık 1600 birim, günlük 10.000); aynı videoyu iki kez yükleme. Yükleme hata verirse bir kez daha dene, yine olmazsa Cem'e hata metnini bildir.
 6. **Başlık ve açıklama.**
    - Yatay başlık: `<Dizi adı> | <no>. Bölüm: <bölüm adı>` (örnek: `13. Kat | 1. Bölüm: Asansör`).
    - Dikey başlık: merak uyandıran tek cümle + dizi ve bölüm (en fazla 90 karakter; örnek: `Asansöre 4 kişi bindi, içeride 5 kişi vardı | 13. Kat 1. Bölüm`).
+   - Açıklama metnini bölüm klasörüne `aciklama.txt` olarak yaz (yayin.py bu dosyayı okur).
    - Açıklama: 2 cümlelik kanca (sürpriz bozmadan), izleyiciye bölümün sorusu, "Yeni bölüm her gün.", en fazla 6 etiket (her zaman `#dizivanastudio` ve dizinin etiketi, örnek `#13kat`).
 
 ## 9. Dizi bitince: film
 Beşinci bölüm yayınlandıktan sonraki çalışmada, yeni diziye başlamadan önce:
 - Beş yatay bölümü tek dosyada birleştir (başta 2 sn dizi adı kartı, aralarda 1 sn kararma; `ffmpeg concat`, gerekirse yeniden kodla). Dosya 95 MB'ı geçmesin (geçerse `-crf` yükselt).
-- `videos/<tarih>-<dizi>-film-yatay.mp4` olarak depoya koy, Buffer ile `<Dizi adı>: Tüm Bölümler (Film)` başlığıyla 20:00'a planla, `log.json` içine `"bolum": "film"` kaydı ekle.
+- `videos/<tarih>-<dizi>-film-yatay.mp4` olarak depoya koy, `yt-yukle` ile `<Dizi adı>: Tüm Bölümler (Film)` başlığıyla 20:00'a planla (aynı oynatma listesine ekle), `log.json` içine `"bolum": "film"` kaydı ekle. Film yataydır; Buffer'a verilmez.
 
 ## 10. Yeni dizi başlatmak
 1. Aşağıdaki havuzdan sıradaki fikri al (havuz biterse aynı ruhta yenisini bul): tek cümlelik güçlü bir fikir, tek bir kural ya da sır, 4 ile 5 karakter, en fazla 3 mekân.
@@ -165,4 +173,5 @@ Beşinci bölüm yayınlandıktan sonraki çalışmada, yeni diziye başlamadan 
 - Kontrol modeli kısa parçaları ("Kai!") komşusuyla birleştirip numaraları kaydırabilir; süreler doğruysa sorun yoktur.
 - Sayım gösteren sahnede rozet sırası ekrandaki soldan sağa sırayla aynı olmalı.
 - Karanlık sahnede "fazla olan" gibi bir sırrı görselle ele verme (gözler sırayla kırmızı yanar).
+- Buffer YouTube'da yalnızca Shorts yayınlar (dikey ya da kare). Yatay video her zaman YouTube API ile yüklenir.
 - Windows'ta ffmpeg `imageio-ffmpeg` paketinden gelir; yazı tipi `motor/fonts` içindedir.
