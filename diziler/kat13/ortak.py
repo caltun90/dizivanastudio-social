@@ -179,9 +179,9 @@ def accessories(cv, who, f, s, look, alpha, back):
         tie_at(cv, f['neck'][0], f['neck'][1] + 26 * s, s, alpha)
 
 
-def package(cv, f, s, alpha=1.0, tie=False, left=False):
-    x = (f['handL'][0] + f['handR'][0]) / 2 if not left else f['handL'][0] + 40 * s
-    y = f['handL'][1] + 4 * s; w, h, a = 176 * s, 124 * s, 255 * alpha
+def package(cv, f, s, alpha=1.0, tie=False, left=False, off=(0, 0)):
+    x = ((f['handL'][0] + f['handR'][0]) / 2 if not left else f['handL'][0] + 40 * s) + off[0]
+    y = f['handL'][1] + 4 * s + off[1]; w, h, a = 176 * s, 124 * s, 255 * alpha
     rc = skia.Rect.MakeLTRB(x - w / 2, y - h / 2, x + w / 2, y + h / 2)
     cv.drawRRect(skia.RRect.MakeRectXY(rc.makeOffset(6, 9), 8, 8), fill((4, 6, 20), 90 * alpha))
     cv.drawRRect(skia.RRect.MakeRectXY(rc, 8, 8), fill((214, 170, 110), a))
@@ -192,8 +192,8 @@ def package(cv, f, s, alpha=1.0, tie=False, left=False):
     if tie: tie_at(cv, x - 50 * s, y - h / 2 - 8 * s, 0.5, alpha, rot=-74)
 
 
-def actor(cv, ts, who, expr='mutlu', pose=None, look=0.0, alpha=1.0, back=False, dx=0.0, dy=0.0, talk='auto', tie=False, place=None, pkg_left=False):
-    """place=(x, gy, s) verilirse kabin yerlesimi yerine o konum/olcek kullanilir (koridor)"""
+def actor(cv, ts, who, expr='mutlu', pose=None, look=0.0, alpha=1.0, back=False, dx=0.0, dy=0.0, talk='auto', tie=False, place=None, pkg_left=False, pkg_off=(0, 0)):
+    """place=(x, gy, s) verilirse kabin yerlesimi yerine o konum/olcek kullanilir (koridor). pkg_off: paketin sarsintisi (dx, dy)"""
     c = CAST[who]; k = kk(ts)
     x, gy, s = place if place else (c['x'], c['gy'], c['s'])
     tk = (TL.talk(who, ts) if talk == 'auto' else talk)
@@ -206,7 +206,8 @@ def actor(cv, ts, who, expr='mutlu', pose=None, look=0.0, alpha=1.0, back=False,
                blink=bl and not back, look=look, alpha=alpha)
     if who == 'Z': skirt(cv, f, s, 255 * alpha)
     accessories(cv, who, f, s, look, alpha, back)
-    if who == 'L': package(cv, f, s, alpha, tie, pkg_left)
+    if who == 'L': package(cv, f, s, alpha, tie, pkg_left, pkg_off)
+    f['s'], f['who'], f['look'] = s, who, look
     return f
 
 
@@ -440,7 +441,8 @@ def cabin_bg():
         cv.drawRect(skia.Rect.MakeLTRB(DX0 - 20, DY0 - 20, DX1 + 20, FLOOR), fill((56, 64, 80)))
         cv.drawRRect(skia.RRect.MakeRectXY(skia.Rect.MakeLTRB(540 - 132, 468, 540 + 132, 562), 16, 16), fill((28, 32, 46)))
         cv.drawRRect(skia.RRect.MakeRectXY(skia.Rect.MakeLTRB(540 - 120, 478, 540 + 120, 552), 10, 10), dashed((90, 100, 130), 2.5, 200, (9, 7)))
-        cv.drawRRect(skia.RRect.MakeRectXY(skia.Rect.MakeLTRB(912, 760, 1000, 1010), 12, 12), fill((44, 50, 66)))
+        cv.drawRRect(skia.RRect.MakeRectXY(skia.Rect.MakeLTRB(912, 760, 1000, 1052), 12, 12), fill((44, 50, 66)))
+        cv.drawCircle(956, 1022, 11, fill((16, 18, 28))); cv.drawCircle(956, 1022, 12.5, dashed((120, 130, 160), 2, 200, (4, 3)))   # 'L' dugmesinin bos yuvasi
         for r_ in range(6):
             for c_ in range(2):
                 cv.drawCircle(938 + c_ * 36, 790 + r_ * 38, 11, fill(YEL if (r_, c_) == (0, 1) else (206, 212, 226)))
@@ -453,13 +455,14 @@ def cabin_bg():
     _IMG['cab'] = surf.makeImageSnapshot(); return _IMG['cab']
 
 
-def cabin(cv, sh, u=0.0, lamp=1.0):
-    """arka plan + kapi araligi. sh: (dx, dy) sarsinti, u: kapi acikligi 0..1"""
+def cabin(cv, sh, u=0.0, lamp=1.0, view=None):
+    """arka plan + kapi araligi. sh: (dx, dy) sarsinti, u: kapi acikligi 0..1. view(cv, near, far, lamp): kapinin ardi (varsayilan: 13. kat koridoru)"""
     cv.clear(col(shade(WALL, 0.6))); cv.drawImage(cabin_bg(), sh[0] * K, sh[1] * K)
     with stage(cv, *sh):
         cv.save(); cv.clipRect(skia.Rect.MakeLTRB(DX0, DY0, DX1, FLOOR))
         cv.drawRect(skia.Rect.MakeLTRB(DX0, DY0, DX1, FLOOR), fill((14, 16, 28)))
-        if u > 0: corridor(cv, (DX0, DY0, DX1, FLOOR), (490, 664, 590, 790), 'red', lamp)
+        if u > 0 and view: view(cv, (DX0, DY0, DX1, FLOOR), (490, 664, 590, 790), lamp)
+        elif u > 0: corridor(cv, (DX0, DY0, DX1, FLOOR), (490, 664, 590, 790), 'red', lamp)
         w = (DX1 - DX0) / 2
         for sd in (-1, 1):
             x0 = (DX0 - w * u) if sd < 0 else (540 + w * u)
@@ -481,6 +484,134 @@ def display(cv, sh, txt, red=False, level=None, k=0):
                 cv.drawRRect(skia.RRect.MakeRectXY(skia.Rect.MakeLTRB(540 - 92 + i * 22, 515 - h / 2, 540 - 80 + i * 22, 515 + h / 2), 5, 5), fill(c))
         else:
             text(cv, txt, 540, 540, 66, c)
+
+
+# ---------- ortak yardimcilar (b02'den itibaren) ----------
+def scr(x, y):
+    """sahne koordinati -> ekran koordinati"""
+    return CX + (x - 540) * K, GYD + (y - GY) * K
+
+
+class zoom:
+    """yakin plan: icinde cizilen her sey z kat buyur; sahne noktasi p, sahne noktasi q'ya oturur"""
+    def __init__(s, cv, z, p, q=None): s.cv, s.z, s.p, s.q = cv, z, p, q or p
+    def __enter__(s):
+        px, py = scr(*s.p); qx, qy = scr(*s.q); s.cv.save(); s.cv.translate(qx, qy); s.cv.scale(s.z, s.z); s.cv.translate(-px, -py)
+    def __exit__(s, *a): s.cv.restore()
+
+
+def mouth_of(f):
+    """actor() ciktisindan agzin sahne konumu"""
+    s = f['s']; return f['head'][0] + f.get('look', 0) * 5 * s, f['head'][1] + 49 * s
+
+
+def hand_ball(cv, x, y, r, c, seed=3):
+    def d(c_): stil.R.seed(seed); yarn_ball(c_, r + 12, r + 12, r, c, rows=5)
+    blit(cv, sprite(('hand', round(r, 1), c, seed), 2 * r + 40, 2 * r + 44, d), x - r - 12, y - r - 12)
+
+
+# eller agizda (kol pozu + yuzun ustune cizilen eller: govde cizimi elleri basin arkasinda birakir)
+HUSH = dict(aL=(-100, 30, -30, -58), aR=(100, 30, 30, -58), lean=-4, belly=8)
+SHH = dict(aR=(92, 30, 26, -40))
+def hush(cv, f):
+    """iki el agzin ustunde. f: actor() ciktisi"""
+    s = f['s']; c = CAST[f['who']]['c']; mx, my = mouth_of(f)
+    for sd in (-1, 1): hand_ball(cv, mx + sd * 19 * s, my + 6 * s, 33 * s, c, 3 + sd)
+
+
+def shh(cv, f):
+    """isaret parmagi dudakta: 'sus' isareti"""
+    s = f['s']; c = CAST[f['who']]['c']; mx, my = mouth_of(f)
+    hand_ball(cv, mx + 5 * s, my + 44 * s, 27 * s, c, 4)
+    cv.drawLine(mx + 3 * s, my + 30 * s, mx, my - 34 * s, stroke(shade(c, 0.56), 21 * s))
+    cv.drawLine(mx + 3 * s, my + 30 * s, mx, my - 34 * s, stroke(shade(c, 0.9), 15 * s))
+    cv.drawLine(mx + 2 * s, my + 24 * s, mx, my - 30 * s, dashed(shade(c, 1.25), 3 * s, 200, (5 * s, 5 * s)))
+
+
+def reach_pose(x, gy, s, target, base=None, side=1, bend=40):
+    """eli sahnedeki bir noktaya (target) uzanan kol pozu. side: 1 sag kol, -1 sol kol"""
+    P = dict(IDLE); P.update(base or {}); g = geo(x, gy, s, P); sh = g['sh']
+    hx, hy = (target[0] - sh[0]) / s, (target[1] - sh[1]) / s
+    out = dict(base or {}); out['aR' if side > 0 else 'aL'] = (hx * 0.5 + side * 0, hy * 0.5 + bend, hx, hy); return out
+
+
+def badge_at(cv, x, y, txt, red=False, a=1.0, r=36):
+    """sahne koordinatinda sayi rozeti"""
+    cv.drawCircle(x + 3, y + 5, r, fill((4, 6, 20), 110 * a))
+    cv.drawCircle(x, y, r, fill((255, 86, 74) if red else CREAM, 255 * a)); cv.drawCircle(x, y, r - 7, dashed(INKBLUE, 2.5, 150 * a, (7, 6)))
+    text(cv, txt, x, y + r * 0.47, r * 1.28, CREAM if red else INKBLUE, a=255 * a)
+
+
+def fingers(cv, x, y, n, c, r=60, a=1.0):
+    """parmakla sayma balonu: avuc + n acik parmak"""
+    cv.drawCircle(x + 3, y + 5, r, fill((4, 6, 20), 110 * a))
+    cv.drawCircle(x, y, r, fill(CREAM, 255 * a)); cv.drawCircle(x, y, r - 7, dashed(INKBLUE, 2.5, 150 * a, (7, 6)))
+    px, py = x, y + r * 0.34
+    for i in range(4):
+        an = math.radians(-90 + (i - 1.5) * 21); ln = r * (0.74 if i < n else 0.30)
+        x0, y0 = px + (i - 1.5) * r * 0.155, py - r * 0.06
+        cv.drawLine(x0, y0, x0 + math.cos(an) * ln, y0 + math.sin(an) * ln, stroke(shade(c, 0.62), r * 0.2, 255 * a))
+        cv.drawLine(x0, y0, x0 + math.cos(an) * ln, y0 + math.sin(an) * ln, stroke(c, r * 0.14, 255 * a))
+    cv.drawLine(px - r * 0.3, py + r * 0.02, px - r * 0.5, py - r * 0.16, stroke(shade(c, 0.62), r * 0.2, 255 * a))   # basparmak
+    cv.drawLine(px - r * 0.3, py + r * 0.02, px - r * 0.5, py - r * 0.16, stroke(c, r * 0.14, 255 * a))
+    cv.drawCircle(px, py + r * 0.05, r * 0.33, fill(shade(c, 0.62), 255 * a)); cv.drawCircle(px, py + r * 0.05, r * 0.29, fill(c, 255 * a))
+
+
+def beret_at(cv, x, y, s, rot=0.0, a=1.0):
+    """Sam'in yesil beresi (tek basina). (x, y): berenin alt orta noktasi"""
+    u = 118 * s; A = 255 * a
+    cv.save(); cv.translate(x, y); cv.rotate(rot)
+    p = skia.Path(); p.addArc(skia.Rect.MakeLTRB(-u * 1.0, -u * 0.86, u * 1.0, u * 0.62), 180, 180); p.close()
+    cv.drawPath(p, fill(GREEN, A))
+    cv.drawRRect(skia.RRect.MakeRectXY(skia.Rect.MakeLTRB(-u * 0.98, -u * 0.2, u * 0.98, 0), u * 0.1, u * 0.1), fill(shade(GREEN, 1.35), A))
+    cv.drawLine(-u * 0.8, -u * 0.1, u * 0.8, -u * 0.1, dashed(shade(GREEN, 0.7), max(1.5, 3 * s), 200 * a, (8 * s + 2, 6 * s + 2)))
+    cv.drawCircle(0, -u * 0.9, u * 0.2, fill(CREAM, A)); cv.restore()
+
+
+def sfx_text(cv, x, y, txt, size=54, c=CREAM, rot=-8, a=1.0, rays=True):
+    """ses yazisi (TIK, CIT): sessiz izleyen de anlasin"""
+    cv.save(); cv.translate(x, y); cv.rotate(rot)
+    f = skia.Font(TFB, size); w = f.measureText(txt)
+    cv.drawString(txt, -w / 2, 0, f, stroke((14, 16, 44), size * 0.2, 230 * a)); cv.drawString(txt, -w / 2, 0, f, fill(c, 255 * a))
+    if rays:
+        for an in (-150, -90, -30):
+            ax, ay = math.cos(math.radians(an)), math.sin(math.radians(an)) * 0.8
+            cv.drawLine(ax * (w / 2 + 14), -size * 0.4 + ay * (size * 0.7), ax * (w / 2 + 34), -size * 0.4 + ay * (size * 1.1), stroke(c, 5, 255 * a))
+    cv.restore()
+
+
+def panel_closeup(cv, a=1.0, hi=0.0, k=0, finger=None):
+    """asansor panelinin yakin plani (ekran koordinati): 12 kat dugmesi ve 'L' dugmesinin bos yuvasi.
+    hi 0..1: bos yuva vurgusu. finger: isaret eden kolun rengi (None: yok)"""
+    if a <= 0: return
+    u = (1.0 if FMT == 'v' else 0.80) * lerp(0.82, 1.0, smooth(a)); A = 255 * clamp(a)
+    cx, cy = (W / 2, 800) if FMT == 'v' else (W / 2, 468)
+    pw, ph = 520 * u, 950 * u; top = cy - ph / 2
+    rc = skia.Rect.MakeLTRB(cx - pw / 2, top, cx + pw / 2, top + ph)
+    sh = fill((4, 6, 20), 150 * clamp(a)); sh.setMaskFilter(skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 18))
+    cv.drawRRect(skia.RRect.MakeRectXY(rc.makeOffset(12, 18), 40 * u, 40 * u), sh)
+    cv.drawRRect(skia.RRect.MakeRectXY(rc, 40 * u, 40 * u), fill((44, 50, 66), A))
+    cv.drawRRect(skia.RRect.MakeRectXY(rc.makeInset(18 * u, 18 * u), 26 * u, 26 * u), dashed((120, 130, 160), 3.5 * u, 200 * clamp(a), (14 * u, 10 * u)))
+    for r_ in range(6):
+        for c_ in range(2):
+            bx, by = cx + (c_ - 0.5) * 190 * u, top + 112 * u + r_ * 118 * u; n = 12 - r_ * 2 - (1 - c_)
+            cv.drawCircle(bx + 3 * u, by + 6 * u, 46 * u, fill((16, 18, 30), 150 * clamp(a)))
+            cv.drawCircle(bx, by, 46 * u, fill(YEL if (r_, c_) == (0, 1) else (206, 212, 226), A))
+            cv.drawCircle(bx, by, 37 * u, dashed(INKBLUE, 2.5 * u, 110 * clamp(a), (7 * u, 6 * u)))
+            text(cv, str(n), bx, by + 15 * u, 42 * u, INKBLUE, a=A)
+    sx, sy = cx, top + 112 * u + 6 * 118 * u                # bos yuva
+    cv.drawCircle(sx, sy, 48 * u, fill((14, 16, 26), A)); cv.drawCircle(sx, sy, 49 * u, dashed((120, 130, 160), 4 * u, 220 * clamp(a), (8 * u, 7 * u)))
+    for d_ in (-14, 14): cv.drawCircle(sx + d_ * u, sy, 5 * u, fill((150, 120, 70), A))                # bosta kalan kontaklar
+    red = (255, 86, 74)
+    text(cv, 'L', sx - 128 * u, sy + 22 * u, 62 * u, lerpt((150, 160, 190), red, hi), a=A)
+    if hi > 0:
+        gl = fill(red, 70 * hi * clamp(a)); gl.setMaskFilter(skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 24)); cv.drawCircle(sx, sy, 78 * u, gl)
+        cv.drawCircle(sx, sy, (66 + (5 if (k // 3) % 2 else 0)) * u, dashed(red, 6 * u, 255 * hi * clamp(a), (16 * u, 11 * u)))
+    if finger and hi > 0:                                   # isaret eden parmak (sol alttan)
+        x1, y1 = sx - 74 * u * 1.0 - 30 * u, sy + 96 * u; x0, y0 = x1 - 330 * u, y1 + 300 * u
+        x1, y1 = lerp(x0, x1, smooth(hi)), lerp(y0, y1, smooth(hi))
+        cv.drawLine(x0, y0, x1, y1, stroke(shade(finger, 0.56), 62 * u, A)); cv.drawLine(x0, y0, x1, y1, stroke(shade(finger, 0.92), 52 * u, A))
+        cv.drawLine(x0, y0, x1, y1, dashed(shade(finger, 1.3), 4 * u, 190 * clamp(a), (12 * u, 10 * u)))
 
 
 # ============ kare dongusu ve komutlar ============

@@ -175,3 +175,4 @@ Beşinci bölüm yayınlandıktan sonraki çalışmada, yeni diziye başlamadan 
 - Karanlık sahnede "fazla olan" gibi bir sırrı görselle ele verme (gözler sırayla kırmızı yanar).
 - Buffer YouTube'da yalnızca Shorts yayınlar (dikey ya da kare). Yatay video her zaman YouTube API ile yüklenir.
 - Windows'ta ffmpeg `imageio-ffmpeg` paketinden gelir; yazı tipi `motor/fonts` içindedir.
+- Bulut ortamında skia için `apt-get update && apt-get install -y libegl1` ve `python -m pip install ...` gerekir; TTS bazen bozuk, çok uzun ve sessiz kayıt döndürür (655 sn gibi): süreyi kontrol et, yalnızca o grubu silip yeniden üret.
