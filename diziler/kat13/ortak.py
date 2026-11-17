@@ -207,7 +207,7 @@ def actor(cv, ts, who, expr='mutlu', pose=None, look=0.0, alpha=1.0, back=False,
     if who == 'Z': skirt(cv, f, s, 255 * alpha)
     accessories(cv, who, f, s, look, alpha, back)
     if who == 'L': package(cv, f, s, alpha, tie, pkg_left, pkg_off)
-    f['s'], f['who'], f['look'] = s, who, look
+    f['s'], f['who'], f['look'], f['expr'] = s, who, look, expr
     return f
 
 
@@ -612,6 +612,33 @@ def panel_closeup(cv, a=1.0, hi=0.0, k=0, finger=None):
         x1, y1 = lerp(x0, x1, smooth(hi)), lerp(y0, y1, smooth(hi))
         cv.drawLine(x0, y0, x1, y1, stroke(shade(finger, 0.56), 62 * u, A)); cv.drawLine(x0, y0, x1, y1, stroke(shade(finger, 0.92), 52 * u, A))
         cv.drawLine(x0, y0, x1, y1, dashed(shade(finger, 1.3), 4 * u, 190 * clamp(a), (12 * u, 10 * u)))
+
+
+# ---------- ortak yardimcilar (b03'ten itibaren) ----------
+def lids(cv, f, drop=0.62):
+    """yari inik goz kapaklari: yere bakan karakter (ifade ne olursa olsun). f: actor() ciktisi"""
+    s = f['s']; c = CAST[f['who']]['c']; sf = s * 118 / 110.0; look = f.get('look', 0)
+    cx, cy = f['head'][0], f['head'][1] + 6 * s; y = cy - 12 * sf
+    big = f.get('expr') in ('panik', 'bagir', 'saskin')
+    for sd in (-1, 1):
+        x = cx + sd * 34 * sf + look * 6 * sf
+        top, bot = y - (26 if big else 21) * sf, y + lerp(-18, 15, drop) * sf; hw = (27 if big else 22) * sf
+        cv.drawRRect(skia.RRect.MakeRectXY(skia.Rect.MakeLTRB(x - hw, top, x + hw, bot), 7 * sf, 7 * sf), fill(shade(c, 0.96)))
+        cv.drawLine(x - hw + 3 * sf, bot, x + hw - 3 * sf, bot, stroke(THREAD, 6.5 * sf))
+    if f['who'] == 'Z':                                    # gozluk kapaklarin ustunde kalir
+        hx, hy = f['head']; ey = hy - 7 * s; r = 27 * s
+        for sd in (-1, 1): cv.drawCircle(hx + sd * 36.5 * s + look * 6.4 * s, ey, r, stroke(THREAD, 5 * s))
+        cv.drawLine(hx - 9.5 * s + look * 6.4 * s, ey, hx + 9.5 * s + look * 6.4 * s, ey, stroke(THREAD, 5 * s))
+
+
+def glasses_at(cv, x, y, s, rot=0.0, a=1.0):
+    """Zoe'nin gozlugu (tek basina). (x, y): koprunun ortasi"""
+    A = 255 * a; r = 27 * s
+    cv.save(); cv.translate(x, y); cv.rotate(rot)
+    for sd in (-1, 1):
+        cv.drawCircle(sd * 36.5 * s, 0, r, fill((200, 226, 240), 70 * a)); cv.drawCircle(sd * 36.5 * s, 0, r, stroke(THREAD, 5.5 * s, A))
+        cv.drawLine(sd * 36.5 * s - r * 0.45, -r * 0.2, sd * 36.5 * s - r * 0.1, -r * 0.55, stroke((250, 248, 240), 3 * s, 200 * a))
+    cv.drawLine(-9.5 * s, 0, 9.5 * s, 0, stroke(THREAD, 5.5 * s, A)); cv.restore()
 
 
 # ============ kare dongusu ve komutlar ============
