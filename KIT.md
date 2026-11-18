@@ -20,6 +20,11 @@ Bu dosya, bölümü üreten kişinin (çoğu zaman otomatik görev) tek kaynağ�
 13. **Süre 2:40 ile 2:55 arası.** 3:00'ı geçen video Shorts olamaz; geçerse yayınlama, kısalt.
 14. Şiddet, kan, korkutucu ayrıntı yok: gerilim ima ile kurulur (karaltı, sönen ışık, kaybolan kişi). Küfür, siyaset, din, tıbbi tavsiye yok.
 15. Kapanışta "yarın" denmez; "bir sonraki bölümde" denir.
+16. **İlk 2 saniye kancası (Cem, 19 Kasım 2026; istisnasız her video: dikey, yatay ve film).** İlk 2 saniye izleyiciyi ekrana kilitler. Logo, kanal adı, dizi adı, jenerik, başlık kartı, "Önceki bölümde" hatırlatması, selamlama, boş, siyah ya da hareketsiz kareyle açılmaz; bunlar 2. saniyeden sonra gelir. Abone ol bandı ilk 2 saniyede görünmez.
+    - 0:00'daki ilk kare doludur; ses (replik ya da efekt) en geç 0,5. saniyede başlar.
+    - Kanca, bölümün en gerilimli anından 1-2 saniyelik bir soğuk açılış ya da bölümün sorusunu cevabı vermeden soran tek bir repliktir (en fazla 8 kelime, 2. saniye dolmadan biter). Cevap bölümün ilerisinde gelir; kancanın verdiği söz mutlaka karşılanır, yanıltıcı tıklama tuzağı yok.
+    - İlk karede büyük, okunaklı, en fazla 5 kelimelik bir kanca yazısı ve bölümün en çarpıcı görseli olur; ilk 2 saniyede belirgin bir hareket (hızlı yakınlaşma, giriş animasyonu ya da ani kesme) olur. Kanca yazısı altyazıyla üst üste binmez.
+    - Bu kural bu dosyadaki ve `DIZI.md` dosyalarındaki diğer açılış kurallarından önce gelir; çelişirse buna uy. Kural 7'deki 1,5-2 sn sessiz tepki ilk 2 saniyeye uygulanmaz.
 
 ## 2. Depo düzeni
 ```
@@ -62,7 +67,7 @@ Her çalışmada tek bölüm üretilir ve yayına planlanır.
 
 - `SEQ` öğeleri: `('scene', no)`, `('beat', ad, süre_sn)` (sessiz aksiyon), `('line', id, konuşan, metin, vurgu_kelimeleri, sonraki_boşluk_sn)`.
 - Yaklaşık 40 ile 48 replik, 300 ile 340 kelime, 30 ile 38 sn sessiz aksiyon. İlk tahmin için `ses.py dry` toplamına bak; gerçek ses genelde taslaktan uzun çıkar.
-- **Kanca ilk 15 saniyede.** Sonra başlık kartı (`('beat', 'title', 2.5)`). Dizinin ilk bölümü değilse kancadan hemen önce ya da sonra tek cümleyle "Önceki bölümde" hatırlatması.
+- **İlk 2 saniye kancadır** (kural 16): `SEQ` ilk sahneyle ve kanca repliğiyle başlar, öncesinde sessiz vuruş ya da kart olmaz. Kancanın açtığı merak ilk 15 saniyede büyütülür. Sonra başlık kartı (`('beat', 'title', 2.5)`). Dizinin ilk bölümü değilse kancadan hemen önce ya da sonra tek cümleyle "Önceki bölümde" hatırlatması.
 - Bitiş: izleyiciye tek soru + sonraki bölümün adı (kart). Dizinin son bölümünde soru yerine kapanış.
 - Replikler kısa, konuşma dilinde. Bir replik en fazla iki cümle. Her karakterin kendine ait bir konuşma biçimi olsun.
 - **Ses grupları (`GROUPS`):** Gemini tek istekte en fazla 2 konuşmacı üretir. Replikleri çiftlere böl; grup içinde konuşanlar **sırayla değişmeli** (aynı kişi art arda iki replik söylemesin, yoksa bölme karışır). Grup, sahne sırasını izlemek zorunda değil. Tek konuşmacılı gruplar olabilir (anlatıcı; çifti olmayan artık replikler). Hedef: bölüm başına **en fazla 5 istek**. Grubu 25 saniyeden uzun tutma (uzun isteklerde 502 gelebilir); gerekirse ikiye böl ama toplam 6'yı geçme.
@@ -111,6 +116,7 @@ Her sahneden en az 3 kare, **iki formatta da**:
 `FMT=v python bolum.py still chk 3.0 21.5 ...` ve `FMT=h ...`; sonra `python ../../../motor/sheet.py chk/sayfa.jpg 4 640 chk/h_*.png` ve görseli **aç, bak**.
 
 Kontrol listesi:
+- **İlk 2 saniye (kural 16):** her iki formatta 0,0 / 0,5 / 1,0 / 1,9. saniye karelerini ayrıca aç. İlk kare boş, siyah ya da yalnızca logo/başlık kartıysa, kanca yazısı okunmuyorsa ya da kanca repliği 2 saniyeyi aşıyorsa düzelt; düzelmiyorsa yayınlama, Cem'e bildir.
 - Taşma, üst üste binme, kadraj dışında kalan önemli nesne ya da karakter (özellikle yatayda y<470 ve dikeyde x<0, x>1080).
 - Altyazı doğru kişinin adıyla ve doğru anda mı; altyazı karakterin yüzünü kapatıyor mu.
 - Gerilim sahnesinde gülen var mı. İfade repliğe uyuyor mu.
