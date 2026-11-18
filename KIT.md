@@ -177,3 +177,4 @@ Beşinci bölüm yayınlandıktan sonraki çalışmada, yeni diziye başlamadan 
 - Windows'ta ffmpeg `imageio-ffmpeg` paketinden gelir; yazı tipi `motor/fonts` içindedir.
 - Bulut ortamında skia için `apt-get update && apt-get install -y libegl1` ve `python -m pip install ...` gerekir; TTS bazen bozuk, çok uzun ve sessiz kayıt döndürür (655 sn gibi): süreyi kontrol et, yalnızca o grubu silip yeniden üret.
 - TTS bazen grubun bir kısmını dip gürültülü üretir (`gaps` sessizlik bulamaz, `check` replikleri kaydırır): yalnızca o replikleri yeni bir grupta yeniden üret, kalanları `voice/cuts.json` ile kes.
+- 2.5 TTS kotası gün içinde başka işlerce de harcanabiliyor: 429 gelirse kalan tek grubu `TTS_MODEL=gemini-3.1-flash-tts-preview python ../../../motor/ses.py tts <grup>` ile üret (b04'te çalıştı). TTS konuşmacı değişiminde her zaman 1 saniye durmaz; `check` kayma gösterirse `gaps` çıktısından `voice/cuts.json` yaz.

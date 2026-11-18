@@ -35,6 +35,7 @@ CAST = {
     'K': dict(x=880, gy=GY - 70, s=0.66, c=NAVY, seed=25),
     'L': dict(x=350, gy=GY + 26, s=0.80, c=TEAL, seed=5),
     'U': dict(x=730, gy=GY + 26, s=0.56, c=LILAC, seed=9),
+    'M': dict(x=540, gy=GY - 70, s=0.66, c=(186, 118, 196), seed=27),   # Luna'nin annesi (b04'ten itibaren; yalnizca place ile)
 }
 ORDER = ('Z', 'S', 'K', 'L', 'U')
 orgu.SPK.update({'V': ('ASANSÖR', (255, 150, 90)), 'L': ('LEO', TEAL), 'Z': ('ZOE', CORAL), 'K': ('KAI', NAVY), 'U': ('LUNA', LILAC), 'S': ('SAM', TAN)})
@@ -106,9 +107,10 @@ def tie_at(cv, x, y, s, alpha=1.0, rot=0.0):
 
 HAIR = (244, 208, 112)                                     # sari
 SKIRT = (128, 66, 118)
-def hair(cv, hx, hy, HR, a, back, c_seed=21):
-    """uzun sari sac: ortadan ayrik, omuzlardan gogse dokulen yun tutamlari; arkadan bakista basi ve sirti orter"""
-    u = HR
+MHAIR, MSKIRT = (98, 62, 58), (232, 120, 150)              # anne: koyu kahve sac, pembe etek
+def hair(cv, hx, hy, HR, a, back, c_seed=21, c=None):
+    """uzun sac (varsayilan sari; c ile baska renk): ortadan ayrik, omuzlardan gogse dokulen yun tutamlari; arkadan bakista basi ve sirti orter"""
+    u = HR; HAIR = c or globals()['HAIR']
     sh = skia.Path()
     sh.moveTo(hx - u * 1.04, hy + u * 1.95)
     sh.cubicTo(hx - u * 1.58, hy + u * 0.90, hx - u * 1.42, hy - u * 1.26, hx, hy - u * 1.24)
@@ -136,8 +138,9 @@ def hair(cv, hx, hy, HR, a, back, c_seed=21):
     cv.drawPath(sh, stroke(shade(HAIR, 0.58), u * 0.03, a))
 
 
-def skirt(cv, f, s, a):
+def skirt(cv, f, s, a, c=None):
     """kece etek: belden kalcanin altina, etek ucunda dikis"""
+    SKIRT = c or globals()['SKIRT']
     (hx_, hy_), (mx_, my_) = f['hip'], f['mid']
     wx, wy = lerp(mx_, hx_, 0.45), lerp(my_, hy_, 0.45); by = hy_ + 96 * s
     p = skia.Path(); p.moveTo(wx - 46 * s, wy); p.lineTo(wx + 46 * s, wy)
@@ -175,6 +178,16 @@ def accessories(cv, who, f, s, look, alpha, back):
             for dx_, dy_ in ((11, -16), (16, -9)): cv.drawLine(ex_ + sd * (dx_ - 5) * s, ey + (dy_ + 5) * s, ex_ + sd * (dx_ + 5) * s, ey + (dy_ - 3) * s, stroke(THREAD, 3.6 * s, a))
         for sd in (-1, 1): cv.drawCircle(hx + sd * 36.5 * s + look * 6.4 * s, ey, r, stroke(THREAD, 5 * s, a))
         cv.drawLine(hx - 9.5 * s + look * 6.4 * s, ey, hx + 9.5 * s + look * 6.4 * s, ey, stroke(THREAD, 5 * s, a))
+    elif who == 'M':                                       # anne: uzun koyu sac, kirpik, Luna'ninkiyle ayni fiyonk
+        hair(cv, hx, hy, HR, a, back, c_seed=27, c=MHAIR)
+        bx, by = hx + HR * 0.5, hy - HR * 0.92
+        for sd in (-1, 1): poly(cv, [(bx, by), (bx + sd * HR * 0.46, by - HR * 0.28), (bx + sd * HR * 0.46, by + HR * 0.28)], PINKB, a)
+        cv.drawCircle(bx, by, HR * 0.12, fill(shade(PINKB, 0.8), a))
+        if back: return
+        ey = hy - 7 * s
+        for sd in (-1, 1):
+            ex_ = hx + sd * 34 * s + look * 6 * s
+            for dx_, dy_ in ((11, -16), (16, -9)): cv.drawLine(ex_ + sd * (dx_ - 5) * s, ey + (dy_ + 5) * s, ex_ + sd * (dx_ + 5) * s, ey + (dy_ - 3) * s, stroke(THREAD, 3.6 * s, a))
     elif who == 'K' and not back:                          # kravat
         tie_at(cv, f['neck'][0], f['neck'][1] + 26 * s, s, alpha)
 
@@ -205,6 +218,7 @@ def actor(cv, ts, who, expr='mutlu', pose=None, look=0.0, alpha=1.0, back=False,
     f = figure(cv, x + dx, gy + dy, s, c['c'], None if back else expr, P, c['seed'], talk=None if back else tk,
                blink=bl and not back, look=look, alpha=alpha)
     if who == 'Z': skirt(cv, f, s, 255 * alpha)
+    elif who == 'M': skirt(cv, f, s, 255 * alpha, MSKIRT)
     accessories(cv, who, f, s, look, alpha, back)
     if who == 'L': package(cv, f, s, alpha, tie, pkg_left, pkg_off)
     f['s'], f['who'], f['look'], f['expr'] = s, who, look, expr
@@ -382,8 +396,9 @@ def shadow(cv, x, s=0.74, alpha=1.0, reach=0.0, k=0, ring=False):
 
 # ---------- dekor: lobi (asansorun disi) ----------
 LOBBY = (136, 126, 108)
-def lobby(cv, u):
-    """u: kapi acikligi 0..1. Kapinin ardi isikli kabin"""
+def lobby(cv, u, inside=None, glow=0.0):
+    """u: kapi acikligi 0..1. Kapinin ardi isikli kabin. inside(cv): kabinin icine cizilir (kapi kanatlarinin arkasinda kalir).
+    glow 0..1: kabinin isigi gozu alir, ici secilmez"""
     cv.clear(col(shade(LOBBY, 0.7)))
     with stage(cv):
         cv.drawRect(skia.Rect.MakeLTRB(-3000, -3000, 4000, FLOOR), fill(LOBBY))
@@ -401,6 +416,8 @@ def lobby(cv, u):
         cv.drawRect(skia.Rect.MakeLTRB(DX0, DY0, DX1, FLOOR), fill((250, 228, 156)))
         cv.drawRect(skia.Rect.MakeLTRB(DX0 + 34, DY0 + 34, DX1 - 34, FLOOR + 40), dashed((214, 180, 96), 3.5, 220))
         cv.drawLine(DX0, 1040, DX1, 1040, stroke((200, 170, 100), 14))
+        if inside: inside(cv)
+        if glow > 0: cv.drawRect(skia.Rect.MakeLTRB(DX0, DY0, DX1, FLOOR), fill((255, 246, 214), 235 * glow))
         w = (DX1 - DX0) / 2
         for sd in (-1, 1):
             x0 = (DX0 - w * u) if sd < 0 else (540 + w * u)
@@ -641,9 +658,55 @@ def glasses_at(cv, x, y, s, rot=0.0, a=1.0):
     cv.drawLine(-9.5 * s, 0, 9.5 * s, 0, stroke(THREAD, 5.5 * s, A)); cv.restore()
 
 
+# ---------- ortak yardimcilar (b04'ten itibaren) ----------
+class tint:
+    """icinde cizilen her seyi renk matrisinden gecirir (geri donus rengi). m: 20 sayilik satir sirali matris"""
+    def __init__(s, cv, m): s.cv, s.m = cv, m
+    def __enter__(s):
+        p = skia.Paint(); p.setColorFilter(skia.ColorFilters.Matrix(list(s.m))); s.cv.saveLayer(None, p)
+    def __exit__(s, *a): s.cv.restore()
+
+
+def sepia_m(u=1.0, lift=0.06):
+    """u: 0 renkli .. 1 tam sepya; lift: soluklastirma (siyahlar acilir)"""
+    sp = [0.393, 0.769, 0.189, 0.349, 0.686, 0.168, 0.272, 0.534, 0.131]; idn = [1, 0, 0, 0, 1, 0, 0, 0, 1]
+    m = [lerp(a, b, u) * (1 - lift) for a, b in zip(idn, sp)]
+    return m[0:3] + [0, lift] + m[3:6] + [0, lift * 0.9] + m[6:9] + [0, lift * 0.7] + [0, 0, 0, 1, 0]
+
+
+def sat_m(sat=1.2, gain=1.04):
+    """doygunluk ve parlaklik (canli, net ani)"""
+    r, g, b = 0.213, 0.715, 0.072; out = []
+    for i in range(3):
+        row = [(1 - sat) * w for w in (r, g, b)]; row[i] += sat
+        out += [v * gain for v in row] + [0, 0]
+    return out + [0, 0, 0, 1, 0]
+
+
+def memory_frame(cv, label, c=CREAM, a=1.0):
+    """geri donus cercevesi: kenarlari soluk, kosesi yuvarlak fotograf kenarligi ve ust etiket (ekran koordinati)"""
+    if a <= 0: return
+    g = skia.Paint(); g.setShader(skia.GradientShader.MakeRadial(skia.Point(W / 2, H / 2), max(W, H) * 0.66,
+                                  [skia.Color(c[0], c[1], c[2], 0), skia.Color(c[0], c[1], c[2], 0), skia.Color(c[0], c[1], c[2], int(150 * a))]))
+    cv.drawRect(skia.Rect.MakeWH(W, H), g)
+    th = 30 if FMT == 'v' else 24
+    inner_ = skia.RRect.MakeRectXY(skia.Rect.MakeLTRB(th, th, W - th, H - th), 54, 54)
+    p = skia.Path(); p.addRect(skia.Rect.MakeWH(W, H)); p.addRRect(inner_); p.setFillType(skia.PathFillType.kEvenOdd)
+    cv.drawPath(p, fill(c, 255 * a)); cv.drawRRect(inner_, dashed(shade(c, 0.62), 3.5, 220 * a, (16, 12)))
+    f = skia.Font(TFB, 38 if FMT == 'v' else 30); w = f.measureText(label); hgt = f.getSize() * 1.9
+    x, y = (W / 2, 392) if FMT == 'v' else (60 + (w + 56) / 2, 118)
+    cv.drawRRect(skia.RRect.MakeRectXY(skia.Rect.MakeLTRB(x - w / 2 - 28, y, x + w / 2 + 28, y + hgt), hgt / 2, hgt / 2), fill((255, 110, 96), 245 * a))
+    cv.drawString(label, x - w / 2, y + hgt * 0.68, f, fill(CREAM, 255 * a))
+
+
+def flash(cv, a, c=(255, 250, 236)):
+    if a > 0: cv.drawRect(skia.Rect.MakeWH(W, H), fill(c, 255 * clamp(a)))
+
+
 # ============ kare dongusu ve komutlar ============
-def run(DRAW, no_tag=None):
-    """DRAW: {sahne_no: cizim_fonksiyonu(cv, t)}. no_tag: ust etiketin gizlenecegi sahneler (varsayilan: son sahne)"""
+def run(DRAW, no_tag=None, white=()):
+    """DRAW: {sahne_no: cizim_fonksiyonu(cv, t)}. no_tag: ust etiketin gizlenecegi sahneler (varsayilan: son sahne).
+    white: [(sahne, sonraki_sahne)] bu gecislerde kararma yapilmaz (sahneler kendi beyaz parlamasini cizer: geri donus)"""
     KS = sorted(TL.scenes); no_tag = no_tag or (KS[-1],)
     def bounds(k):
         """sahnenin 12 fps kare araligi (cift sayiya yuvarlanir: 30 fps'e tam oturur)"""
@@ -661,9 +724,12 @@ def run(DRAW, no_tag=None):
         for lid, off in getattr(_sen, 'ABONE', []): abone(cv, t, S(lid) + off)   # abone ol bandi (senaryo.ABONE)
         captions(cv, TL, t)
         a, b = bounds(k)[0] / STEP, bounds(k)[1] / STEP
-        f = min(seg(t, a, a + 0.25), 1 - seg(t, b - 0.25, b))
-        if k == KS[-1]: f = min(seg(t, a, a + 0.25), 1 - seg(t, TL.total - 0.6, TL.total - 0.05))
-        if k == KS[0]: f = min(seg(t, 0, 0.4), 1 - seg(t, b - 0.25, b))
+        i = KS.index(k)
+        fi = 1.0 if i > 0 and (KS[i - 1], k) in white else seg(t, a, a + 0.25)
+        fo = 1.0 if i + 1 < len(KS) and (k, KS[i + 1]) in white else 1 - seg(t, b - 0.25, b)
+        f = min(fi, fo)
+        if k == KS[-1]: f = min(fi, 1 - seg(t, TL.total - 0.6, TL.total - 0.05))
+        if k == KS[0]: f = min(seg(t, 0, 0.4), fo)
         dim(cv, 1 - f, (4, 5, 14))
 
     cmd = sys.argv[1]; d = f'scenes_{FMT}'
