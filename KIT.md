@@ -26,6 +26,7 @@ Bu dosya, bölümü üreten kişinin (çoğu zaman otomatik görev) tek kaynağ�
     - İlk karede büyük, okunaklı, en fazla 5 kelimelik bir kanca yazısı ve bölümün en çarpıcı görseli olur; ilk 2 saniyede belirgin bir hareket (hızlı yakınlaşma, giriş animasyonu ya da ani kesme) olur. Kanca yazısı altyazıyla üst üste binmez.
     - Bu kural bu dosyadaki ve `DIZI.md` dosyalarındaki diğer açılış kurallarından önce gelir; çelişirse buna uy. Kural 7'deki 1,5-2 sn sessiz tepki ilk 2 saniyeye uygulanmaz.
 
+17. **Görsel kalite (Cem, 19 Kasım 2026; hedef: film ışığı almış 2.5D çizgi film).** Her bölümde en az 6 farklı mekân ya da açı olur; ortalama 3-5 saniyede bir yeni plan gelir (aynı mekânda farklı açı da sayılır: geniş, yakın, üstten, alttan, kesit). Hiçbir plan 8 saniyeden uzun sabit kalmaz. Aynı koridoru ya da kapıyı bölümün yarısından fazlasında kullanma; her bölüm en az bir yeni mekân ekler (bina dışı gece, asansör boşluğu kesiti, uzun perspektif koridor gibi). Sinema katmanı (bölüm 6) her sahnede açıktır.
 ## 2. Depo düzeni
 ```
 KIT.md                      bu dosya
@@ -109,6 +110,15 @@ Yeni dekor yazarken: düz renkli yüzeyler + kesik çizgili dikiş (`dashed`) + 
 
 **Abone ol bandı.** `abone(cv, t, t0, pos=None)` (motor/orgu.py). `senaryo.ABONE` içindekileri `run` kendisi çizer (dikeyde üst orta, yatayda sol üst); o anda o bölgede önemli bir şey (sayaç, yazı) olmasın. Bitiş sahnesinde `pos` ile kartın ve gözlerin arasına, altyazının üstüne yerleştir. Logo `motor/logo.webp`.
 
+**Sinema katmanı (`motor/sinema.py`, 19 Kasım 2026).** `run()` her karede kendiliğinden uygular; `SINEMA=0` eski görünümü verir.
+- Kamera: her sahne yaklaşık 3,8 sn'lik planlara bölünür, planlar sırayla geniş itme, konuşana yakın plan (actor() konuşanın yerini bildirir) ve yana kayan geniş olur. Bölümün ilk 2 saniyesinde hızlı yakınlaşma. Son sahne (bitiş kartı) kendiliğinden geniş kalır.
+- Sahne bazında ayar: `SINE = {sahne_no: dict(cam='oto'|'genis'|'sabit', mood=None|'sicak'|'soguk'|'gece'|'kirmizi'|'sepya', rays=True, zmax=1.32)}` ve `run(DRAW, sine=SINE)`. Sayaç, ekran, kart gibi kırpılmaması gereken bir şey varsa o sahneye `cam='genis'` ya da `'sabit'` ver. Geri dönüş sahnelerine `mood='sepya'`.
+- Işık: sahnenin en parlak noktası (lamba) kendiliğinden bulunur; oradan ışık hüzmesi ve zemine ışık havuzu düşer. Parlama, vinyet, renk ayarı, film greni, ayak altında temas gölgesi. Lambası olmayan sahnede hüzme çıkmaz: her sahneye en az bir ışık kaynağı (lamba, pencere, ekran, kapı aralığı) koy.
+- Altyazı: ekranın ortasında (dikey y≈1250, yatay y≈985, ayakların altı), büyük beyaz harf + siyah kontur, 1-3 kelimelik parçalar; vurgu kelimeleri sarı; konuşanın rengi kelimelerin altındaki çizgide. Karakterin yüzü bu yükseklikte kalıyorsa karakteri biraz yukarı ya da yana yerleştir.
+- Plaka (üretilmiş arka plan): `with stage(cv): sinema.plate(cv, 'arkaplan/lobi')` dosyayı `diziler/<dizi>/arkaplan/lobi-v.jpg` (dikey) ya da `-h.jpg` (yatay) olarak arar, görünen alanı doldurur; dosya yoksa `False` döner, sahne kodla çizilen dekora düşer. Karakterler, temas gölgesi, ön plan ve ışık üstüne gelir. `shift=(dx, dy)` ile plakayı karakterden yavaş kaydırarak parallax ver.
+- Plaka üretimi (isteğe bağlı, ücretsiz kota izin verirse): anahtarın gördüğü modelleri listele (`GET https://generativelanguage.googleapis.com/v1beta/models`), adı `image` içeren ücretsiz bir Gemini modeliyle tek istekle dene. İstem: stilize 3D animasyon filmi arka planı, keçe ve yün örgü dokuları, sinematik yumuşak ışık (lamba, pencere huzmesi, sis), insan yok, karakter yok, yazı yok, logo yok, alt üçte birde boş düz zemin; dikey 9:16 ve yatay 16:9 ayrı. Bir çalışmada en fazla 4 görsel isteği, TTS isteklerinden ayrı. 429, `limit: 0`, faturalandırma ya da ücretli plan uyarısı gelirse dur, kodla çizime devam et ve bunu "Öğrenilenler"e yaz. Her görseli Read ile aç: yazı, insan, logo, bozuk perspektif varsa kullanma; zemin çizgisi GY=1330'a otursun. Geçenleri en fazla 600 KB jpg olarak `diziler/<dizi>/arkaplan/` altına koy ve commit et; plakalar dizi boyunca yeniden kullanılır.
+- Hız: yeni katmanla bir kare yaklaşık 0,4 sn sürer (eskisinin 2 katı kadar); sahneler paralel işlendiği için bölüm yine sığar.
+
 **Performans.** Karakterler sprite olarak önbelleğe alınır; her karede değişen poz (yürüyüş) pahalıdır. Uzun yürüyüş sahnelerini 10 ile 15 saniyede tut.
 
 ## 7. Kare kontrolü (zorunlu)
@@ -117,6 +127,7 @@ Her sahneden en az 3 kare, **iki formatta da**:
 
 Kontrol listesi:
 - **İlk 2 saniye (kural 16):** her iki formatta 0,0 / 0,5 / 1,0 / 1,9. saniye karelerini ayrıca aç. İlk kare boş, siyah ya da yalnızca logo/başlık kartıysa, kanca yazısı okunmuyorsa ya da kanca repliği 2 saniyeyi aşıyorsa düzelt; düzelmiyorsa yayınlama, Cem'e bildir.
+- **Görsel kalite (kural 17):** kamera hareket ediyor mu, ardışık iki plan aynı açı mı, ışık hüzmesi ve temas gölgesi var mı, ortadaki altyazı okunuyor mu ve yüz kapatıyor mu, yakın planda önemli bir nesne (sayaç, gösterge, kart) kırpılmış mı.
 - Taşma, üst üste binme, kadraj dışında kalan önemli nesne ya da karakter (özellikle yatayda y<470 ve dikeyde x<0, x>1080).
 - Altyazı doğru kişinin adıyla ve doğru anda mı; altyazı karakterin yüzünü kapatıyor mu.
 - Gerilim sahnesinde gülen var mı. İfade repliğe uyuyor mu.
@@ -184,3 +195,4 @@ Beşinci bölüm yayınlandıktan sonraki çalışmada, yeni diziye başlamadan 
 - Bulut ortamında skia için `apt-get update && apt-get install -y libegl1` ve `python -m pip install ...` gerekir; TTS bazen bozuk, çok uzun ve sessiz kayıt döndürür (655 sn gibi): süreyi kontrol et, yalnızca o grubu silip yeniden üret.
 - TTS bazen grubun bir kısmını dip gürültülü üretir (`gaps` sessizlik bulamaz, `check` replikleri kaydırır): yalnızca o replikleri yeni bir grupta yeniden üret, kalanları `voice/cuts.json` ile kes.
 - 2.5 TTS kotası gün içinde başka işlerce de harcanabiliyor: 429 gelirse kalan tek grubu `TTS_MODEL=gemini-3.1-flash-tts-preview python ../../../motor/ses.py tts <grup>` ile üret (b04'te çalıştı). TTS konuşmacı değişiminde her zaman 1 saniye durmaz; `check` kayma gösterirse `gaps` çıktısından `voice/cuts.json` yaz.
+- Sinema katmanı yakın planı konuşanın yüzüne göre kurar; konuşan kimse çizilmediyse (anlatıcı) geniş plan kullanılır. Kırpılmaması gereken sahnede `SINE` ile `cam='genis'` ver.

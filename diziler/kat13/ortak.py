@@ -18,6 +18,7 @@ import orgu
 from orgu import *
 from senaryo import TITLE, EP, EP_NAME
 import senaryo as _sen
+import sinema
 
 def _ffmpeg():
     p = shutil.which('ffmpeg')
@@ -215,6 +216,7 @@ def actor(cv, ts, who, expr='mutlu', pose=None, look=0.0, alpha=1.0, back=False,
     if tk is not None and not place:                        # konusan ziplamaz: govdesiyle hafifce one arkaya salinir
         P['lean'] = P.get('lean', 0) + alt(k, -6, 7, 2); P['belly'] = P.get('belly', 0) + alt(k, 5, -6, 2)
     bl = ((k + c['seed'] * 3) % 37) in (20, 21) and expr in ('mutlu', 'sakin', 'merak', 'endise', 'yorgun', 'kararli', 'uzgun')
+    sinema.contact_shadow(cv, x + dx, gy + dy, s, alpha)
     f = figure(cv, x + dx, gy + dy, s, c['c'], None if back else expr, P, c['seed'], talk=None if back else tk,
                blink=bl and not back, look=look, alpha=alpha)
     if who == 'Z': skirt(cv, f, s, 255 * alpha)
@@ -222,6 +224,7 @@ def actor(cv, ts, who, expr='mutlu', pose=None, look=0.0, alpha=1.0, back=False,
     accessories(cv, who, f, s, look, alpha, back)
     if who == 'L': package(cv, f, s, alpha, tie, pkg_left, pkg_off)
     f['s'], f['who'], f['look'], f['expr'] = s, who, look, expr
+    if tk is not None: sinema.note(cv, f, who)
     return f
 
 
@@ -704,7 +707,7 @@ def flash(cv, a, c=(255, 250, 236)):
 
 
 # ============ kare dongusu ve komutlar ============
-def run(DRAW, no_tag=None, white=()):
+def run(DRAW, no_tag=None, white=(), sine=None):
     """DRAW: {sahne_no: cizim_fonksiyonu(cv, t)}. no_tag: ust etiketin gizlenecegi sahneler (varsayilan: son sahne).
     white: [(sahne, sonraki_sahne)] bu gecislerde kararma yapilmaz (sahneler kendi beyaz parlamasini cizer: geri donus)"""
     KS = sorted(TL.scenes); no_tag = no_tag or (KS[-1],)
@@ -716,13 +719,25 @@ def run(DRAW, no_tag=None, white=()):
         for s_ in KS:
             if t >= bounds(s_)[0] / STEP - 1e-6: k = s_
         return k
+    SINE = sine or {}
     def frame(cv, t, k=None):
         k = k or scene_of(t)
-        DRAW[k](cv, t)
+        if not sinema.ON:
+            DRAW[k](cv, t)
+        else:                                                # sinema katmani: kamera + isik (motor/sinema.py)
+            opt = dict(SINE.get(k, {}))
+            if k == KS[-1]: opt.setdefault('cam', 'genis')   # bitis karti kirpilmasin
+            a_, b_ = bounds(k)[0] / STEP, bounds(k)[1] / STEP
+            if k not in sinema.CAM.scene_light:
+                cv.save(); DRAW[k](cv, a_ + 0.6); cv.restore()
+                sinema.CAM.scene_light[k] = sinema.find_light(surf.makeImageSnapshot())
+            z, x_, y_ = sinema.CAM.plan(k, KS.index(k), a_, b_, t, TL.who(t), opt)
+            cv.save(); cv.clear(skia.Color(0, 0, 0)); sinema.Camera.apply(cv, z, x_, y_); DRAW[k](cv, t); cv.restore()
+            sinema.light_pass(cv, surf, kk(t), sinema.CAM.scene_light[k], opt)
         tb = TL.beats.get('title')
         if not (tb and tb[0] <= t < tb[1]) and k not in no_tag: tag(cv, TITLE, EP)
         for lid, off in getattr(_sen, 'ABONE', []): abone(cv, t, S(lid) + off)   # abone ol bandi (senaryo.ABONE)
-        captions(cv, TL, t)
+        (sinema.captions if sinema.ON else captions)(cv, TL, t)
         a, b = bounds(k)[0] / STEP, bounds(k)[1] / STEP
         i = KS.index(k)
         fi = 1.0 if i > 0 and (KS[i - 1], k) in white else seg(t, a, a + 0.25)
