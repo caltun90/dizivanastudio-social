@@ -17,6 +17,7 @@ Hicbir anahtar ekrana, dosyaya ya da depoya yazilmaz.
   python yayin.py yt-yukle <yatay_dosya> <baslik> <metin_dosyasi> <yayin_saati_iso | simdi> [etiketler] [oynatma_listesi_id]
         -> YATAY videoyu yukler. Saat verilirse ozel yuklenir ve o saatte yayinlanir; 'simdi' ise hemen herkese acik.
   python yayin.py yt-durum <video_id>                     -> gizlilik, yayin saati, yukleme durumu
+  python yayin.py yt-sil <video_id>                       -> videoyu kanaldan siler (yalnizca yanlis yuklenen, henuz yayinlanmamis video icin)
   python yayin.py yt-liste-olustur <ad> <aciklama>        -> oynatma listesi kimligi
   python yayin.py yt-listeye-ekle <oynatma_listesi_id> <video_id>
   python yayin.py yt-bul <baslik_parcasi>                 -> kanaldaki son videolarda basligi arar (video_id)
@@ -148,6 +149,8 @@ if __name__ == '__main__':
     elif cmd == 'yt-durum':
         v = yt('GET', 'videos', params={'part': 'status,snippet,contentDetails', 'id': a[1]})['items']
         out({'baslik': v[0]['snippet']['title'], 'durum': v[0]['status'], 'sure': v[0]['contentDetails'].get('duration')} if v else {'hata': 'video yok'})
+    elif cmd == 'yt-sil':
+        yt('DELETE', 'videos', params={'id': a[1]}); print('silindi', a[1])
     elif cmd == 'yt-liste-olustur':
         r = yt('POST', 'playlists', {'snippet': {'title': a[1], 'description': a[2], 'defaultLanguage': 'tr'}, 'status': {'privacyStatus': 'public'}}, {'part': 'snippet,status'})
         out({'playlist_id': r['id']})

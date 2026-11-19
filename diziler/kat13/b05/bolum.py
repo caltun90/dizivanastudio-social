@@ -204,6 +204,7 @@ def hud(cv, t, k):
         hook_text(cv, t, a)
     elif T0 <= t < T1 + 1.3:
         timer(cv, COUNT - (t - T0), min(seg(t, T0, T0 + 0.2), 1 - seg(t, T1 + 0.9, T1 + 1.3)), big=lerp(1.5, 1.0, smooth(seg(t, T0, T0 + 0.7))))
+    if k == 1 and HOOK_END <= t < B('title')[0]: tally(cv, [(CREAM, 'on')] * 4 + ([(RED, 'on')] if t >= frac('n2', 0.76) else []))
     if k == 14 and t >= S('n5') - 0.1:                       # dort kisi bindi, bes kisi indi
         marks = [(c, 'on') for c, f_ in zip((NAVY, CORAL, TAN, LILAC), TALLY[:4]) if t >= frac('n5', f_)]
         if t >= frac('n5', TALLY[4]): marks.append((MOMC, 'on'))
@@ -323,7 +324,6 @@ def scene1(cv, t):
     display(cv, (0, 0), '1')
     dim(cv, 0.12)
     memory_frame(cv, 'ÖNCEKİ BÖLÜM')
-    tally(cv, [(CREAM, 'on')] * 4 + ([(RED, 'on')] if ts >= frac('n2', 0.76) else []))
     flash(cv, 0.8 * (1 - seg(t, HOOK_END, HOOK_END + 0.25)))
     title_card(cv, t)
 
@@ -768,7 +768,7 @@ def scene13(cv, t):
     a, b = TL.span(13); uu = seg(ts, a, b)
     d = FALL_N * FH * uu ** FALL_EASE
     cv.clear(col((8, 10, 18)))
-    sh = jit(k, 2)
+    sh = (0, 0)
     appear = {w: a + (b - a) * fall_u(n_) + (0.25 if w == 'M' else 0.0) for w, n_ in RETURNS}
     with stage(cv, *sh):
         for n in range(17, 9, -1):

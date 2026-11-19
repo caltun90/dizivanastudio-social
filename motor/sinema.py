@@ -1,4 +1,4 @@
-"""Sinema katmani: kamera (plan degisimi, yakinlasma, konusana yakin plan), isik (huzme, parlama, vinyet),
+"""Sinema katmani: kamera (yavas yakinlasma / uzaklasma, hafif yana kayma), isik (huzme, parlama, vinyet),
 renk ayari, film greni, temas golgesi ve yeni altyazi. Diziden bagimsizdir; ortak.run() her karede kullanir.
 
 Acma/kapama: SINEMA=0 ortam degiskeni eski gorunumu aynen verir.
@@ -37,25 +37,21 @@ class Camera:
         n = max(1, round((b - a) / SHOT)); return [a + (b - a) * i / n for i in range(n + 1)]
 
     def plan(s, k, i_scene, a, b, t, who, opt):
-        """(zoom, merkez_x, merkez_y) ekran koordinatinda"""
+        """(zoom, merkez_x, merkez_y) ekran koordinatinda.
+        Kamera SAKIN: yalnizca yavas yakinlasma / uzaklasma ve hafif yana kayma (Cem, 19 Kasim 2026). Konusani izlemez,
+        sahne icinde sicrama yapmaz: planlar birbirine kesintisiz baglanir (yakinlas -> uzaklas -> yakinlas ...)."""
         mode = opt.get('cam', 'oto'); zmax = opt.get('zmax', 1.32)
         cx, cy = W / 2, H / 2
         if mode == 'sabit': return 1.0, cx, cy
         sh = s.shots(a, b); j = max(0, min(len(sh) - 2, sum(1 for x in sh[1:-1] if t >= x)))
-        t0, t1 = sh[j], sh[j + 1]; u = seg(t, t0, t1)
-        kind = (j + i_scene) % 3 if mode == 'oto' else 0           # 0 genis itme, 1 konusana yakin, 2 yana kayan genis
-        if t < 2.0 and i_scene == 0:                                 # ilk 2 saniye: hizli yakinlasma (kanca)
-            z = lerp(1.22, 1.04, smooth(seg(t, 0, 0.9))) + 0.02 * seg(t, 0.9, 2.0); return z, cx, cy * 0.98
-        if kind == 1 and who in _POS:
-            hx, hy, r = _POS[who]
-            z = clamp(lerp(1.24, 1.30, u), 1.0, zmax)
-            ty = hy + r * (1.25 if FMT == 'v' else 0.7)              # yuz kadrajin ust ucte birinde kalsin
-            return z, hx, ty
-        if kind == 2:
-            d = 1 if (j + k) % 2 else -1
-            return (1.14 if FMT == 'v' else 1.08), cx + d * lerp(-26, 26, smooth(u)) * (1.4 if FMT == 'h' else 1), cy
-        zb = 1.10 if FMT == 'v' else 1.0           # dikeyde alt bos ucte bir kirpilir
-        return lerp(zb, zb + 0.07, smooth(u)), cx, cy - lerp(0, 18, u) - (60 if FMT == 'v' else 0)
+        u = smooth(seg(t, sh[j], sh[j + 1]))
+        z0, z1 = (1.09, 1.17) if FMT == 'v' else (1.04, 1.10)    # dikeyde alt bos ucte bir kirpilir
+        z1 = max(z0, min(z1, zmax))
+        d = (20 if FMT == 'v' else 30) * (1 if k % 2 else -1)       # yana kayma: en fazla bu kadar piksel
+        if (j + i_scene) % 2 == 0: z, x = lerp(z0, z1, u), cx + d * lerp(-1, 1, u)
+        else: z, x = lerp(z1, z0, u), cx + d * lerp(1, -1, u)
+        if i_scene == 0: z *= lerp(1.13, 1.0, smooth(seg(t, 0, 0.9)))   # ilk saniye: kanca icin hizli hareket
+        return z, x, cy - (60 if FMT == 'v' else 0)
 
     @staticmethod
     def apply(cv, z, x, y):
