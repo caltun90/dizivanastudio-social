@@ -206,12 +206,13 @@ def package(cv, f, s, alpha=1.0, tie=False, left=False, off=(0, 0)):
     if tie: tie_at(cv, x - 50 * s, y - h / 2 - 8 * s, 0.5, alpha, rot=-74)
 
 
-def actor(cv, ts, who, expr='mutlu', pose=None, look=0.0, alpha=1.0, back=False, dx=0.0, dy=0.0, talk='auto', tie=False, place=None, pkg_left=False, pkg_off=(0, 0)):
-    """place=(x, gy, s) verilirse kabin yerlesimi yerine o konum/olcek kullanilir (koridor). pkg_off: paketin sarsintisi (dx, dy)"""
+def actor(cv, ts, who, expr='mutlu', pose=None, look=0.0, alpha=1.0, back=False, dx=0.0, dy=0.0, talk='auto', tie=False, place=None, pkg_left=False, pkg_off=(0, 0), pkg=True):
+    """place=(x, gy, s) verilirse kabin yerlesimi yerine o konum/olcek kullanilir (koridor). pkg_off: paketin sarsintisi (dx, dy).
+    pkg=False: Leo paketi tasimiyor (b05: paket acildi)"""
     c = CAST[who]; k = kk(ts)
     x, gy, s = place if place else (c['x'], c['gy'], c['s'])
     tk = (TL.talk(who, ts) if talk == 'auto' else talk)
-    P = dict(HOLD) if who == 'L' else {}
+    P = dict(HOLD) if who == 'L' and pkg else {}
     P.update(pose or {})
     if tk is not None and not place:                        # konusan ziplamaz: govdesiyle hafifce one arkaya salinir
         P['lean'] = P.get('lean', 0) + alt(k, -6, 7, 2); P['belly'] = P.get('belly', 0) + alt(k, 5, -6, 2)
@@ -222,7 +223,7 @@ def actor(cv, ts, who, expr='mutlu', pose=None, look=0.0, alpha=1.0, back=False,
     if who == 'Z': skirt(cv, f, s, 255 * alpha)
     elif who == 'M': skirt(cv, f, s, 255 * alpha, MSKIRT)
     accessories(cv, who, f, s, look, alpha, back)
-    if who == 'L': package(cv, f, s, alpha, tie, pkg_left, pkg_off)
+    if who == 'L' and pkg: package(cv, f, s, alpha, tie, pkg_left, pkg_off)
     f['s'], f['who'], f['look'], f['expr'] = s, who, look, expr
     if tk is not None: sinema.note(cv, f, who)
     return f
@@ -707,9 +708,11 @@ def flash(cv, a, c=(255, 250, 236)):
 
 
 # ============ kare dongusu ve komutlar ============
-def run(DRAW, no_tag=None, white=(), sine=None):
+def run(DRAW, no_tag=None, white=(), sine=None, hud=None):
     """DRAW: {sahne_no: cizim_fonksiyonu(cv, t)}. no_tag: ust etiketin gizlenecegi sahneler (varsayilan: son sahne).
-    white: [(sahne, sonraki_sahne)] bu gecislerde kararma yapilmaz (sahneler kendi beyaz parlamasini cizer: geri donus)"""
+    white: [(sahne, sonraki_sahne)] bu gecislerde kararma yapilmaz (sahneler kendi beyaz parlamasini cizer: geri donus; ya da sert kesme).
+    hud(cv, t, sahne_no): kameradan ve isiktan SONRA ekran koordinatinda cizilir (sayac gibi kirpilmamasi gereken gostergeler).
+    Ilk 2 saniye kancadir (KIT kural 16): bolum kararmadan acilmaz ve ust etiket (dizi adi) 2. saniyeden once gorunmez."""
     KS = sorted(TL.scenes); no_tag = no_tag or (KS[-1],)
     def bounds(k):
         """sahnenin 12 fps kare araligi (cift sayiya yuvarlanir: 30 fps'e tam oturur)"""
@@ -734,8 +737,9 @@ def run(DRAW, no_tag=None, white=(), sine=None):
             z, x_, y_ = sinema.CAM.plan(k, KS.index(k), a_, b_, t, TL.who(t), opt)
             cv.save(); cv.clear(skia.Color(0, 0, 0)); sinema.Camera.apply(cv, z, x_, y_); DRAW[k](cv, t); cv.restore()
             sinema.light_pass(cv, surf, kk(t), sinema.CAM.scene_light[k], opt)
+        if hud: hud(cv, t, k)
         tb = TL.beats.get('title')
-        if not (tb and tb[0] <= t < tb[1]) and k not in no_tag: tag(cv, TITLE, EP)
+        if not (tb and tb[0] <= t < tb[1]) and k not in no_tag and t >= 2.0: tag(cv, TITLE, EP)
         for lid, off in getattr(_sen, 'ABONE', []): abone(cv, t, S(lid) + off)   # abone ol bandi (senaryo.ABONE)
         (sinema.captions if sinema.ON else captions)(cv, TL, t)
         a, b = bounds(k)[0] / STEP, bounds(k)[1] / STEP
@@ -744,7 +748,7 @@ def run(DRAW, no_tag=None, white=(), sine=None):
         fo = 1.0 if i + 1 < len(KS) and (k, KS[i + 1]) in white else 1 - seg(t, b - 0.25, b)
         f = min(fi, fo)
         if k == KS[-1]: f = min(fi, 1 - seg(t, TL.total - 0.6, TL.total - 0.05))
-        if k == KS[0]: f = min(seg(t, 0, 0.4), fo)
+        if k == KS[0]: f = fo                                # ilk kare dolu: kararmadan acilir
         dim(cv, 1 - f, (4, 5, 14))
 
     cmd = sys.argv[1]; d = f'scenes_{FMT}'
