@@ -84,6 +84,8 @@ MOODS = {
     'gece':    dict(tint=(170, 196, 255), shade=(6, 12, 50), sat=0.96, con=1.10),
     'kirmizi': dict(tint=(255, 120, 100), shade=(40, 6, 20), sat=1.10, con=1.10),
     'sepya':   None,
+    # kontrast: golgeler gece mavisi, lamba havuzu sicak sari (sicak/soguk zitligi belirgin)
+    'kontrast': dict(tint=(255, 192, 112), shade=(8, 20, 84), sat=1.14, con=1.10, cool=(20, 50, 160), cool_a=0.30, pool=225, pool_r=0.62),
 }
 
 
@@ -136,6 +138,9 @@ def light_pass(cv, surf, k, light, opt):
     # renk ayari (sepya sahneleri kendi rengini zaten ciziyor: dokunma)
     if mood != 'sepya':
         p = skia.Paint(); p.setColorFilter(_grade_filter(m)); cv.drawImage(img, 0, 0, LIN, p)
+        if m.get('cool'):                                    # butun kareyi gece mavisine cek; sicak havuz asagida geri isitir
+            cp = skia.Paint(); cp.setColor(skia.Color(*m['cool'])); cp.setBlendMode(skia.BlendMode.kSoftLight); cp.setAlphaf(m['cool_a'])
+            cv.drawRect(skia.Rect.MakeWH(W, H), cp)
         img = surf.makeImageSnapshot()
     # parlama (bloom): parlak bolgeler bulanik olarak ustune eklenir
     q = 6; sw, shh = W // q, H // q
@@ -152,9 +157,18 @@ def light_pass(cv, surf, k, light, opt):
     if peak > 120:
         pool = skia.Paint(); pool.setBlendMode(skia.BlendMode.kSoftLight)
         gy = orgu.GYD if FMT == 'h' else 1330 * 1.0
-        pool.setShader(skia.GradientShader.MakeRadial(skia.Point(lx, min(H * 0.86, gy)), W * 0.55,
-                       [skia.Color(*m['tint'], 150), skia.Color(*m['tint'], 0)]))
+        pool.setShader(skia.GradientShader.MakeRadial(skia.Point(lx, min(H * 0.86, gy)), W * m.get('pool_r', 0.55),
+                       [skia.Color(*m['tint'], m.get('pool', 150)), skia.Color(*m['tint'], 0)]))
         cv.drawRect(skia.Rect.MakeWH(W, H), pool)
+        if m.get('cool'):                                    # lambanin cevresi sicak, uzaklastikca gece mavisi (carpma)
+            gp = skia.Paint(); gp.setBlendMode(skia.BlendMode.kSoftLight)
+            gp.setShader(skia.GradientShader.MakeRadial(skia.Point(lx, ly), W * 0.36, [skia.Color(*m['tint'], 200), skia.Color(*m['tint'], 0)]))
+            cv.drawRect(skia.Rect.MakeWH(W, H), gp)
+            mp = skia.Paint(); mp.setBlendMode(skia.BlendMode.kMultiply)
+            cx_, cy_ = lx, (ly + min(H * 0.86, gy)) / 2
+            mp.setShader(skia.GradientShader.MakeRadial(skia.Point(cx_, cy_), math.hypot(W, H) * 0.55,
+                         [skia.Color(255, 255, 255), skia.Color(255, 255, 255), skia.Color(118, 140, 220)], [0.0, 0.32, 1.0]))
+            cv.drawRect(skia.Rect.MakeWH(W, H), mp)
     # vinyet
     vg = skia.Paint(); r = math.hypot(W, H) * 0.62
     vg.setShader(skia.GradientShader.MakeRadial(skia.Point(W / 2, H * 0.47), r,

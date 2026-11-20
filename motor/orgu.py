@@ -171,8 +171,9 @@ IDLE = dict(aL=(-100, 170, -120, 300), aR=(100, 170, 120, 300), bob=0, lean=0, c
 SIT = dict(crouch=175, kL=(-120, -100), fL=(-185, -18), kR=(120, -100), fR=(185, -18))
 
 
-def geo(x, gy, s, P):
-    HR = 118 * s; bob = P['bob'] * s; cr = P['crouch'] * s
+def geo(x, gy, s, P, head=1.0):
+    """head: kafa buyuklugu carpani (1.0 eski oran; buyuk kafali, sevimli gorunum icin 1.15-1.25)"""
+    HR = 118 * s * head; bob = P['bob'] * s; cr = P['crouch'] * s
     hip = (x, gy - 250 * s + bob * 0.5 + cr)
     neck = (x + P['lean'] * s * 0.6, gy - 520 * s + bob + cr)
     hc = (neck[0] + P['lean'] * s * 0.5, neck[1] - HR * 0.88)
@@ -184,9 +185,9 @@ def geo(x, gy, s, P):
                 legL=leg(P['kL'], P['fL']), legR=leg(P['kR'], P['fR']))
 
 
-def _draw_fig(cv, x, gy, s, c, expr, P, seed, talk, blink, look, scarf, antenna, ant_sw, hood):
+def _draw_fig(cv, x, gy, s, c, expr, P, seed, talk, blink, look, scarf, antenna, ant_sw, hood, head=1.0):
     stil.R.seed(seed)
-    g = geo(x, gy, s, P); HR, lw = g['HR'], 68 * s
+    g = geo(x, gy, s, P, head); HR, lw = g['HR'], 68 * s
     hip, neck, hc = g['hip'], g['neck'], g['hc']
     yarn_limb(cv, [(neck[0], neck[1] - 10 * s), g['mid'], (hip[0], hip[1] - 4 * s)], lw * 1.14, c)
     for L, sd in ((g['legL'], -1), (g['legR'], 1)):
@@ -233,16 +234,16 @@ def _draw_fig(cv, x, gy, s, c, expr, P, seed, talk, blink, look, scarf, antenna,
         face(cv, hc[0], hc[1] + 6 * s, HR, expr, talk=talk, blink=blink, look=look)
 
 
-def figure(cv, x, gy, s, c, expr, pose=None, seed=5, talk=None, blink=False, look=0.0, scarf=None, antenna=None, ant_sw=0.0, hood=False, alpha=1.0):
+def figure(cv, x, gy, s, c, expr, pose=None, seed=5, talk=None, blink=False, look=0.0, scarf=None, antenna=None, ant_sw=0.0, hood=False, alpha=1.0, head=1.0):
     P = dict(IDLE); P.update(pose or {})
     if talk is not None: talk = round(clamp(talk) * 4) / 4
     q = lambda v: tuple(round(a, 1) for a in v) if isinstance(v, tuple) else round(v, 1)
     key = ('fig', round(s, 3), c, expr, tuple((k, q(P[k])) for k in sorted(P)), seed, talk, blink, round(look, 2),
-           (scarf[0], round(scarf[1]), scarf[2]) if scarf else None, antenna, round(ant_sw, 1), hood)
+           (scarf[0], round(scarf[1]), scarf[2]) if scarf else None, antenna, round(ant_sw, 1), hood, round(head, 3))
     ox, oy, w, h = 470 * s + 20, 930 * s + 20, 1160 * s + 60, 1000 * s + 60
-    img = sprite(key, w, h, lambda c_: _draw_fig(c_, ox, oy, s, c, expr, P, seed, talk, blink, look, scarf, antenna, ant_sw, hood))
+    img = sprite(key, w, h, lambda c_: _draw_fig(c_, ox, oy, s, c, expr, P, seed, talk, blink, look, scarf, antenna, ant_sw, hood, head))
     blit(cv, img, x - ox, gy - oy, alpha)
-    g = geo(x, gy, s, P)
+    g = geo(x, gy, s, P, head)
     return dict(head=g['hc'], HR=g['HR'], handL=g['armL'][-1], handR=g['armR'][-1], neck=g['neck'], hip=g['hip'], mid=g['mid'])
 
 

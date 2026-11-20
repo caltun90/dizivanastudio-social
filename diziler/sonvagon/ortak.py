@@ -44,6 +44,8 @@ CAST = {
     'D': dict(x=760, gy=NEAR, s=0.64, c=ROSE, seed=35),      # Ada: gul kurusu; gri topuz, lila sal
     'E': dict(x=940, gy=FAR, s=0.70, c=SKYB, seed=37),       # Eli: gok mavisi; melon sapka, biyik
 }
+for _c in CAST.values(): _c['head'] = 1.2                 # buyuk kafa (b02'den itibaren; b01 1.0 ile uretildi)
+DEFAULT_MOOD = 'kontrast'                                  # sinema: gece mavisi golgeler + sicak lamba havuzu (b02'den itibaren)
 SCARF = {'M': (REDS, 150, -1)}
 orgu.SPK.update({'A': ('ANONS', AMBER), 'M': ('MIA', MUSTARD), 'R': ('REN', GREENC), 'D': ('ADA', ROSE), 'E': ('ELI', SKYB)})
 
@@ -105,10 +107,12 @@ def walk(dist, s, facing=1, scared=False, hold=False, run=False, off=0.0):
 
 
 # ---------- aksesuarlar ----------
-def lashes(cv, hx, hy, s, look, a):
-    ey = hy - 7 * s
+def lashes(cv, hx, hy, s, look, a, HR=None):
+    """kirpikler; HR verilirse gozlerin yeri kafanin gercek boyundan hesaplanir (buyuk kafa)"""
+    if HR: s = HR / 118.0; ey = hy + 6 * s - 12 * HR / 110.0
+    else: ey = hy - 7 * s
     for sd in (-1, 1):
-        ex_ = hx + sd * 34 * s + look * 6 * s
+        ex_ = hx + sd * 34 * (HR / 110.0 if HR else s) + look * 6 * s
         for dx_, dy_ in ((11, -16), (16, -9)): cv.drawLine(ex_ + sd * (dx_ - 5) * s, ey + (dy_ + 5) * s, ex_ + sd * (dx_ + 5) * s, ey + (dy_ - 3) * s, stroke(THREAD, 3.6 * s, a))
 
 
@@ -160,7 +164,7 @@ def accessories(cv, who, f, s, look, alpha, back):
     (hx, hy), u, a = f['head'], f['HR'], 255 * alpha
     if who == 'M':
         bob(cv, hx, hy, u, a, back)
-        if not back: lashes(cv, hx, hy, s, look, a)
+        if not back: lashes(cv, hx, hy, s, look, a, u)
     elif who == 'R': headphones(cv, hx, hy, u, a)
     elif who == 'D':
         bun(cv, hx, hy, u, a, back)
@@ -169,11 +173,11 @@ def accessories(cv, who, f, s, look, alpha, back):
         poly(cv, pts, SHAWL, a)
         sm = skia.Path(); sm.moveTo(nx - 96 * s, ny + 92 * s); sm.lineTo(nx, ny + 144 * s); sm.lineTo(nx + 96 * s, ny + 92 * s)
         cv.drawPath(sm, dashed(shade(SHAWL, 1.45), 3 * s, 220 * alpha, (9 * s, 7 * s)))
-        if not back: lashes(cv, hx, hy, s, look, a)
+        if not back: lashes(cv, hx, hy, s, look, a, u)
     elif who == 'E':
         bowler(cv, hx, hy, u, a)
         if not back:                                       # biyik
-            mx, my = hx + look * 5 * s, hy + 29 * s
+            k_ = u / 118.0; mx, my = hx + look * 5 * k_, hy + 6 * k_ + 27 * u / 110.0; s = k_
             for sd in (-1, 1):
                 p = skia.Path(); p.moveTo(mx, my); p.quadTo(mx + sd * 16 * s, my - 8 * s, mx + sd * 34 * s, my + 7 * s)
                 cv.drawPath(p, stroke(BOWL, 9 * s, a))
@@ -234,7 +238,7 @@ def actor(cv, ts, who, expr='sakin', pose=None, look=0.0, place=None, alpha=1.0,
     bl = ((k + c['seed'] * 3) % 37) in (20, 21) and expr in ('mutlu', 'sakin', 'merak', 'endise', 'yorgun', 'kararli', 'uzgun')
     sinema.contact_shadow(cv, x + dx, gy + dy, s, alpha)
     f = figure(cv, x + dx, gy + dy, s, c['c'], None if back else expr, P, c['seed'], talk=None if back else tk,
-               blink=bl and not back, look=look, alpha=alpha, scarf=SCARF.get(who))
+               blink=bl and not back, look=look, alpha=alpha, scarf=SCARF.get(who), head=c.get('head', 1.0))
     f['s'], f['who'], f['look'], f['expr'] = s, who, look, expr
     accessories(cv, who, f, s, look, alpha, back)
     if prop: PROPS[prop](cv, f, s, alpha)
@@ -883,7 +887,7 @@ def run(DRAW, no_tag=None, white=(), sine=None, hud=None):
         if not sinema.ON:
             DRAW[k](cv, t)
         else:                                                # sinema katmani: kamera + isik (motor/sinema.py)
-            opt = dict(SINE.get(k, {}))
+            opt = dict(SINE.get(k, {})); opt.setdefault('mood', DEFAULT_MOOD)
             if k == KS[-1]: opt.setdefault('cam', 'genis')   # bitis karti kirpilmasin
             a_, b_ = bounds(k)[0] / STEP, bounds(k)[1] / STEP
             if k not in sinema.CAM.scene_light:

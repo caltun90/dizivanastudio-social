@@ -49,4 +49,5 @@ Beş yatay bölüm tek dosyada birleştirilir ve "Son Vagon: Tüm Bölümler (Fi
 - Her bölümde en az bir yeni mekân ve bir yeni görsel fikir (1: bilet kartları, tren dışarıdan, peron, körük; 2: REC çerçevesi ve lokomotifin arkası; 3: geri sayan zaman etiketi ve örgüdeki yazılar; 4: kondüktör ve zımba; 5: lokomotif, sabah ışığı).
 - Dizinin ilk bölümü değilse ilk 10 saniyede tek cümleyle "Önceki bölümde" hatırlatması.
 - Bu dizinin efektleri (`whistle`, `brake`, `clack`) `b01/senaryo.py` içinde tanımlı ve `mix_plan` başında `FX` sözlüğüne ekleniyor; sonraki bölümlerde aynı yöntemi kopyala.
+- 2. bölümden itibaren: karakterler büyük kafalı (`head=1.2`, ortak.py), ışık `kontrast` (sıcak lamba, mavi kenar), müzik `music` ile (`pads` boş). Müzik planı: gündelik sohbet `sicak`, anons ve kaybolma `gerilim`, bitiş kartı `gizem`. 5. bölümde sır açılınca ("Herkes indi") müzik `gerilim`den `sicak`a döner ve sonuna kadar sıcak kalır. b01 eski görünümle (kafa 1.0, pads) yayınlandı.
 - Oynatma listesi kimliği `log.json` içindeki Son Vagon kayıtlarında (`playlist`).

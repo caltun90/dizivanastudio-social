@@ -59,6 +59,29 @@ def tts(name):
     return x
 
 
+def expected(name):
+    """grubun beklenen suresi (sn): hece sayisindan + replik arasi 1 sn"""
+    g = GROUPS[name]; tot = 0.0
+    for i in g['ids']:
+        L = LINES[i]; n = sum(ch in 'aeıioöuüAEIİOÖUÜ' for ch in L['text'])
+        tot += (0.33 + 0.174 * n) + 1.0
+    return tot
+
+
+def sanity(name, x):
+    """TTS bazen araya dakikalarca sessizlik koyar ya da metni tekrar okur. Uzun sessizlikleri 1 sn'ye indirir;
+    sonra sure beklenenin 1.35 katini (+2 sn) gecerse kayit bozuktur (False): metin tekrar okunmus ya da replik atlanmistir.
+    Yanlis alarm oldugundan eminsen TTS_KABUL=1 ile kaydet; her durumda 'check' sart."""
+    gaps = [g for g in silences(x, 3.0) if g[0] > 0.05 and g[1] < len(x) / SR - 0.05]
+    if gaps:
+        parts, pos = [], 0
+        for a_, b_ in gaps:
+            parts.append(x[pos:int((a_ + 0.5) * SR)]); pos = int((b_ - 0.5) * SR)
+        parts.append(x[pos:]); x = np.concatenate(parts)
+        print(f"UYARI {name}: {len(gaps)} uzun sessizlik 1 sn'ye indirildi")
+    return x, os.environ.get('TTS_KABUL') == '1' or len(x) / SR <= 1.35 * expected(name) + 2.0
+
+
 def silences(x, min_dur=0.12):
     hop = int(SR * 0.01); n = len(x) // hop
     rms = np.sqrt((x[:n * hop].reshape(n, hop) ** 2).mean(axis=1) + 1e-12)
@@ -293,6 +316,66 @@ def ring(d=2.0):
 
 FX = dict(hum=hum, rumble=rumble, snap=snap, tick=tick, whoosh=whoosh, chime=chime, buzz=buzz, ding=ding, slide=slide, steps=steps, ring=ring)
 
+
+# ---------- muzik: gerilim (minor, seyrek piyano + uzak muzik kutusu) / sicak (major, muzik kutusu melodisi + yumusak piyano) ----------
+# mix_plan(T) donusune 'music': [(bas, bit, mod, kazanc)] eklenirse calar. mod: 'gerilim' | 'sicak' | 'gizem'.
+# Ayni anda pads de calabilir ama ton catisir: muzik kullanan bolumde pads'i bos birak ya da ayni tonda tut (gerilim D minor, sicak F major).
+def _note(f, d, partials, decay, attack=0.004):
+    t = tt(d); x = np.zeros(len(t))
+    for k, (m, a, dk) in enumerate(partials):
+        x += a * np.sin(2 * np.pi * f * m * t + k) * np.exp(-t * decay * dk)
+    return (x * np.minimum(1, t / attack)).astype(np.float32)
+def piano(f, d=2.6, vel=1.0):
+    """yumusak piyano: hafif inharmonik kismi tonlar, hizli atak, uzun sonum"""
+    x = _note(f, d, [(1, 1.0, 1.0), (2.003, 0.42, 1.6), (3.009, 0.20, 2.4), (4.02, 0.10, 3.2), (5.03, 0.05, 4.0)], 1.25)
+    return lowpass(x, 2600) * 0.32 * vel
+def musicbox(f, d=1.8, vel=1.0):
+    """muzik kutusu: cana benzer, 4. ve 7. kismi tonlar cabuk soner"""
+    return _note(f, d, [(1, 1.0, 1.0), (4.0, 0.34, 3.5), (6.98, 0.12, 5.0), (2.0, 0.18, 2.0)], 2.3, 0.002) * 0.22 * vel
+def drone(d, root):
+    t = tt(d); lfo = 0.75 + 0.25 * np.sin(2 * np.pi * 0.08 * t)
+    x = (np.sin(2 * np.pi * root * t) + 0.55 * np.sin(2 * np.pi * root * 1.5 * t + 1) + 0.3 * np.sin(2 * np.pi * root * 2.003 * t)) * lfo
+    n = lowpass(RNG.standard_normal(len(t)).astype(np.float32), 180) * 2.5
+    return ((x * 0.22 + n * 0.08) * env(d, min(1.5, d / 3), min(1.5, d / 3))).astype(np.float32)
+
+def hz(midi): return 440.0 * 2 ** ((midi - 69) / 12)
+DMIN = [62, 64, 65, 67, 69, 70, 72, 74]                      # D minor (D4..D5)
+FMAJ_M = [65, 67, 69, 70, 72, 74, 76, 77]                    # F major (F4..F5)
+# sicak melodi: (derece, vurus) 8 olcu, 3/4 hissi; dereceler FMAJ_M icinde
+MEL = [(0, 1), (2, 1), (4, 1), (5, 2), (4, 1), (2, 1), (1, 1), (2, 2), (0, 1), (2, 1), (4, 1), (7, 2), (5, 1), (4, 1), (2, 1), (4, 3),
+       (5, 1), (4, 1), (2, 1), (1, 2), (2, 1), (0, 1), (1, 1), (2, 2), (4, 1), (2, 1), (1, 1), (0, 3)]
+CHORDS_F = [(53, 57, 60), (48, 52, 55), (50, 53, 57), (46, 50, 53)]   # F, C, Dm, Bb
+def music_bed(a, b, mode, seed=0):
+    d = b - a; out = np.zeros(int(d * SR) + SR * 3, dtype=np.float32); R = np.random.default_rng(seed)
+    if mode == 'gerilim':
+        put(out, drone(d + 1.0, hz(38)), 0, 1.0)              # D2
+        t = R.uniform(0.4, 1.4)
+        while t < d - 0.5:                                    # seyrek piyano tek notalari (minor)
+            m = DMIN[int(R.integers(0, len(DMIN)))] - (12 if R.random() < 0.35 else 0)
+            put(out, piano(hz(m), 3.0, R.uniform(0.6, 1.0)), t); t += R.uniform(1.6, 2.9)
+        t = R.uniform(2.0, 4.0)
+        while t < d - 0.5:                                    # uzaktan muzik kutusu harmonigi
+            put(out, musicbox(hz(DMIN[int(R.integers(3, 8))] + 12), 2.2, 0.45), t); t += R.uniform(4.5, 7.5)
+    elif mode == 'gizem':
+        put(out, drone(d + 1.0, hz(38)) * 0.7, 0, 1.0)
+        beat = 0.62; t = 0.3; i = 0
+        seq = [7, 5, 4, 2, 4, 5, 4, 0]
+        while t < d - 0.4:
+            put(out, musicbox(hz(DMIN[seq[i % len(seq)]] + 12), 2.0, 0.8), t); t += beat * (2 if i % 4 == 3 else 1); i += 1
+    else:                                                     # sicak
+        beat = 0.70; t = 0.25; i = 0; bar = 0
+        while t < d - 0.4:
+            deg, n = MEL[i % len(MEL)]
+            put(out, musicbox(hz(FMAJ_M[deg] + 12), 2.0, 0.9), t)
+            if i % 4 == 0:                                    # her olcu basinda yumusak piyano akoru
+                for m in CHORDS_F[bar % 4]: put(out, piano(hz(m), 3.2, 0.5), t)
+                bar += 1
+            t += beat * n; i += 1
+    e = np.ones(len(out), dtype=np.float32); f = int(0.8 * SR)
+    e[:f] = np.linspace(0, 1, f); k = int(d * SR); e[k:] = 0; e[max(0, k - f):k] *= np.linspace(1, 0, k - max(0, k - f))
+    return out * e
+
+
 def mix(T, voice):
     """senaryo.mix_plan(T) -> dict(pads=[(bas, bit, frekanslar, kazanc)], fx=[(ad, zaman, kazanc, kwargs)])"""
     P = mix_plan(T)
@@ -302,7 +385,13 @@ def mix(T, voice):
     for name, t, g, kw in P['fx']:
         if kw.get('d', 1) <= 0.05: continue
         put(fx, FX[name](**kw), max(0, t), g)
-    out = voice + fx * 0.42 + pd * 0.085
+    mu = np.zeros(len(voice), dtype=np.float32)
+    for j, (a, b, mode, g) in enumerate(P.get('music', [])):
+        put(mu, music_bed(a, b, mode, seed=j + 1), max(0, a), g)
+    if np.abs(mu).max() > 0:                                  # konusma varken muzik kisilir (ducking)
+        ev = lowpass(np.abs(voice).astype(np.float32), 3.0); ev = np.clip(ev / (np.percentile(ev, 95) + 1e-6), 0, 1)
+        mu = mu * (1 - 0.5 * ev)
+    out = voice + fx * 0.42 + pd * 0.085 + mu * 0.30
     return out / max(1e-6, np.abs(out).max()) * 0.93
 
 
@@ -313,7 +402,12 @@ if __name__ == "__main__":
         for name in (sys.argv[2:] or GROUPS):
             f = f"voice/raw_{name}.wav"
             if os.path.exists(f) and len(sys.argv) < 3: print("var:", f); continue
-            x = tts(name); sf.write(f, x, SR); print("uretildi:", name, round(len(x) / SR, 1), "sn")
+            x = tts(name); x, ok = sanity(name, x)
+            if ok: sf.write(f, x, SR); print("uretildi:", name, round(len(x) / SR, 1), "sn")
+            else:
+                sf.write(f"voice/bozuk_{name}.wav", x, SR)
+                print(f"BOZUK KAYIT: {name} ({round(len(x) / SR, 1)} sn, beklenen ~{round(expected(name), 1)} sn). raw_{name}.wav YAZILMADI. "
+                      f"Grubu ikiye bol (ozellikle anlatici: en fazla 4 paragraf) ve yalnizca o grubu yeniden uret.")
     elif cmd == "gaps":
         for name in (sys.argv[2:] or GROUPS):
             x, _ = sf.read(f"voice/raw_{name}.wav", dtype="float32")
