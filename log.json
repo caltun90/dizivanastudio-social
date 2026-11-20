@@ -96,8 +96,7 @@
   "durum": "planlandi",
   "playlist": "PLQB6q6Ph56LI",
   "yatay_youtube": "fxemykPHAxo",
-  "yayin": "2026-11-20T20:00:00+03:00",
-  "yz_etiket": "gonderildi"
+  "yayin": "2026-11-20T20:00:00+03:00"
  },
  {
   "tarih": "2026-11-20",
@@ -115,6 +114,20 @@
   "yatay_youtube": "XMg7aymK0GM",
   "buffer_post": "6b001c7de0dc26301cccb5fa",
   "yayin": "2026-11-20T18:00:00+03:00",
-  "yz_etiket": "gonderildi (yatay)"
+  "yz_etiketli": [
+   "XMg7aymK0GM",
+   "fxemykPHAxo",
+   "EdoS3lPjFdI",
+   "p2eoZMjz4mw",
+   "AUi-l13JyVw",
+   "cPPHrwoXDpc",
+   "fatxK9-e89g",
+   "ie4givl7GJ8",
+   "wqGH4N87JMw",
+   "mCiLyUTywCE",
+   "FXQrqOvsypc",
+   "hlGa0Ocx-2o"
+  ],
+  "yz_etiket_bekleyen": "Son Vagon b01 Short (Buffer 18:00 yükler)"
  }
 ]
