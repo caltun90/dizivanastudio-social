@@ -96,7 +96,8 @@
   "durum": "planlandi",
   "playlist": "PLQB6q6Ph56LI",
   "yatay_youtube": "fxemykPHAxo",
-  "yayin": "2026-11-20T20:00:00+03:00"
+  "yayin": "2026-11-20T20:00:00+03:00",
+  "yz_etiket": "gonderildi"
  },
  {
   "tarih": "2026-11-20",
@@ -108,8 +109,12 @@
   "dikey": "videos/2026-11-20-sonvagon-b01-bilet-dikey.mp4",
   "yatay": "videos/2026-11-20-sonvagon-b01-bilet-yatay.mp4",
   "sure_sn": 164,
-  "durum": "uretildi, planlanacak",
+  "durum": "planlandi",
   "baslik_dikey": "Tren kalktı, son vagon yok. İçinde bir yolcu vardı | Son Vagon 1. Bölüm",
-  "playlist": "PLSAMtowKWcOo"
+  "playlist": "PLSAMtowKWcOo",
+  "yatay_youtube": "XMg7aymK0GM",
+  "buffer_post": "6b001c7de0dc26301cccb5fa",
+  "yayin": "2026-11-20T18:00:00+03:00",
+  "yz_etiket": "gonderildi (yatay)"
  }
 ]
