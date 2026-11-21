@@ -331,7 +331,9 @@ def plate(cv, x, y, txt, hi=0.0, k=0, sc_=1.0):
         gl = fill(REDL, 150 * hi * (1.0 if (k // 3) % 2 else 0.55)); gl.setMaskFilter(skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 22 * sc_))
         cv.drawRRect(RRXY(rc.makeOutset(16 * sc_, 16 * sc_), 16 * sc_, 16 * sc_), gl)
     cv.drawRRect(RRXY(rc, 12 * sc_, 12 * sc_), fill((22, 26, 40))); cv.drawRRect(RRXY(rc.makeInset(6 * sc_, 6 * sc_), 8 * sc_, 8 * sc_), dashed((110, 120, 150), 2.5 * sc_, 200, (9 * sc_, 7 * sc_)))
-    text(cv, txt, x, y + 15 * sc_, 42 * sc_, lerpt(AMBER, REDL, hi))
+    fs = 42 * sc_; tw = skia.Font(TFB, fs).measureText(txt)
+    if tw > w - 34 * sc_: fs *= (w - 34 * sc_) / tw                # uzun yazi (LOKOMOTIF) levhaya sigar
+    text(cv, txt, x, y + fs * 0.357, fs, lerpt(AMBER, REDL, hi))
 
 
 def speaker(cv, x, y, level=None, k=0, sc_=1.0):
@@ -642,29 +644,37 @@ def platform(cv, name, tx=0.0, k=0, lit5=1.0, heads4=None, heads5=None, fog_a=0.
 
 # ---------- dekor: koruk (iki vagonun arasi, kesit) ----------
 GL, GR = 280, 800                                          # korugun sol ve sag ucu (sahne x)
-def gangway(cv, k=0, scroll=0.0, shake=0.0, closed=0.0, nos=(5, 4)):
-    """solda arka vagonun on ucu, ortada koruk, sagda ondeki vagonun arka ucu. shake: sarsinti; closed 0..1: soldaki kapi kapanir"""
+def gangway(cv, k=0, scroll=0.0, shake=0.0, closed=0.0, nos=(5, 4), out_l=None, lamp_l=1.0, hi=(0.0, 0.0), gone_l=False, out_r=None):
+    """solda arka vagonun on ucu, ortada koruk, sagda ondeki vagonun arka ucu. shake: sarsinti; closed 0..1: soldaki kapi kapanir.
+    out_l(cv) / out_r(cv): soldaki / sagdaki vagonun penceresinin ardi (varsayilan gece). lamp_l 0..1: soldaki vagonun lambasi. hi: (sol, sag) levha kirmizi yanar.
+    gone_l: soldaki vagon yok (bos ray); koruk kisalir, ucunda kuyruk lambasi yanar"""
     cv.clear(col((8, 12, 24)))
     with stage(cv):
         night(cv, scroll, k)
         track(cv, scroll)
         jl, jr = jit(k, shake), jit(k + 3, shake)
         for sd, (dx_, dy_), no in ((-1, jl, nos[0]), (1, jr, nos[1])):
+            if sd < 0 and gone_l: continue
+            lon = clamp(lamp_l) if sd < 0 else 1.0
             cv.save(); cv.translate(dx_, dy_)
             xa, xb = (-700, GL) if sd < 0 else (GR, 1800); ex = GL if sd < 0 else GR
             cv.drawRRect(RRXY(LTRB(xa - 14, ROOF - 46, xb + 14, CEIL), 40, 40), fill((24, 34, 48)))
             cv.drawRect(LTRB(xa, CEIL, xb, WF), fill(WALLC)); cv.drawRect(LTRB(xa, 1010, xb, WF), fill(WAINS)); cv.drawLine(xa, 1022, xb, 1022, dashed(shade(WAINS, 1.5), 4, 190, (18, 14)))
             wx = ex - 560 if sd < 0 else ex + 280
             wr = RRXY(LTRB(wx, WY0, wx + 280, WY1), 26, 26)
-            cv.save(); cv.clipRRect(wr, True); cv.translate(-dx_, -dy_); night(cv, scroll, k); cv.restore()
+            cv.save(); cv.clipRRect(wr, True); cv.translate(-dx_, -dy_)
+            if sd < 0 and out_l: out_l(cv)
+            elif sd > 0 and out_r: out_r(cv)
+            else: night(cv, scroll, k)
+            cv.restore()
             cv.drawRRect(wr, stroke(BRASS, 9))
             lx = ex + sd * 420
-            poly(cv, [(lx - 50, CEIL + 30), (lx + 50, CEIL + 30), (lx + 230, WF), (lx - 230, WF)], LAMPC, 24)
-            cv.drawRRect(RRXY(LTRB(lx - 58, CEIL - 4, lx + 58, CEIL + 30), 15, 15), fill(LAMPC))
+            if lon > 0.02: poly(cv, [(lx - 50, CEIL + 30), (lx + 50, CEIL + 30), (lx + 230, WF), (lx - 230, WF)], LAMPC, 24 * lon)
+            cv.drawRRect(RRXY(LTRB(lx - 58, CEIL - 4, lx + 58, CEIL + 30), 15, 15), fill(lerpt((58, 62, 72), LAMPC, lon)))
             cv.drawRect(LTRB(xa, WF, xb, FEDGE), fill((84, 44, 54))); cv.drawRect(LTRB(xa, WF + 36, xb, FEDGE - 24), fill((122, 60, 72)))
             cv.drawRect(LTRB(xa, FEDGE, xb, FEDGE + 64), fill((26, 30, 42)))
             cv.drawRect(LTRB(ex - 22, CEIL, ex + 22, 668), fill((26, 34, 46)))                 # kapi ustu (uc duvarin kesiti)
-            plate(cv, ex + sd * 118, 612, f'VAGON {no}', sc_=0.8)
+            plate(cv, ex + sd * 118, 612, f'VAGON {no}', hi[0 if sd < 0 else 1], k, sc_=0.8)
             bx = ex + sd * 330
             for wx_ in (-90, 90):
                 cv.drawCircle(bx + wx_, 1508, 62, fill((36, 40, 54))); cv.drawCircle(bx + wx_, 1508, 50, stroke((124, 132, 154), 5)); cv.drawCircle(bx + wx_, 1508, 13, fill((170, 60, 64)))
@@ -672,25 +682,30 @@ def gangway(cv, k=0, scroll=0.0, shake=0.0, closed=0.0, nos=(5, 4)):
                     a_ = scroll / 62 + j * math.pi / 2; cv.drawLine(bx + wx_, 1508, bx + wx_ + math.cos(a_) * 48, 1508 + math.sin(a_) * 48, stroke((124, 132, 154), 5))
             cv.restore()
         # koruk: karanlik kumas, kaburgalar, sallanan fener
-        cv.drawRect(LTRB(GL + 22 + jl[0], 668 + jl[1], GR - 22 + jr[0], FEDGE + 30), fill((16, 20, 32)))
-        n = 9
+        bl = (590 if gone_l else GL + 22) + jl[0]             # korugun sol ucu (vagon yoksa kisalmis)
+        cv.drawRect(LTRB(bl, 668 + jl[1], GR - 22 + jr[0], FEDGE + 30), fill((16, 20, 32)))
+        n = 4 if gone_l else 9
         for j in range(n + 1):
-            f = j / n; x = lerp(GL + 22 + jl[0], GR - 22 + jr[0], f); dy_ = lerp(jl[1], jr[1], f)
+            f = j / n; x = lerp(bl, GR - 22 + jr[0], f); dy_ = lerp(jl[1], jr[1], f)
             cv.drawLine(x, 668 + dy_, x, FEDGE + 30 + dy_, stroke((40, 46, 64), 6, cap=False))
-        zz = skia.Path(); zz.moveTo(GL + 22 + jl[0], 668 + jl[1])
+        zz = skia.Path(); zz.moveTo(bl, 668 + jl[1])
         for j in range(1, 2 * n + 1):
-            f = j / (2 * n); zz.lineTo(lerp(GL + 22 + jl[0], GR - 22 + jr[0], f), 668 + lerp(jl[1], jr[1], f) - (26 if j % 2 else 0))
+            f = j / (2 * n); zz.lineTo(lerp(bl, GR - 22 + jr[0], f), 668 + lerp(jl[1], jr[1], f) - (26 if j % 2 else 0))
         zz.lineTo(GR - 22 + jr[0], 668 + jr[1]); zz.close(); cv.drawPath(zz, fill((26, 32, 48)))
         sw = 16 * math.sin(k * 0.55) * (0.3 + shake / 6.0)
-        lx_, ly_ = 540 + sw * 2.2, 760
-        cv.drawLine(540, 668, lx_, ly_ - 26, stroke((90, 96, 116), 4))
+        lx0_ = 690 if gone_l else 540
+        lx_, ly_ = lx0_ + sw * 2.2, 760
+        cv.drawLine(lx0_, 668, lx_, ly_ - 26, stroke((90, 96, 116), 4))
         poly(cv, [(lx_ - 34, ly_ + 22), (lx_ + 34, ly_ + 22), (lx_ + 200, FEDGE), (lx_ - 200, FEDGE)], AMBER, 26)
         gl = fill(AMBER, 150); gl.setMaskFilter(skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 22)); cv.drawCircle(lx_, ly_, 40, gl)
         cv.drawRRect(RRXY(LTRB(lx_ - 22, ly_ - 26, lx_ + 22, ly_ + 24), 9, 9), fill((255, 226, 150))); cv.drawRRect(RRXY(LTRB(lx_ - 22, ly_ - 26, lx_ + 22, ly_ + 24), 9, 9), stroke((60, 50, 40), 5))
-        for (xa, xb, (dx_, dy_)) in ((GL - 10, 570, jl), (510, GR + 10, jr)):                   # ust uste binen iki sac levha
+        for (xa, xb, (dx_, dy_)) in (((590, GR + 10, jr),) if gone_l else ((GL - 10, 570, jl), (510, GR + 10, jr))):   # ust uste binen iki sac levha
             cv.drawRect(LTRB(xa + dx_, WF + 34 + dy_, xb + dx_, FEDGE + dy_), fill((84, 90, 108))); cv.drawLine(xa + dx_, WF + 46 + dy_, xb + dx_, WF + 46 + dy_, dashed((150, 156, 176), 3, 190, (12, 10)))
-        cv.drawRect(LTRB(GL - 30, FEDGE + 20, GR + 30, FEDGE + 54), fill((14, 16, 26)))
-        if closed > 0:                                      # soldaki kapi kapanir (kesitte kalin bir kanat)
+        cv.drawRect(LTRB(580 if gone_l else GL - 30, FEDGE + 20, GR + 30, FEDGE + 54), fill((14, 16, 26)))
+        if gone_l:                                          # acik uc: kuyruk lambasi
+            gl = fill(REDL, 150); gl.setMaskFilter(skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 26)); cv.drawCircle(bl - 6, 1120, 40, gl)
+            cv.drawCircle(bl - 6, 1120, 15, fill((255, 120, 104)))
+        if closed > 0 and not gone_l:                                      # soldaki kapi kapanir (kesitte kalin bir kanat)
             h = (WF - 668) * clamp(closed)
             cv.drawRect(LTRB(GL - 16 + jl[0], WF - h + jl[1], GL + 16 + jl[0], WF + jl[1]), fill((98, 62, 52))); cv.drawRect(LTRB(GL - 16 + jl[0], WF - h + jl[1], GL + 16 + jl[0], WF + jl[1]), stroke(BRASS, 3, cap=False))
     p = skia.Paint(); p.setBlendMode(skia.BlendMode.kSoftLight); p.setAlphaf(0.4); cv.drawImage(noise_img(), 0, 0, LIN, p)
@@ -722,8 +737,45 @@ def rear_view(cv, g, gone=1.0, fog_a=0.0, scroll=0.0, k=0):
             cv.drawCircle(g.left() + ((i * 97 + k * 3) % int(g.width() + 120)) - 60, g.top() + 60 + (i * 71) % int(g.height() - 60), 70, p)
 
 
-def door_view(cv, k=0, gone=1.0, fog_a=0.0, scroll=0.0, plate_hi=0.0, plate_on=1.0, shake=(0, 0), no=5):
-    """vagonun icinden arka kapiya bakis (karsidan). Kapinin ustunde ardindaki vagonun levhasi (VAGON no)"""
+def fwd_glass(cv, g, k=0):
+    """on kapinin caminin ardi: ondeki vagonun isikli koridoru (perspektif)"""
+    cx, cy, w, h = g.centerX(), g.top() + g.height() * 0.46, g.width(), g.height()
+    cv.drawRect(g, fill((236, 204, 136)))
+    poly(cv, [(g.left(), g.bottom()), (g.right(), g.bottom()), (cx + w * 0.10, cy + h * 0.16), (cx - w * 0.10, cy + h * 0.16)], (150, 74, 84))
+    for sd in (-1, 1):
+        poly(cv, [(cx + sd * w * 0.5, g.top()), (cx + sd * w * 0.12, cy - h * 0.2), (cx + sd * w * 0.12, cy + h * 0.16), (cx + sd * w * 0.5, g.bottom())], shade(WALLC, 1.25))
+        for j, f in enumerate((0.92, 0.6, 0.36)):
+            x = cx + sd * w * (0.12 + 0.38 * f); y0 = cy + h * (0.02 + 0.2 * f); y1 = cy + h * (0.16 + 0.34 * f)
+            cv.drawRRect(RRXY(LTRB(min(x, x - sd * w * 0.13 * f), y0, max(x, x - sd * w * 0.13 * f), y1), 6, 6), fill(shade(SEATC, 0.8 + 0.2 * f)))
+    cv.drawRect(LTRB(cx - w * 0.07, cy - h * 0.2, cx + w * 0.07, cy + h * 0.16), fill((70, 46, 44)))
+    for j, f in enumerate((0.9, 0.55, 0.28)):
+        cv.drawOval(LTRB(cx - w * 0.16 * f, g.top() + h * (0.04 + 0.2 * (1 - f)), cx + w * 0.16 * f, g.top() + h * (0.09 + 0.2 * (1 - f))), fill((255, 244, 206)))
+
+
+def loco_glass(cv, g, k=0):
+    """lokomotifin kapisinin ardi: karanlik, komur yigini, ocak isigi"""
+    cx, w, h = g.centerX(), g.width(), g.height()
+    cv.drawRect(g, fill((10, 12, 20)))
+    fl = 0.75 + 0.25 * math.sin(k * 0.9) * math.sin(k * 0.37)
+    gl = fill((255, 120, 50), 210 * fl); gl.setMaskFilter(skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, w * 0.16)); cv.drawCircle(cx, g.bottom() - h * 0.34, w * 0.26, gl)
+    cv.drawRRect(RRXY(LTRB(cx - w * 0.2, g.bottom() - h * 0.48, cx + w * 0.2, g.bottom() - h * 0.2), w * 0.08, w * 0.08), fill((255, 190, 90), 255 * fl))
+    cv.drawRRect(RRXY(LTRB(cx - w * 0.2, g.bottom() - h * 0.48, cx + w * 0.2, g.bottom() - h * 0.2), w * 0.08, w * 0.08), stroke((30, 30, 40), w * 0.04))
+    for j in range(7): cv.drawCircle(g.left() + w * (0.08 + 0.14 * j), g.bottom() - h * (0.05 + 0.05 * (j % 3)), w * 0.13, fill((22, 22, 30)))
+    for j in range(1, 4):                                   # ocak izgarasi
+        x = cx - w * 0.2 + j * w * 0.1; cv.drawLine(x, g.bottom() - h * 0.47, x, g.bottom() - h * 0.21, stroke((30, 30, 40), w * 0.025, cap=False))
+    for x in (0.16, 0.3, 0.84): cv.drawLine(g.left() + w * x, g.top(), g.left() + w * x, g.top() + h * (0.5 if x > 0.5 else 0.3), stroke((60, 62, 76), w * 0.04, cap=False))   # borular
+    gx, gy_ = g.left() + w * 0.6, g.top() + h * 0.16                                              # tek basinc saati
+    cv.drawCircle(gx, gy_, w * 0.08, fill(BRASS)); cv.drawCircle(gx, gy_, w * 0.058, fill((240, 232, 210)))
+    a_ = -0.6 + 0.25 * math.sin(k * 0.3); cv.drawLine(gx, gy_, gx + math.sin(a_) * w * 0.045, gy_ - math.cos(a_) * w * 0.045, stroke((170, 40, 40), 3))
+    vx, vy = g.left() + w * 0.23, g.top() + h * 0.4                                               # vana carki
+    cv.drawCircle(vx, vy, w * 0.07, stroke((170, 60, 64), w * 0.022))
+    for j in range(3): cv.drawLine(vx - math.cos(j * 1.047) * w * 0.07, vy - math.sin(j * 1.047) * w * 0.07, vx + math.cos(j * 1.047) * w * 0.07, vy + math.sin(j * 1.047) * w * 0.07, stroke((170, 60, 64), w * 0.014))
+
+
+def door_view(cv, k=0, gone=1.0, fog_a=0.0, scroll=0.0, plate_hi=0.0, plate_on=1.0, shake=(0, 0), no=5, label=None, glass=None, open_u=0.0, lock=False):
+    """vagonun icinden kapiya bakis (karsidan). Varsayilan ARKA kapi: ustunde ardindaki vagonun levhasi (VAGON no), caminda rear_view.
+    One bakis icin: label (levha yazisi), glass=fwd_glass ya da loco_glass (camin ardi), open_u 0..1 (kapi saga kayarak acilir),
+    lock (kapida asma kilit)"""
     cv.clear(col((16, 26, 34)))
     with stage(cv, *shake):
         cv.drawRect(LTRB(-560, -400, 1640, 2600), fill((84, 44, 54)))
@@ -753,12 +805,22 @@ def door_view(cv, k=0, gone=1.0, fog_a=0.0, scroll=0.0, plate_hi=0.0, plate_on=1
             poly(cv, [(lx - 44, CEIL + 8), (lx + 44, CEIL + 8), (lx + 200, WF), (lx - 200, WF)], LAMPC, 24)
             cv.drawRRect(RRXY(LTRB(lx - 56, CEIL - 26, lx + 56, CEIL + 8), 15, 15), fill(LAMPC))
         cv.drawRect(LTRB(D0 - 22, DT - 22, D1 + 22, WF), fill((26, 34, 46)))
+        behind = (lambda g_: glass(cv, g_, k)) if glass else (lambda g_: rear_view(cv, g_, gone, fog_a, scroll, k))
+        op = LTRB(D0, DT, D1, WF)
+        if open_u > 0: cv.save(); cv.clipRect(op); behind(op); cv.restore()
+        cv.save(); cv.clipRect(op); cv.translate((D1 - D0) * 0.96 * clamp(open_u), 0)
         cv.drawRect(LTRB(D0, DT, D1, WF), fill((98, 62, 52))); cv.drawRect(LTRB(D0 + 18, DT + 18, D1 - 18, WF - 16), dashed((170, 120, 96), 3.5, 200))
         g = LTRB(D0 + 56, DT + 50, D1 - 56, 1010); gr = RRXY(g, 20, 20)
-        cv.save(); cv.clipRRect(gr, True); rear_view(cv, g, gone, fog_a, scroll, k); cv.restore()
+        cv.save(); cv.clipRRect(gr, True); behind(g); cv.restore()
         cv.drawRRect(gr, stroke(BRASS, 9)); cv.drawLine(g.left() + 36, g.top() + 90, g.left() + 96, g.top() + 30, stroke((255, 255, 255), 7, 40))
         cv.drawRRect(RRXY(LTRB(D1 - 76, 1050, D1 - 36, 1136), 10, 10), fill(BRASS))
-        if plate_on > 0: plate(cv, 540, DT - 62, f'VAGON {no}', plate_hi, k)
+        if lock:                                            # asma kilit
+            lx_, ly_ = D1 - 56, 1168
+            sk = skia.Path(); sk.addArc(LTRB(lx_ - 17, ly_ - 44, lx_ + 17, ly_ - 6), 180, 180); cv.drawPath(sk, stroke((150, 156, 176), 8))
+            cv.drawRRect(RRXY(LTRB(lx_ - 27, ly_ - 24, lx_ + 27, ly_ + 26), 8, 8), fill(BRASS)); cv.drawCircle(lx_, ly_ - 2, 6, fill((40, 30, 24))); cv.drawRect(LTRB(lx_ - 2.5, ly_, lx_ + 2.5, ly_ + 14), fill((40, 30, 24)))
+        cv.restore()
+        if label: plate(cv, 540, DT - 62, label, plate_hi, k)
+        elif plate_on > 0: plate(cv, 540, DT - 62, f'VAGON {no}', plate_hi, k)
         else: cv.drawRRect(RRXY(LTRB(540 - 125, DT - 93, 540 + 125, DT - 31), 12, 12), fill((22, 26, 40)))
     p = skia.Paint(); p.setBlendMode(skia.BlendMode.kSoftLight); p.setAlphaf(0.4); cv.drawImage(noise_img(), 0, 0, LIN, p)
 
