@@ -140,10 +140,11 @@
   "dikey": "videos/2026-11-21-sonvagon-b02-degirmen-dikey.mp4",
   "yatay": "videos/2026-11-21-sonvagon-b02-degirmen-yatay.mp4",
   "sure_sn": 166,
-  "durum": "uretildi, yayin planlaniyor",
+  "durum": "planlandi",
   "baslik_dikey": "Bileti yırttı, camdan attı. Bilet cebinden yine çıktı | Son Vagon 2. Bölüm",
   "playlist": "PLSAMtowKWcOo",
   "yz_etiketli": [
+   "uOjpf5JVHKo",
    "mW027MqJ89c",
    "XMg7aymK0GM",
    "fxemykPHAxo",
@@ -157,6 +158,10 @@
    "mCiLyUTywCE",
    "FXQrqOvsypc",
    "hlGa0Ocx-2o"
-  ]
+  ],
+  "yatay_youtube": "uOjpf5JVHKo",
+  "buffer_post": "6b016c1d510276624512f517",
+  "yayin": "2026-11-21T18:00:00+03:00",
+  "yz_etiket_bekleyen": "Son Vagon b02 Short (Buffer 18:00 yükler)"
  }
 ]
