@@ -37,17 +37,19 @@ GREENC, ROSE, SKYB = (96, 170, 110), (226, 132, 150), (110, 170, 226)
 NAVYH, REDS, GRAYH, SHAWL, BOWL, CASE = (40, 52, 96), (214, 60, 64), (208, 206, 216), (150, 130, 200), (70, 52, 48), (150, 96, 60)
 WALLC, WAINS, SEATC, BRASS, LAMPC = (44, 84, 92), (112, 48, 60), (150, 56, 66), (214, 170, 96), (252, 236, 190)
 AMBER, REDL, EXTC, PAPER = (255, 182, 70), (255, 86, 74), (124, 50, 62), (244, 232, 204)
+CNAVY = (50, 68, 136)
 FAR, NEAR = GY - 64, GY + 14                               # iki yuruyus seridi
 CAST = {
     'M': dict(x=300, gy=NEAR, s=0.70, c=MUSTARD, seed=31),   # Mia: hardal; lacivert kut sac, kirmizi atki
     'R': dict(x=520, gy=FAR, s=0.74, c=GREENC, seed=33),     # Ren: yesil; kulaklik
     'D': dict(x=760, gy=NEAR, s=0.64, c=ROSE, seed=35),      # Ada: gul kurusu; gri topuz, lila sal
     'E': dict(x=940, gy=FAR, s=0.70, c=SKYB, seed=37),       # Eli: gok mavisi; melon sapka, biyik
+    'C': dict(x=420, gy=NEAR, s=0.74, c=CNAVY, seed=39),     # Konduktor (b04'ten itibaren): lacivert uniforma, kirmizi kasket, kir biyik
 }
 for _c in CAST.values(): _c['head'] = 1.2                 # buyuk kafa (b02'den itibaren; b01 1.0 ile uretildi)
 DEFAULT_MOOD = 'kontrast'                                  # sinema: gece mavisi golgeler + sicak lamba havuzu (b02'den itibaren)
 SCARF = {'M': (REDS, 150, -1)}
-orgu.SPK.update({'A': ('ANONS', AMBER), 'M': ('MIA', MUSTARD), 'R': ('REN', GREENC), 'D': ('ADA', ROSE), 'E': ('ELI', SKYB)})
+orgu.SPK.update({'A': ('ANONS', AMBER), 'M': ('MIA', MUSTARD), 'R': ('REN', GREENC), 'D': ('ADA', ROSE), 'E': ('ELI', SKYB), 'C': ('KONDÜKTÖR', (120, 146, 226))})
 
 
 def step(t): return math.floor(t * STEP + 1e-6) / STEP
@@ -160,6 +162,16 @@ def bowler(cv, hx, hy, u, a):
     cv.drawRRect(RRXY(LTRB(hx - u * 1.28, hy - u * 0.92, hx + u * 1.28, hy - u * 0.74), u * 0.09, u * 0.09), fill(shade(BOWL, 0.8), a))
 
 
+def kasket(cv, hx, hy, u, a, back):
+    """kirmizi kasket (Konduktor): duz tepe, koyu bant, siyah siperlik, pirinc arma"""
+    rc = LTRB(hx - u * 0.99, hy - u * 1.52, hx + u * 0.99, hy - u * 0.74)
+    cv.drawRRect(RRXY(rc, u * 0.3, u * 0.3), fill(REDS, a)); cv.drawRRect(RRXY(rc.makeInset(u * 0.08, u * 0.08), u * 0.22, u * 0.22), dashed(shade(REDS, 1.4), u * 0.03, a * 0.8, (u * 0.1, u * 0.08)))
+    cv.drawRect(LTRB(hx - u * 0.97, hy - u * 0.98, hx + u * 0.97, hy - u * 0.74), fill(shade(REDS, 0.55), a))
+    if back: return
+    v = skia.Path(); v.addArc(LTRB(hx - u * 0.9, hy - u * 1.04, hx + u * 0.9, hy - u * 0.44), 0, 180); v.close(); cv.drawPath(v, fill((20, 22, 34), a))
+    cv.drawCircle(hx, hy - u * 1.2, u * 0.16, fill(BRASS, a)); cv.drawCircle(hx, hy - u * 1.2, u * 0.08, fill(shade(BRASS, 0.6), a))
+
+
 def accessories(cv, who, f, s, look, alpha, back):
     (hx, hy), u, a = f['head'], f['HR'], 255 * alpha
     if who == 'M':
@@ -181,6 +193,18 @@ def accessories(cv, who, f, s, look, alpha, back):
             for sd in (-1, 1):
                 p = skia.Path(); p.moveTo(mx, my); p.quadTo(mx + sd * 16 * s, my - 8 * s, mx + sd * 34 * s, my + 7 * s)
                 cv.drawPath(p, stroke(BOWL, 9 * s, a))
+    elif who == 'C':
+        kasket(cv, hx, hy, u, a, back)
+        (nx, ny), (mx_, my_), (px, py) = f['neck'], f['mid'], f['hip']                     # uniforma: yaka ve pirinc dugmeler
+        if not back:
+            for sd in (-1, 1): poly(cv, [(nx, ny + 30 * s), (nx + sd * 58 * s, ny + 16 * s), (nx + sd * 30 * s, ny + 78 * s)], shade(CNAVY, 0.62), a)
+            for q_ in (0.22, 0.5, 0.78):
+                bx, by = (lerp(nx, mx_, q_ * 2), lerp(ny + 60 * s, my_, q_ * 2)) if q_ < 0.5 else (lerp(mx_, px, q_ * 2 - 1), lerp(my_, py - 20 * s, q_ * 2 - 1))
+                cv.drawCircle(bx, by, 10 * s, fill(BRASS, a)); cv.drawCircle(bx, by, 4 * s, fill(shade(BRASS, 0.6), a))
+            k_ = u / 118.0; mx, my = hx + look * 5 * k_, hy + 6 * k_ + 27 * u / 110.0          # kir, dolgun biyik
+            for sd in (-1, 1):
+                p = skia.Path(); p.moveTo(mx, my - 2 * k_); p.quadTo(mx + sd * 20 * k_, my - 12 * k_, mx + sd * 42 * k_, my + 10 * k_)
+                cv.drawPath(p, stroke(GRAYH, 13 * k_, a))
 
 
 # ---------- kucuk nesneler (el esyalari) ----------
@@ -218,7 +242,42 @@ def prop_knit(cv, f, s, a):
     poly(cv, [(lx + 6 * s, ly - 6 * s), (rx - 6 * s, ry - 6 * s), (rx - 14 * s, ry + 92 * s), (lx + 14 * s, ly + 92 * s)], CREAM, A)
     for j in range(1, 5): cv.drawLine(lx + 12 * s, ly - 6 * s + j * 19 * s, rx - 12 * s, ry - 6 * s + j * 19 * s, dashed(shade(CORAL, 1.0), 3 * s, 210 * a, (7 * s, 6 * s)))
     cv.drawLine(lx - 30 * s, ly + 20 * s, rx + 16 * s, ry - 40 * s, stroke((120, 110, 130), 5 * s, A)); cv.drawLine(rx + 30 * s, ry + 20 * s, lx - 16 * s, ly - 40 * s, stroke((120, 110, 130), 5 * s, A))
-PROPS = dict(case=prop_case, watch=prop_watch, ticket=prop_ticket, knit=prop_knit)
+def lantern(cv, x, y, s, a=1.0, k=0, glow=1.0):
+    """el feneri (Konduktor); (x, y): tutulan halkanin yeri. Fener asagi sarkar"""
+    A = 255 * a; fl = 0.9 + 0.1 * math.sin(k * 0.9)
+    gl = fill((255, 214, 130), 150 * a * glow * fl); gl.setMaskFilter(skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 34 * s)); cv.drawCircle(x, y + 66 * s, 92 * s, gl)
+    hd = skia.Path(); hd.addArc(LTRB(x - 22 * s, y - 6 * s, x + 22 * s, y + 44 * s), 180, 180); cv.drawPath(hd, stroke((50, 44, 40), 6 * s, A))
+    cv.drawRect(LTRB(x - 20 * s, y + 20 * s, x + 20 * s, y + 34 * s), fill((50, 44, 40), A))
+    rc = RRXY(LTRB(x - 30 * s, y + 32 * s, x + 30 * s, y + 104 * s), 9 * s, 9 * s)
+    cv.drawRRect(rc, fill((255, 232, 160), A)); cv.drawRRect(rc, stroke((50, 44, 40), 6 * s, A))
+    cv.drawLine(x, y + 34 * s, x, y + 102 * s, stroke((50, 44, 40), 4 * s, A)); cv.drawOval(LTRB(x - 9 * s, y + 56 * s, x + 9 * s, y + 90 * s), fill((255, 250, 226), A))
+    cv.drawRect(LTRB(x - 34 * s, y + 100 * s, x + 34 * s, y + 114 * s), fill((50, 44, 40), A))
+def punch_tool(cv, x, y, s, a=1.0, rot=0.0, close=0.0):
+    """bilet zimbasi: pense bicimli; (x, y): sap (elin yeri), agzi saga bakar. close 0..1: agiz kapanir"""
+    A = 255 * a; g = 13 * (1 - close)
+    cv.save(); cv.translate(x, y); cv.rotate(rot)
+    for sd in (-1, 1):
+        cv.drawLine(-46 * s, sd * (16 + g * 0.6) * s, 14 * s, sd * 5 * s, stroke((90, 40, 44), 13 * s, A))                # saplar
+        cv.drawLine(14 * s, sd * 5 * s, 74 * s, sd * (5 + g) * s, stroke((150, 156, 176), 12 * s, A))                     # ceneler
+    cv.drawCircle(16 * s, 0, 10 * s, fill(BRASS, A)); cv.drawCircle(74 * s, -(5 + g) * s, 7 * s, fill((60, 64, 82), A)); cv.restore()
+def ticket_ring(cv, x, y, s, a=1.0, sway=0.0):
+    """pirinc halkaya dizili uc zimbali bilet (kucuk); (x, y): halkanin ustu"""
+    A = 255 * a
+    cv.drawCircle(x, y + 22 * s, 22 * s, stroke(BRASS, 6 * s, A))
+    for j, c_ in enumerate((SKYB, GREENC, ROSE)):
+        cv.save(); cv.translate(x, y + 40 * s); cv.rotate((j - 1) * 24 + sway)
+        rc = LTRB(-24 * s, 0, 24 * s, 86 * s)
+        cv.drawRRect(RRXY(rc.makeOffset(3, 4), 5 * s, 5 * s), fill((4, 6, 20), 80 * a)); cv.drawRRect(RRXY(rc, 5 * s, 5 * s), fill(PAPER, A))
+        cv.drawRect(LTRB(-24 * s, 66 * s, 24 * s, 86 * s), fill(c_, A)); cv.drawCircle(0, 12 * s, 6 * s, fill((30, 34, 60), A))
+        for yy in (30, 42, 54): cv.drawLine(-15 * s, yy * s, 15 * s, yy * s, stroke((120, 100, 90), 3 * s, 200 * a, cap=False))
+        cv.restore()
+def prop_lantern(cv, f, s, a): lantern(cv, f['handL'][0], f['handL'][1] + 8 * s, s / 0.74, a, f.get('k', 0))
+def prop_punch(cv, f, s, a): punch_tool(cv, f['handR'][0] + 4 * s, f['handR'][1] - 6 * s, s / 0.74, a, rot=-24)
+def prop_ring(cv, f, s, a): ticket_ring(cv, f['handR'][0], f['handR'][1] + 4 * s, 1.5 * s / 0.74, a, 6 * math.sin(f.get('k', 0) * 0.5))
+def prop_lp(cv, f, s, a): prop_lantern(cv, f, s, a); prop_punch(cv, f, s, a)
+def prop_lr(cv, f, s, a): prop_lantern(cv, f, s, a); prop_ring(cv, f, s, a)
+PROPS = dict(case=prop_case, watch=prop_watch, ticket=prop_ticket, knit=prop_knit, lantern=prop_lantern, punch=prop_punch, ring=prop_ring, lp=prop_lp, lr=prop_lr)
+LANT = dict(aL=(-110, 120, -150, 150))                      # feneri govdesinin yaninda tasir (sol el)
 KNIT = dict(aL=(-84, 110, -40, 180), aR=(84, 110, 40, 180))
 SHOW = dict(aR=(96, 60, 70, -30))                           # elindekini (bilet, saat) gosterir
 DOORP = dict(aL=(-90, 50, -70, -50), aR=(90, 50, 70, -50))  # eller kapida (arkadan)
@@ -231,7 +290,7 @@ def actor(cv, ts, who, expr='sakin', pose=None, look=0.0, place=None, alpha=1.0,
     if alpha <= 0.01: return None
     x, gy, s = place if place else (c['x'], c['gy'], c['s'])
     tk = (TL.talk(who, ts) if talk == 'auto' else talk)
-    P = dict(HOLD) if prop == 'case' else (dict(KNIT) if prop == 'knit' else {})
+    P = dict(HOLD) if prop == 'case' else (dict(KNIT) if prop == 'knit' else (dict(LANT) if prop in ('lantern', 'lp', 'lr') else {}))
     P.update(pose or {})
     if tk is not None and 'fL' not in P:                    # konusan ziplamaz: govdesiyle hafifce one arkaya salinir
         P['lean'] = P.get('lean', 0) + alt(k, -5, 6, 2); P['belly'] = P.get('belly', 0) + alt(k, 4, -5, 2)
@@ -239,7 +298,7 @@ def actor(cv, ts, who, expr='sakin', pose=None, look=0.0, place=None, alpha=1.0,
     sinema.contact_shadow(cv, x + dx, gy + dy, s, alpha)
     f = figure(cv, x + dx, gy + dy, s, c['c'], None if back else expr, P, c['seed'], talk=None if back else tk,
                blink=bl and not back, look=look, alpha=alpha, scarf=SCARF.get(who), head=c.get('head', 1.0))
-    f['s'], f['who'], f['look'], f['expr'] = s, who, look, expr
+    f['s'], f['who'], f['look'], f['expr'], f['k'] = s, who, look, expr, k
     accessories(cv, who, f, s, look, alpha, back)
     if prop: PROPS[prop](cv, f, s, alpha)
     if tk is not None: sinema.note(cv, f, who)
@@ -501,6 +560,20 @@ def wagon(cv, cam, no, k=0, scroll=0.0, lamps=1.0, out=None, plate_hi=0.0, door_
                     a_ = scroll / r + j * math.pi / 2; cv.drawLine(x, cy, x + math.cos(a_) * (r - 14), cy + math.sin(a_) * (r - 14), stroke((124, 132, 154), 5))
                 cv.drawCircle(x, cy, 13, fill((170, 60, 64)))
     p = skia.Paint(); p.setBlendMode(skia.BlendMode.kSoftLight); p.setAlphaf(0.4); cv.drawImage(noise_img(), 0, 0, LIN, p)
+
+
+def loco_door(cv, cam, k=0):
+    """bir numaranin on kapisi lokomotife acilir: cami karanlik, ardinda ocak isigi; kapida asma kilit. wagon()'dan SONRA, stage icinde cagir"""
+    xa, xb = FDOOR[0] - cam, FDOOR[1] - cam; w = xb - xa
+    gr = RRXY(LTRB(xa + w * 0.24, 710, xa + w * 0.76, 900), 14, 14)
+    cv.drawRRect(gr, fill((12, 14, 24)))
+    fl = 0.75 + 0.25 * math.sin(k * 0.9) * math.sin(k * 0.37)
+    cv.save(); cv.clipRRect(gr, True)
+    gl = fill((255, 120, 50), 200 * fl); gl.setMaskFilter(skia.MaskFilter.MakeBlur(skia.kNormal_BlurStyle, 16)); cv.drawCircle(xa + w * 0.5, 880, 44, gl); cv.restore()
+    cv.drawRRect(gr, stroke(BRASS, 5))
+    lx_, ly_ = xa + w * 0.86, 1058
+    sk = skia.Path(); sk.addArc(LTRB(lx_ - 13, ly_ - 34, lx_ + 13, ly_ - 4), 180, 180); cv.drawPath(sk, stroke((150, 156, 176), 6))
+    cv.drawRRect(RRXY(LTRB(lx_ - 20, ly_ - 18, lx_ + 20, ly_ + 20), 6, 6), fill(BRASS)); cv.drawCircle(lx_, ly_ - 2, 4.5, fill((40, 30, 24)))
 
 
 def wagon_dark(cv, cam, lamps, a=0.78):
