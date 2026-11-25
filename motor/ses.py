@@ -481,7 +481,7 @@ if __name__ == "__main__":
             n = sum(ch in 'aeıioöuüAEIİOÖUÜ' for ch in L['text']); d = (0.33 + 0.174 * n) / VOICE_FX.get(L['spk'], {}).get('rate', 1.0)
             t = tt(d); segs[i] = (0.05 * np.sin(2 * np.pi * 180 * t) * (0.55 + 0.45 * np.sin(2 * np.pi * 4.5 * t))).astype(np.float32)
         T, voice = timeline(segs); T['dry'] = True
-        sf.write("voice/voice.wav", voice, SR); sf.write("voice/mix.wav", voice * 0, SR)
+        sf.write("voice/voice.wav", voice, SR); sf.write("voice/mix.wav", mix(T, voice * 0), SR)   # taslakta yalnizca efekt ve muzik
         json.dump(T, open("voice/final.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         print("TASLAK toplam", T['total'], "sn | sahneler", T['scenes'])
     elif cmd == "build":

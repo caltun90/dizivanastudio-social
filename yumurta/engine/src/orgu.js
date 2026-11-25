@@ -1,7 +1,8 @@
 // orgu.js: crochet (amigurumi) characters for dizivanastudio, a drop-in replacement for Toon.
 // Same draw() parameters as Toon (expr, mouth, blink, look, lookY, gazeX, gazeY, lid, brow, lean, bob, tilt, armL, armR,
 // propL, propR, flip, sweat, laughMarks, lit, rim, noArmL, noArmR), so every pose and expression of the egg-head kit
-// works with yarn characters. Extra: walk (step phase, radians), squash (-.2..+.2, + = flattened), blush (0..1).
+// works with yarn characters. Extra: walk (step phase, radians), squash (-.2..+.2, + = flattened), blush (0..1),
+//   antUp (-.4..1: antennae shrink or shoot up), antWob (0..1: antennae wobble hard, a 'boing').
 // The channel's identity is kept: a stitched yarn ball head, yarn-tube body and limbs, ball hands and feet,
 // an embroidered face; what comes from the egg-head kit is the acting (lids, brows, laughs, sweat, lip flap).
 //
@@ -9,7 +10,7 @@
 //   hair: { style: 'bob' | 'kisa' | 'kivircik' | 'topuz', color }, lashes: true,
 //   hat: 'bere' | 'kasket' | 'kulah' | 'cook' | 'sarik', hatColor, pompom, badge,
 //   scarf, tie, buttons, belly: true | rx (round tummy: the boss), fat: true (a really round body, thick short limbs, double chin),
-//   nose: { len: 1..2.2, color } (a long crocheted nose that points where the face turns; p.sniff 0..1 wiggles it),
+//   nose: { size: 1..1.4, color } (a big thick bulbous nose in the middle of the face; p.sniff 0..1 flares the nostrils),
 //   antenna: colour (two yarn antennae with balls: aliens), bigEyes: true (shiny ovals in calm expressions), glasses, mustache, beard, beardLen, height }
 import * as THREE from 'three';
 import { Toon, PLUM, toonHat, toonBeard, TOON_PROPS } from './toon.js';
@@ -191,7 +192,8 @@ function face(g, w, h, f, L, exprName) {
     }
   }
   // mouth
-  const mx = fx + turn * w * .03, my = fy + h * .19, m = clamp(f.mouth || 0, 0, 1), sg = turn < 0 ? -1 : 1, kind = E.mouth;
+  const nk = L.nose ? ((L.nose === true ? 1 : L.nose.size) ?? 1) : 0;
+  const mx = fx + turn * w * .03, my = fy + h * .19 + nk * w * .055, m = clamp(f.mouth || 0, 0, 1), sg = turn < 0 ? -1 : 1, kind = E.mouth;
   if (kind === 'grin') {
     const k = .55 + .45 * Math.max(m, exprName === 'laugh' ? .5 : .3), mw = w * .13, mh = w * .13 * k;
     const shp = () => { g.beginPath(); g.moveTo(mx - mw, my - w * .03); g.lineTo(mx + mw, my - w * .03); g.quadraticCurveTo(mx + mw * .92, my + mh, mx, my + mh); g.quadraticCurveTo(mx - mw * .92, my + mh, mx - mw, my - w * .03); g.closePath(); };
@@ -239,16 +241,17 @@ function face(g, w, h, f, L, exprName) {
   if (L.fat) {                                            // a double chin under the mouth
     g.beginPath(); g.moveTo(mx - w * .14, my + w * .16); g.quadraticCurveTo(mx, my + w * .23, mx + w * .14, my + w * .16); sew(g, lw * .7);
   }
-  if (L.nose) {                                           // a long, fat crocheted nose: sticks out to the side the face turns to
-    const N = L.nose === true ? {} : L.nose, len = N.len ?? 1.4, nc = N.color || null;
-    const sgn = turn < -.05 ? -1 : 1, k = .5 + .5 * Math.abs(turn), wig = (f.sniff || 0) * Math.sin((f.sniffT || 0) * 40) * w * .03;
-    const x0 = fx + sgn * w * .02, y0 = ey + w * .085, L1 = len * w * .27 * k + w * .07;
-    const x2 = x0 + sgn * L1, y2 = y0 - w * .02 - L1 * .08 + wig;
-    const col = nc || f.__head, nw = w * (.12 + .02 * len);
-    under(g, () => { g.strokeStyle = PLUM; g.lineWidth = nw; g.lineCap = 'round'; g.beginPath(); g.moveTo(x0, y0); g.quadraticCurveTo(x0 + sgn * L1 * .5, y0 + w * .03, x2, y2); g.stroke(); }, f.lit ?? -1, .5);
-    yarnTube(g, [x0, y0], [x0 + sgn * L1 * .5, y0 + w * .03], [x2, y2], nw, col, f.lit ?? -1, 77);
-    yarnBall(g, x2 + sgn * w * .02, y2, w * .085, w * .078, shade(col, 1.1), f.lit ?? -1, { rows: 5, seed: 78, fuzz: false });
-    g.fillStyle = 'rgba(42,26,44,.5)'; g.beginPath(); g.ellipse(x2 + sgn * w * .045, y2 + w * .04, w * .016, w * .01, 0, 0, 6.29); g.fill();
+  if (L.nose) {                                           // a big, thick, round potato nose in the middle of the face
+    const N = L.nose === true ? {} : L.nose, k = nk, col = N.color || shade(f.__head, 1.06), lit = f.lit ?? -1;
+    const wig = (f.sniff || 0) * Math.sin((f.sniffT || 0) * 38) * w * .01, fl = 1 + (f.sniff || 0) * .5 * (Math.sin((f.sniffT || 0) * 38) * .5 + .5);
+    const nx = fx + turn * w * .06, ny = ey + w * .1 + wig, rx = w * .12 * k, ry = w * .11 * k;
+    under(g, () => { g.fillStyle = PLUM; g.beginPath(); g.ellipse(nx, ny + ry * .25, rx * 1.15, ry * .95, 0, 0, 6.29); g.fill(); }, lit, .45);
+    yarnBall(g, nx - turn * rx * .1, ny - ry * .7, rx * .55, ry * .48, shade(col, .96), lit, { rows: 3, seed: 76, fuzz: false });   // bridge
+    for (const s2 of [-1, 1]) yarnBall(g, nx + s2 * rx * .78 * fl, ny + ry * .42, rx * .42 * fl, ry * .4, shade(col, .92), lit, { rows: 3, seed: 79 + s2, fuzz: false });   // wings
+    yarnBall(g, nx, ny, rx, ry, col, lit, { rows: 6, seed: 78, fuzz: false });                                             // the bulb
+    g.strokeStyle = 'rgba(42,26,44,.7)'; g.lineWidth = lw * .55;                                                           // nostrils: two small sewn curves underneath
+    for (const s2 of [-1, 1]) { const x = nx + s2 * rx * .5 + turn * rx * .12, y = ny + ry * .78; g.beginPath(); g.moveTo(x - s2 * rx * .16 * fl, y); g.quadraticCurveTo(x, y + ry * .2 * fl, x + s2 * rx * .18 * fl, y - ry * .06); g.stroke(); }
+    glint(g, nx - rx * .38, ny - ry * .38, rx * .13, .6)
   }
 }
 
@@ -410,9 +413,9 @@ export class OrguToon extends Toon {
     yarnBall(g, 0, 0, R, R * .97, headC, lit, { spin: -turn * .42, seed: S + 50 });
     rimLight(g, () => { g.beginPath(); g.arc(0, 0, R * .985, 0, 6.29); }, { cx: 0, cy: 0, w: R * 2, h: R * 2 }, p.rim, lit);
     if (L.antenna) for (const s of [-1, 1]) {
-      const sw = Math.sin((p.antT || 0) * 5 + s) * 8;
-      yarnTube(g, [s * R * .32, -R * .82], [s * R * .42 + sw * .3, -R * 1.25], [s * R * .62 + sw, -R * 1.5], 22, shade(headC, .9), lit, S + 80 + s);
-      yarnBall(g, s * R * .64 + sw, -R * 1.56, 30, 30, L.antenna, lit, { rows: 5, seed: S + 82 + s });
+      const up = 1 + clamp(p.antUp || 0, -.4, 1) * .45, sw = Math.sin((p.antT || 0) * (5 + 9 * (p.antWob || 0)) + s) * 8 * (1 + 3 * (p.antWob || 0));
+      yarnTube(g, [s * R * .32, -R * .82], [s * R * .42 + sw * .3, -R * (.82 + .43 * up)], [s * R * .62 + sw, -R * (.82 + .68 * up)], 22, shade(headC, .9), lit, S + 80 + s);
+      yarnBall(g, s * R * .64 + sw, -R * (.82 + .74 * up), 30, 30, L.antenna, lit, { rows: 5, seed: S + 82 + s });
     }
     if (L.beard) toonBeard(g, R * 1.9, R * 1.8, L, lit);
     if (H) hairFront(g, R, H, lit, turn, S + 60);

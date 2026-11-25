@@ -1,221 +1,477 @@
 {
 "words": [
 {
-"word": "Burada",
+"word": "Karnım",
 "start": 0.0,
-"end": 0.554,
-"spk": "H",
-"line": "h1",
+"end": 0.458,
+"spk": "T",
+"line": "t1",
+"hl": false
+},
+{
+"word": "zil",
+"start": 0.458,
+"end": 0.725,
+"spk": "T",
+"line": "t1",
+"hl": true
+},
+{
+"word": "çalıyor.",
+"start": 0.725,
+"end": 1.374,
+"spk": "T",
+"line": "t1",
+"hl": true
+},
+{
+"word": "Misafir!",
+"start": 2.624,
+"end": 3.385,
+"spk": "Z",
+"line": "z1",
+"hl": true
+},
+{
+"word": "Kimse",
+"start": 5.585,
+"end": 6.065,
+"spk": "Z",
+"line": "z2",
+"hl": false
+},
+{
+"word": "yok.",
+"start": 6.065,
+"end": 6.345,
+"spk": "Z",
+"line": "z2",
+"hl": true
+},
+{
+"word": "Zip,",
+"start": 6.645,
+"end": 6.873,
+"spk": "T",
+"line": "t2",
+"hl": false
+},
+{
+"word": "o",
+"start": 6.873,
+"end": 7.1,
+"spk": "T",
+"line": "t2",
 "hl": false
 },
 {
 "word": "bir",
-"start": 0.554,
-"end": 0.782,
+"start": 7.1,
+"end": 7.328,
+"spk": "T",
+"line": "t2",
+"hl": false
+},
+{
+"word": "deyim.",
+"start": 7.328,
+"end": 7.718,
+"spk": "T",
+"line": "t2",
+"hl": true
+},
+{
+"word": "Yani",
+"start": 7.718,
+"end": 8.108,
+"spk": "T",
+"line": "t2",
+"hl": false
+},
+{
+"word": "çok",
+"start": 8.108,
+"end": 8.336,
+"spk": "T",
+"line": "t2",
+"hl": false
+},
+{
+"word": "acıktım.",
+"start": 8.336,
+"end": 8.889,
+"spk": "T",
+"line": "t2",
+"hl": true
+},
+{
+"word": "Anladım.",
+"start": 9.139,
+"end": 9.664,
+"spk": "Z",
+"line": "z3",
+"hl": false
+},
+{
+"word": "Zil",
+"start": 9.664,
+"end": 9.88,
+"spk": "Z",
+"line": "z3",
+"hl": false
+},
+{
+"word": "çalarsa",
+"start": 9.88,
+"end": 10.405,
+"spk": "Z",
+"line": "z3",
+"hl": false
+},
+{
+"word": "kapıya",
+"start": 10.405,
+"end": 10.929,
+"spk": "Z",
+"line": "z3",
+"hl": false
+},
+{
+"word": "bakılmaz.",
+"start": 10.929,
+"end": 11.454,
+"spk": "Z",
+"line": "z3",
+"hl": true
+},
+{
+"word": "Evde",
+"start": 13.104,
+"end": 13.488,
+"spk": "Z",
+"line": "z4",
+"hl": false
+},
+{
+"word": "yokuz!",
+"start": 13.488,
+"end": 13.872,
+"spk": "Z",
+"line": "z4",
+"hl": true
+},
+{
+"word": "Sonra",
+"start": 13.872,
+"end": 14.257,
+"spk": "Z",
+"line": "z4",
+"hl": false
+},
+{
+"word": "gelin!",
+"start": 14.257,
+"end": 14.641,
+"spk": "Z",
+"line": "z4",
+"hl": true
+},
+{
+"word": "Boşuna.",
+"start": 15.591,
+"end": 16.197,
+"spk": "T",
+"line": "t3",
+"hl": false
+},
+{
+"word": "Ben",
+"start": 16.197,
+"end": 16.446,
+"spk": "T",
+"line": "t3",
+"hl": false
+},
+{
+"word": "yıllardır",
+"start": 16.446,
+"end": 17.051,
+"spk": "T",
+"line": "t3",
+"hl": true
+},
+{
+"word": "deniyorum.",
+"start": 17.051,
+"end": 17.835,
+"spk": "T",
+"line": "t3",
+"hl": false
+},
+{
+"word": "Yokuz",
+"start": 19.135,
+"end": 19.593,
+"spk": "Z",
+"line": "z5",
+"hl": false
+},
+{
+"word": "dedik!",
+"start": 19.593,
+"end": 20.051,
+"spk": "Z",
+"line": "z5",
+"hl": true
+},
+{
+"word": "Zip...",
+"start": 20.351,
+"end": 20.604,
+"spk": "T",
+"line": "t4",
+"hl": false
+},
+{
+"word": "o",
+"start": 20.604,
+"end": 20.857,
+"spk": "T",
+"line": "t4",
+"hl": false
+},
+{
+"word": "ben",
+"start": 20.857,
+"end": 21.11,
+"spk": "T",
+"line": "t4",
+"hl": false
+},
+{
+"word": "değilim.",
+"start": 21.11,
+"end": 21.725,
+"spk": "T",
+"line": "t4",
+"hl": true
+},
+{
+"word": "Hımm.",
+"start": 24.525,
+"end": 24.753,
 "spk": "H",
 "line": "h1",
 "hl": false
 },
 {
-"word": "uzay",
-"start": 0.782,
-"end": 1.173,
-"spk": "H",
-"line": "h1",
-"hl": true
-},
-{
-"word": "kokusu",
-"start": 1.173,
-"end": 1.727,
-"spk": "H",
-"line": "h1",
-"hl": true
-},
-{
-"word": "var!",
-"start": 1.727,
-"end": 1.955,
+"word": "Bu",
+"start": 24.753,
+"end": 24.98,
 "spk": "H",
 "line": "h1",
 "hl": false
 },
 {
-"word": "Koku",
-"start": 2.315,
-"end": 2.615,
-"spk": "T",
-"line": "t1",
-"hl": false
-},
-{
-"word": "benim",
-"start": 2.615,
-"end": 2.915,
-"spk": "T",
-"line": "t1",
-"hl": false
-},
-{
-"word": "cipsimden",
-"start": 2.915,
-"end": 3.341,
-"spk": "T",
-"line": "t1",
-"hl": true
-},
-{
-"word": "geliyor,",
-"start": 3.341,
-"end": 3.766,
-"spk": "T",
-"line": "t1",
-"hl": false
-},
-{
-"word": "Bay",
-"start": 3.766,
-"end": 3.941,
-"spk": "T",
-"line": "t1",
-"hl": false
-},
-{
-"word": "Hugo!",
-"start": 3.941,
-"end": 4.241,
-"spk": "T",
-"line": "t1",
-"hl": false
-},
-{
-"word": "Tobi,",
-"start": 4.541,
-"end": 5.007,
-"spk": "L",
-"line": "l1",
-"hl": false
-},
-{
-"word": "sessiz",
-"start": 5.007,
-"end": 5.473,
-"spk": "L",
-"line": "l1",
-"hl": false
-},
-{
-"word": "ol!",
-"start": 5.473,
-"end": 5.745,
-"spk": "L",
-"line": "l1",
-"hl": false
-},
-{
-"word": "Zip",
-"start": 5.745,
-"end": 6.017,
-"spk": "L",
-"line": "l1",
-"hl": false
-},
-{
-"word": "buzdolabının",
-"start": 6.017,
-"end": 7.066,
-"spk": "L",
-"line": "l1",
-"hl": true
-},
-{
-"word": "içinde.",
-"start": 7.066,
-"end": 7.726,
-"spk": "L",
-"line": "l1",
-"hl": false
-},
-{
-"word": "Kılavuz",
-"start": 8.866,
-"end": 9.555,
-"spk": "Z",
-"line": "z1",
-"hl": false
-},
-{
-"word": "diyor",
-"start": 9.555,
-"end": 10.041,
-"spk": "Z",
-"line": "z1",
-"hl": false
-},
-{
-"word": "ki:",
-"start": 10.041,
-"end": 10.325,
-"spk": "Z",
-"line": "z1",
-"hl": false
-},
-{
-"word": "misafire",
-"start": 10.325,
-"end": 11.217,
-"spk": "Z",
-"line": "z1",
-"hl": false
-},
-{
-"word": "gülümse!",
-"start": 11.217,
-"end": 11.906,
-"spk": "Z",
-"line": "z1",
-"hl": true
-},
-{
-"word": "Hmm.",
-"start": 12.266,
-"end": 12.62,
+"word": "kapı",
+"start": 24.98,
+"end": 25.371,
 "spk": "H",
-"line": "h2",
+"line": "h1",
 "hl": false
 },
 {
-"word": "Çilek",
-"start": 12.62,
-"end": 13.228,
+"word": "bugün",
+"start": 25.371,
+"end": 25.761,
+"spk": "H",
+"line": "h1",
+"hl": false
+},
+{
+"word": "üç",
+"start": 25.761,
+"end": 25.988,
+"spk": "H",
+"line": "h1",
+"hl": true
+},
+{
+"word": "kez",
+"start": 25.988,
+"end": 26.216,
+"spk": "H",
+"line": "h1",
+"hl": true
+},
+{
+"word": "açıldı.",
+"start": 26.216,
+"end": 26.769,
+"spk": "H",
+"line": "h1",
+"hl": false
+},
+{
+"word": "Çilek...",
+"start": 27.769,
+"end": 28.201,
 "spk": "H",
 "line": "h2",
 "hl": false
 },
 {
 "word": "ve",
-"start": 13.228,
-"end": 13.582,
+"start": 28.201,
+"end": 28.453,
 "spk": "H",
 "line": "h2",
 "hl": false
 },
 {
 "word": "yıldız",
-"start": 13.582,
-"end": 14.19,
+"start": 28.453,
+"end": 28.885,
 "spk": "H",
 "line": "h2",
 "hl": true
 },
 {
-"word": "tozu...",
-"start": 14.19,
-"end": 14.797,
+"word": "tozu.",
+"start": 28.885,
+"end": 29.317,
 "spk": "H",
 "line": "h2",
 "hl": true
+},
+{
+"word": "Cips.",
+"start": 29.617,
+"end": 29.916,
+"spk": "T",
+"line": "t5",
+"hl": false
+},
+{
+"word": "Çilekli.",
+"start": 29.916,
+"end": 30.643,
+"spk": "T",
+"line": "t5",
+"hl": true
+},
+{
+"word": "Çilekli",
+"start": 30.893,
+"end": 31.505,
+"spk": "H",
+"line": "h3",
+"hl": false
+},
+{
+"word": "cips",
+"start": 31.505,
+"end": 31.757,
+"spk": "H",
+"line": "h3",
+"hl": false
+},
+{
+"word": "mi",
+"start": 31.757,
+"end": 32.009,
+"spk": "H",
+"line": "h3",
+"hl": false
+},
+{
+"word": "olur?",
+"start": 32.009,
+"end": 32.441,
+"spk": "H",
+"line": "h3",
+"hl": true
+},
+{
+"word": "Olur.",
+"start": 32.841,
+"end": 33.306,
+"spk": "T",
+"line": "t6",
+"hl": false
+},
+{
+"word": "Ben",
+"start": 33.306,
+"end": 33.576,
+"spk": "T",
+"line": "t6",
+"hl": false
+},
+{
+"word": "yerim.",
+"start": 33.576,
+"end": 34.041,
+"spk": "T",
+"line": "t6",
+"hl": true
+},
+{
+"word": "Bu",
+"start": 35.841,
+"end": 36.083,
+"spk": "H",
+"line": "h4",
+"hl": false
+},
+{
+"word": "burun",
+"start": 36.083,
+"end": 36.497,
+"spk": "H",
+"line": "h4",
+"hl": false
+},
+{
+"word": "yanılmaz,",
+"start": 36.497,
+"end": 37.084,
+"spk": "H",
+"line": "h4",
+"hl": true
+},
+{
+"word": "Tobi.",
+"start": 37.084,
+"end": 37.498,
+"spk": "H",
+"line": "h4",
+"hl": false
+},
+{
+"word": "Yanılmaz.",
+"start": 37.498,
+"end": 38.085,
+"spk": "H",
+"line": "h4",
+"hl": true
+},
+{
+"word": "Ben",
+"start": 40.385,
+"end": 40.644,
+"spk": "Z",
+"line": "z6",
+"hl": false
+},
+{
+"word": "bakmıyorum.",
+"start": 40.644,
+"end": 41.456,
+"spk": "Z",
+"line": "z6",
+"hl": true
 }
 ],
-"duration": 16.717
+"duration": 43.456
 }

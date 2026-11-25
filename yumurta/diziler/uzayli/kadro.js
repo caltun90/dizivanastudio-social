@@ -6,8 +6,8 @@ export const LOOK = {
   tobi: { yarn: '#f2b43c', fat: true, cloth: '#2f9a8e', hair: { style: 'kisa', color: '#6a3a24' }, headR: 158, height: 1.6 },
   // Zip: kiracı uzaylı; minik, yeşil, iki antenli. "Dünyalı Kılavuzu"ndaki her kuralı harfi harfine uygular
   zip: { yarn: '#86d45a', antenna: '#f25a9a', tie: '#5a7ae0', bigEyes: true, headR: 164, height: 1.38 },
-  // Hugo: ev sahibi, alt katta oturur; upuzun koca burnuyla her kokuyu alır, kuşkucu, bıyıklı
-  hugo: { yarn: '#a88ad8', nose: { len: 1.9, color: '#c49ae0' }, mustache: '#3a2a3a', glasses: true, hair: { style: 'kisa', color: '#8a8aa0' }, headR: 150, height: 1.8 },
+  // Hugo: ev sahibi, alt katta oturur; iri, kalın, yuvarlak burnuyla her kokuyu alır (kokladıkça burun delikleri açılır), kuşkucu, bıyıklı
+  hugo: { yarn: '#a88ad8', nose: { size: 1.25, color: '#d48ab4' }, mustache: '#3a2a3a', glasses: true, hair: { style: 'kisa', color: '#8a8aa0' }, headR: 150, height: 1.8 },
 };
 export const SPK = { L: 'luna', T: 'tobi', Z: 'zip', H: 'hugo' };            // N anlatıcının kartı yok
 export const NAMES = { L: 'Luna', T: 'Tobi', Z: 'Zip', H: 'Hugo', N: 'Anlatıcı' };

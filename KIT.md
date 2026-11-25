@@ -190,7 +190,7 @@ Dizinin son bölümü yayınlandıktan sonraki çalışmada, yeni diziye başlam
 3. **Yedek** (bilimkurgu): bir adam sabah uyanır, evde ondan önce uyanmış bir "o" daha vardır. Hangisi yedek?
 4. **Saat 03:03** (gerilim): bir apartmanda herkes her gece 03:03'te uyanıyor ve her gece binadan bir şey eksiliyor: önce bir kapı numarası, sonra bir merdiven, sonra bir komşu.
 5. **Kayıp Eşya Bürosu** (komedi, gizem): kaybolan her şeyin geldiği bir büro. Bir gün rafa bir "pazartesi günü" gelir ve şehirde kimse pazartesiyi hatırlamaz.
-6. **Kiracı Uzaylı** (komedi): öğrenci evine kiracı olarak bir uzaylı taşınır; dünyalı gibi davranmayı kurallar listesinden öğrenmeye çalışır ve her kuralı yanlış anlar. (SIRADAKİ: Cem 25 Kasım 2026'da Son Vagon'dan sonra bir komedi istedi, komik şişko ve uzun burunlu karakterlerle, 8 bölüm; `diziler/uzayli/` hazır. Havuzda 3, 4 ve 5 bunun ardından sırayla gelir.)
+6. **Kiracı Uzaylı** (komedi): öğrenci evine kiracı olarak bir uzaylı taşınır; dünyalı gibi davranmayı öğrenmeye çalışır, Türkçe deyimleri ve kılavuz kurallarını harfi harfine anlar. (SIRADAKİ: Cem 25 Kasım 2026'da Son Vagon'dan sonra bir komedi istedi, komik şişko ve biraz büyük, kalın burunlu karakterlerle, 8 bölüm; `diziler/uzayli/` hazır. Bölüm yazmadan önce `diziler/uzayli/KOMEDI.md` okunur. Havuzda 3, 4 ve 5 bunun ardından sırayla gelir.)
 
 ## 11. Rapor ve hata
 - Başarıyla bitince Cem'e tek kısa mesaj: dizi ve bölüm adı, iki başlık, planlanan saatler, iki videonun depo bağlantısı. Dikey videoyu dosya olarak da gönder ki yayından önce izleyebilsin; beğenmezse Buffer'dan silebileceğini bir cümleyle hatırlat.

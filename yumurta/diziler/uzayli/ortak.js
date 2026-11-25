@@ -126,9 +126,17 @@ function buildEv(scene, K) {
   for (const s of [-1, 1]) { box(g, .42, .05, .42, 2.05 + s * .85, .45, -1.1, flat('#c9963e')); box(g, .42, .5, .05, 2.05 + s * .85, .72, -1.1 - .2, flat('#c9963e')); for (const [dx, dz] of [[-.18, -.18], [.18, -.18], [-.18, .18], [.18, .18]]) box(g, .04, .45, .04, 2.05 + s * .85 + dx, .225, -1.1 + dz, flat('#5e3a26')); }
   cyl(g, .18, .12, .1, 2.05, .82, -1.1, flat('#e8e0d0')); for (const [dx, dz, c] of [[-.07, 0, '#e04a3a'], [.07, .03, '#f2a03a'], [0, -.07, '#86d45a']]) ball(g, .07, 2.05 + dx, .9, -1.1 + dz, flat(c));
   // front door on the left wall, a coat rack, a picture on the right wall, a plant
-  K.dyn.evKapi = new THREE.Group(); K.dyn.evKapi.position.set(-4.44, 0, 1.0); g.add(K.dyn.evKapi);
-  const kd = box(K.dyn.evKapi, .06, 2.1, .95, 0, 1.05, -.475, painted(woodTex({ base: '#7a4a2e', plank: 96, vertical: true })));
-  ball(K.dyn.evKapi, .045, .06, 1.0, -.85, flat('#e0b050'));
+  K.dyn.evKapi = new THREE.Group(); K.dyn.evKapi.position.set(-4.44, 0, .05); g.add(K.dyn.evKapi);   // hinge at the back edge: opens into the room, away from the camera
+  const kd = box(K.dyn.evKapi, .06, 2.1, .95, 0, 1.05, .475, painted(woodTex({ base: '#7a4a2e', plank: 96, vertical: true })));
+  ball(K.dyn.evKapi, .045, .06, 1.0, .85, flat('#e0b050'));
+  // behind the door: a slice of the stairwell (teal wall, tiled floor, a warm lamp), seen only when the door opens (kapi(K, k))
+  const hall = new THREE.Mesh(new THREE.PlaneGeometry(.95, 2.1), new THREE.MeshBasicMaterial({ map: canvasTex(190, 420, (c, w, h) => {
+    const gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#6f9488'); gr.addColorStop(.7, '#8ab4a6'); gr.addColorStop(1, '#5a7a70'); c.fillStyle = gr; c.fillRect(0, 0, w, h);
+    const lg = c.createRadialGradient(w * .5, h * .2, 4, w * .5, h * .2, w * .9); lg.addColorStop(0, 'rgba(255,214,150,.75)'); lg.addColorStop(1, 'rgba(255,214,150,0)'); c.fillStyle = lg; c.fillRect(0, 0, w, h);
+    c.fillStyle = '#c86a4a'; c.fillRect(0, h * .82, w, h * .18); c.fillStyle = '#f2ead8'; for (let i = 0; i < 6; i++) c.fillRect(i * w / 5 - 4, h * .82, 6, h * .18);
+    c.fillStyle = '#5e3a26'; c.fillRect(0, h * .55, w, 8); c.fillStyle = 'rgba(0,0,0,.25)'; c.fillRect(0, 0, 10, h); c.fillRect(w - 10, 0, 10, h);
+  }), color: HDR(.85, .85, .85) }));
+  hall.position.set(-4.488, 1.05, .525); hall.rotation.y = Math.PI / 2; g.add(hall);
   for (const [sy, sz, y, z] of [[.1, 1.15, 2.15, .48], [2.2, .1, 1.1, 1.05], [2.2, .1, 1.1, -.05]]) box(g, .1, sy, sz, -4.42, y, z + .02, flat('#f2ead8'));
   cyl(g, .03, .03, 1.7, -4.2, .85, 1.75, flat('#5e3a26')); ball(g, .14, -4.2, 1.6, 1.75, flat('#3a6aa8')); ball(g, .12, -4.15, 1.4, 1.85, flat('#c8505a'));
   const pic = new THREE.Mesh(new THREE.PlaneGeometry(1.0, .7), new THREE.MeshBasicMaterial({ map: canvasTex(256, 180, (c, w, h) => { c.fillStyle = '#f6efe0'; c.fillRect(0, 0, w, h); c.fillStyle = '#86b8e0'; c.fillRect(14, 14, w - 28, h * .55); c.fillStyle = '#5ab06a'; c.beginPath(); c.moveTo(14, h - 14); c.lineTo(w * .4, h * .35); c.lineTo(w * .7, h - 14); c.fill(); c.fillStyle = '#f2c64a'; c.beginPath(); c.arc(w * .75, h * .3, 18, 0, 6.29); c.fill(); c.strokeStyle = '#5e3a26'; c.lineWidth = 14; c.strokeRect(0, 0, w, h); }), color: HDR(.8, .78, .76) }));
@@ -278,6 +286,8 @@ export function mekan(K, where) {
   for (const [k, s] of Object.entries(K.sets)) { s.g.visible = k === where; s.L.visible = k === where; }
   for (const c of Object.values(K.cast)) c.hide();
 }
+// ev kapısı: k 0 kapalı .. 1 açık (içeri doğru döner, arkasında merdiven koridoru görünür)
+export function kapi(K, k) { K.dyn.evKapi.rotation.y = 1.45 * Math.max(0, Math.min(1, k)); }
 export const mekanOf = cam => cam.position.x < 50 ? 'ev' : cam.position.x < 150 ? 'merdiven' : 'sokak';
 const KOD = Object.fromEntries(Object.entries(SPK).map(([s, k]) => [k, s]));
 const SEED = { luna: 3, tobi: 7, zip: 11, hugo: 17 };
