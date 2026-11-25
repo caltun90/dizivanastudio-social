@@ -249,10 +249,11 @@
   "dikey": "videos/2026-11-25-sonvagon-b05-sondurak-dikey.mp4",
   "yatay": "videos/2026-11-25-sonvagon-b05-sondurak-yatay.mp4",
   "sure_sn": 167,
-  "durum": "uretildi, yayin planlaniyor",
+  "durum": "planlandi",
   "baslik_dikey": "Makinist koltuğu boş. Bu treni kim sürüyor? | Son Vagon 5. Bölüm",
   "playlist": "PLSAMtowKWcOo",
   "yz_etiketli": [
+   "YCFJU1WUSXs",
    "_lXRMiEBwQM",
    "mjroPwABL3o",
    "pYLTDBYhR0I",
@@ -272,6 +273,10 @@
    "hlGa0Ocx-2o",
    "Wg1auYumb3w",
    "n0Vu86LHzM8"
-  ]
+  ],
+  "yatay_youtube": "YCFJU1WUSXs",
+  "buffer_post": "6b06b1b07daa40c6fc706181",
+  "yayin": "2026-11-25T18:00:00+03:00",
+  "yz_etiket_bekleyen": "Son Vagon b05 Short (Buffer 18:00 yükler)"
  }
 ]
