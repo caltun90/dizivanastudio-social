@@ -4,6 +4,8 @@ Kanal: **dizivanastudio** (YouTube). Örgü (tığ işi) görünümlü çizgi ka
 
 Bu dosya, bölümü üreten kişinin (çoğu zaman otomatik görev) tek kaynağıdır. Baştan sona oku, sonra işe başla. Cem'e yazılan her şey Türkçe, kısa ve sade olur; uzun tire (em dash) asla kullanılmaz.
 
+> HAFTALIK ANALİZ (Cem, 25 Kasım 2026): İşe başlamadan bu dosyadan sonra `ANALIZ.md` dosyasının "Bu haftanın kararları" bölümünü oku ve uygula. ANALIZ.md yalnızca konu seçimi, kanca, başlık, kapak ve süre tercihlerinde yön verir, bu dosyadaki sınırlar içinde kalır. Bu dosyadaki kurallar, güvenlik, yapay zeka etiketi, video sayısı ve yayın saatleri her zaman önce gelir; çelişirse bu dosya geçerlidir.
+
 ## 1. Değişmez kurallar
 1. **Tekrar eden kalıp yok.** Bir dizinin bölümleri aynı yapıyı tekrar etmez (YouTube "tekrar eden içerik" kuralı). Her bölümün yapısı dizinin `DIZI.md` dosyasında yazar; ona uy. Yeni dizi yazarken beş bölüme beş farklı yapı ver (düz anlatım, neredeyse diyalogsuz, tek karakterin gözünden, geri dönüşlü, tek mekân gerçek zamanlı, mektup ya da kayıt biçiminde, tersten anlatım gibi).
 2. **Yüz ifadesi her zaman var.** Gerilim sahnesinde kimse gülmez; `mutlu` yalnızca gündelik sohbet anında kullanılır, sakin duran karakter için `sakin`.
