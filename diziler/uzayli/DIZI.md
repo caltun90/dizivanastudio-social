@@ -1,0 +1,51 @@
+# Kiracı Uzaylı: dizi dosyası (8 bölüm, komedi)
+
+Bu dosya dizinin tamamını anlatır. Yeni bölüm yazan herkes (insan ya da otomasyon) önce bunu okur. Dizi, kanalın ilk komedi dizisidir ve ilk kez yeni görüntü motoruyla (örgü karakterler + 3B dünya, `yumurta/`) üretilir. Cem 25 Kasım 2026'da istedi: komedi olsun, komik şişko bir karakter ve uzun koca burunlu bir karakter olsun, 8 bölüm olsun. Sürprizleri erken açma: aşağıdaki "Sır" bölümü 8. bölüme kadar söylenmez.
+
+## Dünya ve kural
+- Luna ile Tobi, eski bir apartmanın 3. katında küçük bir öğrenci evinde oturur. Kira yetmiyor; Luna kapıya "Kiralık oda" ilanı asar.
+- Tek başvuran Zip: minik, yeşil, iki antenli bir uzaylı. Dünya'ya "Dünyalı gibi yaşamayı öğrenmeye" gelmiştir. Kirasını her ay bir gün önce, bozuk parayla, tek tek sayarak öder.
+- Zip'in elinde "Dünyalı Kılavuzu" adlı mavi bir kitapçık var (eşya: `kilavuz`). **Her bölümde kılavuzdan bir kural okur ve onu harfi harfine uygular.** Komedi bu yanlış anlamadan doğar: "Misafire ikram edilir" deyince buzdolabının tamamını ikram eder; "Komşuya selam verilir" deyince komşuyu her gördüğünde baştan selamlar.
+- Ev sahibi Hugo alt katta oturur. Kira sözleşmesinin **7. maddesi: "Evde evcil hayvan, gürültü ve tuhaf koku yasaktır."** Hugo'nun upuzun burnu her kokuyu alır. Zip'in kokusu "çilek ve yıldız tozu". Hugo her bölümde bu kokunun peşine düşer; Luna ve Tobi her bölümde Zip'i başka bir yere saklar (buzdolabı, kanepe minderinin altı, perde arkası, saksının arkası, Tobi'nin arkası, bakkalın meyve kasası...).
+- Tobi her şeyi yemekle çözer: korkunca acıkır, sevinince acıkır. Zip'in getirdiği tuhaf uzay atıştırmalıklarını seven tek kişi odur.
+- **Komedi kuralları:** kimse incinmez, kimse aşağılanmaz. Tobi'nin kilosuyla dalga geçilmez; şakalar yemek sevgisi ve tembelliği üzerine kurulur, bedeni üzerine değil. Hugo'nun burnu onun süper gücüdür, alay konusu değildir. Kötü karakter yok: Hugo kuşkucu ve kuralcıdır ama iyi kalplidir.
+
+## Karakterler (görünüş: `yumurta/diziler/uzayli/kadro.js`; aynı kalır)
+- **Luna (L):** mercan; uzun koyu saç, hardal atkı, kirpikli. 20 yaşında, mimarlık öğrencisi, evin aklı. Plan yapar, sabırlıdır ama her bölümde bir an sabrı taşar ("Tobi!"). Hızlı ve net konuşur. Ses: Aoede.
+- **Tobi (T):** hardal; kocaman yuvarlak göbek, turkuaz kazak, kısa kahverengi saç, çift gıdı (`fat: true`). Aşçılık okulu öğrencisi. Neşeli, obur, tembel, iyi kalpli. Elinde hep yiyecek (`cips`, `kek`). Yemek benzetmeleriyle konuşur ("Bu iş çorba oldu", "Plan tıpkı fırındaki kek: kabarıyor"). Ses: Puck.
+- **Zip (Z):** açık yeşil; iki pembe toplu anten, mavi kravat (kılavuzda "Dünyalılar ciddi işlerde kravat takar" yazıyor), iri parlak gözler, küçük boy. Çok kibar ve hevesli. Cümlelerinin çoğu "Kılavuz diyor ki..." ile başlar. Heyecanlanınca antenleri sallanır (`antT`), şaşırınca zıplar (`squash`, `boing` efekti). Ses: Fenrir, `VOICE_FX` rate 1.12 (ince, tatlı).
+- **Hugo (H):** lila; upuzun koca örgü burun (`nose`), kır kısa saç, kalın bıyık, yuvarlak gözlük, uzun boy. Ev sahibi; kapısı merdiven sahanlığında (kapıda HUGO levhası). Kuşkucu, kural meraklısı, abartılı resmi. Bir koku alınca burnu kıpırdar (`sniff`), "Hımm!" der, burnunu çeke çeke konuşur. Aslında yalnız ve iyi kalpli. Ses: Orus.
+- **Anlatıcı (N):** Achird. Az konuşur: "Önceki bölümde" hatırlatması ve gerekirse kapanış.
+- Kılık değişimi gerekirse (Zip'in antenlerini saklayan bere gibi) `kadro.js` içine ikinci bir kayıt ekle (`zipBere`); bir karakterin görünüşü bölüm içinde kayıt değiştirerek değişir.
+
+## Sır (8. bölümde açılır; 5-7. bölümlerde ipucu olarak serpiştir, altını çizme)
+**Hugo da uzaylıdır.** Otuz yıl önce gelmiş, Dünyalı olmayı aynı kılavuzun eski baskısından öğrenmiştir. Upuzun burnu aslında yıllar önce katlayıp sakladığı anteni; uzay kokusunu bu yüzden hemen tanır. 7. madde Zip'i değil kendini saklamak içindir. Zip'i yakalamak istemez; onu korumak ister.
+
+İpuçları:
+- Hugo da çilek sever (4. bölümde kapıya bir kavanoz çilek reçeli bırakır).
+- Hugo bazı kuralları Zip gibi harfi harfine söyler ("Komşuya selam verilir." diye kendisi de eğilerek selam verir; 2. bölüm).
+- Hugo'nun kapısının üstünde küçük bir yıldız işareti var (`merdiven` setinde gösterilecek bir ayrıntı, 5. bölümden itibaren).
+- Hugo'nun posta kutusundan solmuş, eski bir "Dünyalı Kılavuzu" görünür (5. bölüm, Zip fark eder ama önemsemez).
+- Hugo hiç hapşırmaz; burnu kıpırdar ama hiç hapşırmaz (Tobi 3. bölümde bunu söyler).
+
+## Bölümler (her birinin YAPISI farklı; aynı kalıp tekrar edilmez)
+1. **Kiralık Oda.** Yapı: **düz anlatım.** Kanca: Hugo kapıda, burnu kıpır kıpır: "Burada bir uzay kokusu var!" Sonra başlık ve dünyanın kurulması (ilk 30 sn): Luna ilanı asar, Tobi cips yer, kapı çalar, eşikte Zip ("Merhaba Dünyalı! Kılavuz diyor ki: önce tanış."). Tobi önce korkar, sonra Zip'in uzay şekerini tadıp sever. Luna kira sözleşmesini okur: 7. madde. Kılavuz kuralı: "Misafire ikram edilir." Hugo kapıyı çalınca Zip ona buzdolabının tamamını ikram etmeye koşar; Luna son anda Zip'i buzdolabına saklar. Hugo içeri koklayarak bakar: "Hımm... Çilek ve yıldız tozu." Tobi: "Benim cipsim!" Hugo gider ama kapıda durup bir kez daha koklar. Soru: Hugo bu kokunun peşini bırakacak mı?
+2. **Günaydın Komşu.** Yapı: **tek mekân, gerçek zamanlı** (yalnızca merdiven sahanlığı, kesintisiz bir sabah). Kılavuz: "Komşuya her gördüğünde selam verilir." Antenlerini saklamak için Tobi'nin beresini takan Zip, posta kutusuna inen Hugo'yu her gördüğünde selamlar; Hugo inip çıktıkça selam büyür (eğilme, el sallama, şarkı). Hugo da her seferinde ciddiyetle eğilip karşılık verir (ipucu). Bere kayar, bir anten görünür; Tobi önüne geçip kek uzatır. Soru: Hugo anteni gördü mü?
+3. **Bakkal.** Yapı: **dış mekân, yolculuk** (ev kapısından sokağa, bakkala ve geri). Kılavuz: "Alışverişte pazarlık yapılır." Zip tek bir elma için bakkalla (yalnızca sesi duyulur, dükkânın içinden; ses: Charon) uzun ve kibar bir pazarlığa girer, sonunda elmanın fiyatını kendisi yükseltir. Tobi atıştırmalık rafında kaybolur. Hugo da bakkala gelir; Zip meyve kasasının arkasına saklanır, Hugo elmaları koklar. Tobi: "Bay Hugo hiç hapşırmaz, fark ettiniz mi?" Soru: Hugo hangi kokuyu takip ediyor?
+4. **Doğum Günü.** Yapı: **neredeyse diyalogsuz** (en fazla 8 replik; müzik, efekt ve tepkilerle anlatılan sessiz komedi). Tobi'nin doğum günü. Zip kılavuzdan okur: "Doğum günü pastasının mumları üflenir." Mum yerine bütün pastayı üfler (uzay nefesi): krema tavana, Luna'nın saçına, Tobi'nin yüzüne. Tobi önce şaşırır, sonra mutlulukla yer. Hugo kokuyu alıp kapıya gelir, kimse açmaz; kapı önüne bir kavanoz çilek reçeli bırakıp gider (ipucu). Soru: Reçeli kim bıraktı?
+5. **Zip'in Günlüğü.** Yapı: **tek karakterin gözünden, kayıt biçimi.** Zip gezegenine sesli günlük gönderir: köşede anten sinyali çerçevesi ve "KAYIT" yazısı, bölümü Zip anlatır. Dünya'da öğrendiklerini sayar, her birinde yanlış anladığı kuralın görüntüsü (dönüşlerle). Hugo'nun posta kutusunda kendi kılavuzunun solmuş eski bir kopyasını gördüğünü söyler ama "Dünyalılar da kılavuz okuyor demek" diye geçer (ipucu). Hugo'nun kapısındaki yıldız ilk kez görünür. Soru: Hugo'nun kılavuzu nereden geldi?
+6. **Aylık Kontrol.** Yapı: **geri dönüşlü.** Hugo elinde listesiyle aylık ev kontrolüne gelir. Evdeki her tuhaflık sorulunca (tavandaki krema izi, kavanozdaki parlayan taşlar, kanepede yuvarlak bir çukur) geri dönüşle nasıl olduğu gösterilir (sepya renk, "DÜN", "GEÇEN HAFTA" damgası); Tobi her birini yemekle açıklamaya çalışır. Son anda Hugo saksının arkasında Zip'i görür, göz göze gelirler... Hugo hiçbir şey demez, gülümser, listesine "Her şey yolunda" yazar. Soru: Hugo neden sustu?
+7. **Bavul.** Yapı: **tersten anlatım.** Bölüm sondan başlar: Zip bavuluyla merdivende, "Gidiyorum." Sahneler geriye doğru açılır ("bir saat önce", "iki saat önce"): Zip'in bavulu toplaması, kılavuzda okuduğu yeni kural ("Kurallara uymayan kiracı evden çıkar"), 7. maddeyi kendi kokusuyla çiğnediğini düşünmesi, Luna ile Tobi'nin onu ikna edememesi. En eski sahne en sonda: Hugo'nun kapısının altından atılan bir not ("7. madde hakkında konuşmalıyız. H."). Zip notu yanlış anlamıştır. Soru: Hugo ne söyleyecek?
+8. **Son Kural.** Yapı: **kapanış.** Zip bavulla Hugo'nun kapısını çalar. Hugo onu durdurur, gözlüğünü çıkarır ve burnunu açar: burun bir antene dönüşür (pembe toplu). "Ben de buradan değilim." Sır açılır: otuz yıl, eski kılavuz, 7. madde. Hugo eski kılavuzun son sayfasını okur: "Dünyalı olmanın tek kuralı: komşunu sev." 7. madde kalemle çizilir. Kapanış: hep birlikte evde yemek masası; Tobi yemek pişirmiştir. Zip: "Kılavuz diyor ki..." Hugo: "Kılavuzu bırak, ye." Herkes güler. Soru yok; kapanış kartı: "Kiracı Uzaylı bitti. Yeni dizi yakında."
+
+## Dizi bitince
+8. bölüm yayınlandıktan sonraki çalışmada sekiz yatay bölüm tek dosyada birleştirilir ve "Kiracı Uzaylı: Tüm Bölümler (Film)" adıyla yüklenir (KIT bölüm 9). Film de kancayla açılır.
+
+## Bölüm yazım kuralları (bu diziye özel)
+- Süre 2:40 ile 2:55 arası. Yaklaşık 38 ile 46 replik, en fazla 5 ses isteği. Kanca ilk 2 saniyede (KIT kural 16).
+- **Her bölümde dört sabit vuruş** (sırası ve biçimi değişir, kalıp tekrarlanmaz): Zip kılavuzdan bir kural okur (ekranda kart: "DÜNYALI KILAVUZU · KURAL: ..."), Hugo bir kez koklar (`sniff` efekti, burun kıpırtısı, "Hımm!"), Zip bir yere saklanır, Tobi bir şey yer (`munch`).
+- Komik zamanlama: espriden önce 0,6-1,0 saniyelik sessiz tepki (`beat`), tepkide yakın plan (`O.yakin(..., { uzak: 2.3 })`), fiziksel komedi (`squash`, `jiggle`, zıplama, `boing`). Gülme sahnesinde `laugh` + `laughMarks`.
+- Müzik: gündelik sahneler `komik`, saklanma ve koklama `sinsi`, duygusal anlar (4. bölümün sonu, 6. bölümün gülümsemesi, 8. bölüm) `sicak`. Efektler: `knock` (kapı), `sniff` (Hugo), `munch` (Tobi), `boing` ve `pop` (Zip), `zip` (anten), `whistle_up` / `whistle_down` (kalkma, düşme).
+- Mekânlar: EV, MERDİVEN, SOKAK (`ortak.js`). Her bölüm en az bir yeni görsel fikir ekler (yeni bir saklanma yeri, yeni bir eşya, yeni bir kamera açısı, setin yeni bir köşesi); gerekirse `ortak.js` içine ekle.
+- Dizinin ilk bölümü değilse ilk 10 saniyede tek cümleyle "Önceki bölümde" hatırlatması.
+- Bölüm sonunda "Bir sonraki bölümde: <ad>" kartı (8. bölüm hariç).

@@ -1,17 +1,19 @@
 # dizivanastudio: üretim kiti
 
-Kanal: **dizivanastudio** (YouTube). Örgü (tığ işi) görünümlü çizgi karakterlerle kısa animasyon diziler. Her gün 1 yeni bölüm. Her dizi 5 bölüm, her bölüm yaklaşık 3 dakika. Bir dizi biter, yenisi başlar. Önce gerilim ve bilimkurgu, sonra komedi.
+Kanal: **dizivanastudio** (YouTube). Örgü (tığ işi) görünümlü çizgi karakterlerle kısa animasyon diziler. Her gün 1 yeni bölüm. Her dizinin bölüm sayısı kendi `DIZI.md` dosyasında yazar (13. Kat ve Son Vagon 5, Kiracı Uzaylı 8; Cem 25 Kasım 2026), her bölüm yaklaşık 3 dakika. Bir dizi biter, yenisi başlar. Önce gerilim ve bilimkurgu, sonra komedi.
 
 Bu dosya, bölümü üreten kişinin (çoğu zaman otomatik görev) tek kaynağıdır. Baştan sona oku, sonra işe başla. Cem'e yazılan her şey Türkçe, kısa ve sade olur; uzun tire (em dash) asla kullanılmaz.
 
 > HAFTALIK ANALİZ (Cem, 25 Kasım 2026): İşe başlamadan bu dosyadan sonra `ANALIZ.md` dosyasının "Bu haftanın kararları" bölümünü oku ve uygula. ANALIZ.md yalnızca konu seçimi, kanca, başlık, kapak ve süre tercihlerinde yön verir, bu dosyadaki sınırlar içinde kalır. Bu dosyadaki kurallar, güvenlik, yapay zeka etiketi, video sayısı ve yayın saatleri her zaman önce gelir; çelişirse bu dosya geçerlidir.
+
+> **YENİ GÖRÜNTÜ MOTORU (Cem, 25 Kasım 2026).** Kiracı Uzaylı dizisinden itibaren bölümlerin görüntüsü `yumurta/` motoruyla üretilir: örgü karakterler 3B setlerde, Demek O Yüzden'deki gibi ifadeli, hareketli ve komik (Cem örnek videoyu beğendi: "Bu şekilde yapalım"). **Senaryo (bölüm 4) ve ses (bölüm 5) aynen geçerlidir.** Bölüm 6 (`bolum.py`, sinema katmanı), `uret.py` ve bölüm 7'deki `FMT=v/h ... still` komutları YALNIZCA eski diziler (13. Kat, Son Vagon) içindir. Yeni bölümde görüntü için baştan sona `yumurta/README.md` uygulanır: `tools/kopru.py` (ses -> motor), `stories/<dizi>-bNN/story.js` (örnek: `stories/uzayli-b00`), iki formatta kare kontrolü, GitHub Actions'ta dikey ve yatay paralel render, teslim dalından alma. Bölüm 7'deki kontrol listesi ve bölüm 8 (depo ve yayın) aynen geçerlidir; videolar Actions'tan gelir. Kamera kuralı (19 Kasım) yeni motorda şöyle uygulanır: plan içinde yalnızca yavaş itme ve kayma; yeni açı yeni plan (`whip` ya da `cut`); kamera bir karakteri kare kare izlemez.
 
 ## 1. Değişmez kurallar
 1. **Tekrar eden kalıp yok.** Bir dizinin bölümleri aynı yapıyı tekrar etmez (YouTube "tekrar eden içerik" kuralı). Her bölümün yapısı dizinin `DIZI.md` dosyasında yazar; ona uy. Yeni dizi yazarken beş bölüme beş farklı yapı ver (düz anlatım, neredeyse diyalogsuz, tek karakterin gözünden, geri dönüşlü, tek mekân gerçek zamanlı, mektup ya da kayıt biçiminde, tersten anlatım gibi).
 2. **Yüz ifadesi her zaman var.** Gerilim sahnesinde kimse gülmez; `mutlu` yalnızca gündelik sohbet anında kullanılır, sakin duran karakter için `sakin`.
 3. **Yürüme gerçek adım döngüsüdür** (`walk`), zıplama değil. Ayak kaymaz, kollar ters salınır.
 4. **Yön her zaman okunur.** Nereden nereye gidildiği belli olur; hedef (kapı, çıkış) sahnenin başında gösterilir.
-5. **Karakterler bükülür:** `crouch`, `lean`, `belly` birlikte kullanılır. Düz çubuk gibi durmak varsayılan değildir.
+5. **Karakterler bükülür:** `crouch`, `lean`, `belly` birlikte kullanılır (yeni motorda `lean`, `tilt`, `squash`, `bob`, kol açıları). Düz çubuk gibi durmak varsayılan değildir.
 6. **Önce eylem, sonra replik.** "Düğmeler çalışmıyor" denecekse önce biri düğmeye basar ve çalışmadığı görülür.
 7. **Geçişler animasyonla gösterilir** (kapı açılır, ışık söner). Önce karakterin tepkisi (1,5 ile 2 sn sessiz), sonra anlatıcı.
 8. **Dekorda yanıltıcı ya da anlamsız öğe olmaz.** Ekrandaki her yazı ve kapı hikâyeye hizmet eder.
@@ -46,22 +48,26 @@ diziler/<dizi>/
   ortak.py                  dizinin karakterleri, aksesuarları, pozları, dekorları, yardımcıları
   b01/ b02/ ...             her bölüm: senaryo.py, bolum.py, voice/cuts.json (gerekirse)
 videos/                     yayınlanan mp4 dosyaları (<tarih>-<dizi>-b<no>-<slug>-dikey.mp4 ve -yatay.mp4)
+yumurta/                    YENİ görüntü motoru (Kiracı Uzaylı'dan itibaren): README.md, engine/, lib/, tools/kopru.py,
+  diziler/<dizi>/             kadro.js (karakterler), ortak.js (setler, planlar, yardımcılar)
+  stories/<dizi>-bNN/         bölümün story.js dosyası + voice/ + audio/mix.m4a
+.github/workflows/yumurta-render.yml   paralel render (dikey ve yatay)
 ```
 Depo herkese açıktır. **Hiçbir anahtar, belirteç ya da parola depoya yazılmaz.**
 
 ## 3. Günlük akış
 Her çalışmada tek bölüm üretilir ve yayına planlanır.
 
-1. **Hazırlık.** `pip install --break-system-packages skia-python soundfile numpy imageio-ffmpeg`. `git push --dry-run origin HEAD:main` ile yazma yetkisini sına; reddedilirse dur ve Cem'e bildir.
+1. **Hazırlık.** `pip install --break-system-packages skia-python soundfile numpy imageio-ffmpeg`; yeni motor için `cd yumurta/engine && npm ci --ignore-scripts --no-audit --no-fund` (Chrome: `/usr/bin/google-chrome`, kendiliğinden bulunur). `git push --dry-run origin HEAD:main` ile yazma yetkisini sına; reddedilirse dur ve Cem'e bildir. GitHub Actions erişimini sına: `gh api repos/caltun90/dizivanastudio-social/actions/workflows --jq '.workflows[].name'` içinde `yumurta-render` görünmeli.
 2. **Sıradaki bölümü bul.** `log.json` içindeki son kayda bak.
-   - Son dizinin 5. bölümü yayınlandıysa: önce o dizinin filmini derle (bölüm 9), sonra **yeni dizi** başlat (bölüm 10).
+   - Son dizinin son bölümü (o dizinin `DIZI.md` dosyasındaki bölüm sayısı) yayınlandıysa: önce o dizinin filmini derle (bölüm 9), sonra **yeni dizi** başlat (bölüm 10). Son Vagon'dan sonraki dizi **Kiracı Uzaylı**dır (Cem, 25 Kasım 2026: komedi, 8 bölüm); `diziler/uzayli/DIZI.md`, `yumurta/diziler/uzayli/kadro.js` ve `ortak.js` hazırdır, yeni dizi yazma, doğrudan b01'den başla.
    - Değilse aynı dizinin sıradaki bölümü. `diziler/<dizi>/DIZI.md` dosyasını ve önceki bölümlerin `senaryo.py` dosyalarını oku (süreklilik: kim gitti, kim ne biliyor, hangi ipucu verildi).
    - Bugünün tarihli kayıt varsa ikinci bölüm üretme, dur.
 3. **Senaryo:** `diziler/<dizi>/bNN/senaryo.py` (bölüm 4).
 4. **Ses:** bölüm klasöründe `python ../../../motor/ses.py tts`, `gaps`, `check`, `build` (bölüm 5).
-5. **Sahneler:** `bolum.py` (bölüm 6). Önce `python ../../../motor/ses.py dry` ile sessiz taslak zaman çizelgesi çıkarıp sahneleri onunla da yazabilirsin; gerçek ses gelince `build` üstüne yazar.
-6. **Kare kontrolü** (bölüm 7). Sorun varsa düzelt. Düzelmiyorsa yayınlama, Cem'e bildir.
-7. **Üretim:** `python ../../../motor/uret.py ../../../videos/<tarih>-<dizi>-b<no>-<slug>`. Sonra son kontrol: süre, ses var mı, iki dosyadan 12'şer kare.
+5. **Sahneler:** yeni motorda `yumurta/README.md` akış 3-4 (`kopru.py`, sonra `yumurta/stories/<dizi>-bNN/story.js`). Önce `python ../../../motor/ses.py dry` ile taslak zaman çizelgesi çıkarıp sahneleri onunla da kurabilirsin; gerçek ses gelince `build` ve `kopru.py` yeniden. (Eski diziler: `bolum.py`, bölüm 6.)
+6. **Kare kontrolü:** README akış 5 (dikey ve yatay `--stills`), kontrol listesi bölüm 7 ve README. Sorun varsa düzelt. Düzelmiyorsa yayınlama, Cem'e bildir.
+7. **Üretim:** README akış 6-7: hikâye klasörünü push et, Actions'ta dikey ve yatay render, teslim dallarından al, `videos/<tarih>-<dizi>-b<no>-<slug>-dikey.mp4` ve `-yatay.mp4` olarak koy (her biri 95 MB altında). Sonra son kontrol: süre, ses var mı (`ebur128`, yaklaşık -14 LUFS), iki dosyadan 12'şer kare. (Eski diziler: `uret.py`.)
 8. **Depo ve yayın** (bölüm 8).
 9. **Rapor:** Cem'e tek kısa mesaj.
 
@@ -166,25 +172,25 @@ Kontrol listesi:
    - Açıklama: 2 cümlelik kanca (sürpriz bozmadan), izleyiciye bölümün sorusu, "Yeni bölüm her gün.", en fazla 6 etiket (her zaman `#dizivanastudio` ve dizinin etiketi, örnek `#13kat`).
 
 ## 9. Dizi bitince: film
-Beşinci bölüm yayınlandıktan sonraki çalışmada, yeni diziye başlamadan önce:
-- Beş yatay bölümü tek dosyada birleştir (başta 2 sn dizi adı kartı, aralarda 1 sn kararma; `ffmpeg concat`, gerekirse yeniden kodla). Dosya 95 MB'ı geçmesin (geçerse `-crf` yükselt).
+Dizinin son bölümü yayınlandıktan sonraki çalışmada, yeni diziye başlamadan önce:
+- Bütün yatay bölümleri tek dosyada birleştir (başta 2 sn dizi adı kartı, aralarda 1 sn kararma; `ffmpeg concat`, gerekirse yeniden kodla). Dosya 95 MB'ı geçmesin (geçerse `-crf` yükselt; 8 bölümlük filmde 1280x720 ve iki geçişli yaklaşık 480k video, 64k ses).
 - `videos/<tarih>-<dizi>-film-yatay.mp4` olarak depoya koy, `yt-yukle` ile `<Dizi adı>: Tüm Bölümler (Film)` başlığıyla 20:00'a planla (aynı oynatma listesine ekle), `log.json` içine `"bolum": "film"` kaydı ekle. Film yataydır; Buffer'a verilmez.
 
 ## 10. Yeni dizi başlatmak
 1. Aşağıdaki havuzdan sıradaki fikri al (havuz biterse aynı ruhta yenisini bul): tek cümlelik güçlü bir fikir, tek bir kural ya da sır, 4 ile 5 karakter, en fazla 3 mekân.
-2. `diziler/<kısa-ad>/DIZI.md` yaz (`diziler/kat13/DIZI.md` örnek): dünya ve kural, karakterler (renk, tek bir ayırt edici aksesuar, konuşma biçimi, ses), sır ve ipuçları, **beş bölümün özeti ve her birinin farklı yapısı**, dizi bitişi. Sonu baştan belli olsun; her bölüm bir soruyla biter, son bölüm bütün soruları kapatır.
-3. `diziler/<kısa-ad>/ortak.py` yaz (`kat13/ortak.py` örnek): `CAST` (yer, ölçek, renk, seed), `accessories` (her karaktere bir aksesuar; kadın karaktere saç), pozlar, dekorlar, `run`. Kat 13'e özel olmayan yardımcıları oradan kopyalayabilirsin (walk, actor, cast, tally, badge, dim, run).
+2. `diziler/<kısa-ad>/DIZI.md` yaz (`diziler/uzayli/DIZI.md` örnek): dünya ve kural, karakterler (renk, tek bir ayırt edici aksesuar, konuşma biçimi, ses), sır ve ipuçları, **bütün bölümlerin özeti ve her birinin farklı yapısı**, dizi bitişi. Bölüm sayısını yaz (varsayılan 5; Cem başka sayı istediyse o). Sonu baştan belli olsun; her bölüm bir soruyla biter, son bölüm bütün soruları kapatır.
+3. Yeni motorda: `yumurta/diziler/<kısa-ad>/kadro.js` (karakterler: `OrguToon` görünüşleri, `SPK`, `NAMES`, `COLORS`) ve `ortak.js` (en fazla 3 mekân, planlar, yardımcılar) yaz; `yumurta/diziler/uzayli/` örnektir, mekân dışındaki yardımcıları oradan kopyala. Kadro sayfasına bak: `node faces.mjs <kadro hikâyesi>`. (Eski motor: `ortak.py`, `kat13/ortak.py` örnek.)
 4. Karakter renkleri birbirinden net ayrılsın (turkuaz, mercan, lacivert, lila, hardal, açık kahve, yeşil, pembe). Bir önceki dizinin karakterlerini aynen kullanma.
 5. Sesler: Gemini hazır seslerinden seç (Achird anlatıcı için iyi; Kore, Aoede, Leda kadın; Puck, Fenrir, Algenib, Charon, Orus erkek). Her karaktere ayrı ses; benzer çıkanları `VOICE_FX` ile ayır.
 6. İlk bölüm dünyayı ve kuralı ilk 30 saniyede kurar.
 
 **Dizi havuzu (sırayla)**
 1. **13. Kat** (gerilim): asansör olmayan katlara çıkar, her katın bir kuralı vardır. (YAYINDA)
-2. **Son Vagon** (gerilim): gece treninde her istasyonda bir vagon kayboluyor; yolcular en öndeki vagona doğru ilerlemek zorunda. Biletlerde herkesin ineceği istasyon yazıyor, biri hariç.
+2. **Son Vagon** (gerilim): gece treninde her istasyonda bir vagon kayboluyor; yolcular en öndeki vagona doğru ilerlemek zorunda. Biletlerde herkesin ineceği istasyon yazıyor, biri hariç. (BİTTİ, 25 Kasım 2026)
 3. **Yedek** (bilimkurgu): bir adam sabah uyanır, evde ondan önce uyanmış bir "o" daha vardır. Hangisi yedek?
 4. **Saat 03:03** (gerilim): bir apartmanda herkes her gece 03:03'te uyanıyor ve her gece binadan bir şey eksiliyor: önce bir kapı numarası, sonra bir merdiven, sonra bir komşu.
 5. **Kayıp Eşya Bürosu** (komedi, gizem): kaybolan her şeyin geldiği bir büro. Bir gün rafa bir "pazartesi günü" gelir ve şehirde kimse pazartesiyi hatırlamaz.
-6. **Kiracı Uzaylı** (komedi): öğrenci evine kiracı olarak bir uzaylı taşınır; dünyalı gibi davranmayı kurallar listesinden öğrenmeye çalışır ve her kuralı yanlış anlar.
+6. **Kiracı Uzaylı** (komedi): öğrenci evine kiracı olarak bir uzaylı taşınır; dünyalı gibi davranmayı kurallar listesinden öğrenmeye çalışır ve her kuralı yanlış anlar. (SIRADAKİ: Cem 25 Kasım 2026'da Son Vagon'dan sonra bir komedi istedi, komik şişko ve uzun burunlu karakterlerle, 8 bölüm; `diziler/uzayli/` hazır. Havuzda 3, 4 ve 5 bunun ardından sırayla gelir.)
 
 ## 11. Rapor ve hata
 - Başarıyla bitince Cem'e tek kısa mesaj: dizi ve bölüm adı, iki başlık, planlanan saatler, iki videonun depo bağlantısı. Dikey videoyu dosya olarak da gönder ki yayından önce izleyebilsin; beğenmezse Buffer'dan silebileceğini bir cümleyle hatırlat.
@@ -209,3 +215,4 @@ Beşinci bölüm yayınlandıktan sonraki çalışmada, yeni diziye başlamadan 
 - 23 Kasım 2026: Yavaş okunan anons grubu "bozuk kayıt" yanlış alarmı verebilir (16,5 sn, sonu 3 sn sessiz): yeni istek harcamadan `voice/bozuk_<grup>.wav` dosyasını `raw_<grup>.wav` adıyla kopyala ve `check` ile doğrula. Karakterler vagon koltuğuna oturtulamaz (koltuk boylarından yüksek): duvara katlanır koltuk çiz (b03 `jump_seat`, `SEATP`). Küçük ölçekli karakteri `zoom` içinde büyütme (bulanır); zoom dışında, hesaplanmış yer ve ölçekte çiz (b03 `door_shot`). Bulut ortamında `pip` başka Python'a kurabiliyor: `python -m pip` kullan.
 - 24 Kasım 2026: Mektup ya da dış ses biçimi: sesi okuyan karakteri köşede konuşan bir portreyle göster (b04 `portrait`, nakış kasnağı) ve replikleri iki konuşmacılı gruba koy (8 replik, 35 sn sorunsuz geldi). İki konuşmacılı grupta konuşmacı değişimindeki boşluk (0,3 sn) cümle içi duraklamadan (0,5-1 sn) kısa çıkabiliyor: `check` kayma gösterirse kesimleri `gaps` çıktısından cümle sayarak yaz. Kamera sahneyi kırptığı için kenara yapışık çerçeve ve etiketleri (`memory_frame`, köşe portresi) sahnede değil `hud` içinde çiz. `CRF=23` ile bölüm 45 MB civarı çıkar (21 ile 75 MB).
 - 25 Kasım 2026: Sinema kamerası dikeyde kenarlardan yaklaşık 80 piksel kırpar: tabela, saat ve kenardaki karakteri x 90-990 arasında tut (b05'te gişe tabelası ve kapıdaki Kondüktör kesildi, kaydırıldı). Hazır `SIT` pozu karakteri yere yakın oturtur: alçak bank çiz, zemini oturma tahtasının 62 piksel altına ver (b05 `bench`). "Boş" bir şeyi (boş koltuk) kancada göstermek için kesik çizgili siluet ve soru işareti koy; yalnız boş dekor okunmuyor. Tek heceli replik başı ("Ev.") iki konuşmacılı grupta bir önceki repliğe yapışabiliyor: kesimi `gaps` çıktısından elle yaz.
+- 25 Kasım 2026: Yeni motorla (yumurta + örgü) 16,8 sn'lik deneme Actions'ta 4 parçayla dikey ve yatay birlikte yaklaşık 5 dakikada çıktı (kare başına yaklaşık 1,8 sn, kurulum 2 dk). 3 dakikalık bölümde `parts=20` ile iki format birlikte 20-35 dakika bekle. Ses `ses.py` ile aynı yoldan gelir; `kopru.py` her `build`'den sonra çalışmalı. Konuşanın adı ve vurgu kelimeleri altyazıda kendiliğinden çıkar (`senaryo` `hl` listesi).
