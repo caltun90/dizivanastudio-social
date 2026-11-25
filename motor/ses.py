@@ -314,11 +314,44 @@ def ring(d=2.0):
     g = lowpass(gate, 40)
     return (lowpass(x.astype(np.float32), 2600) * g * env(d, 0.02, 0.1)).astype(np.float32) * 0.3
 
-FX = dict(hum=hum, rumble=rumble, snap=snap, tick=tick, whoosh=whoosh, chime=chime, buzz=buzz, ding=ding, slide=slide, steps=steps, ring=ring)
+# komedi efektleri (Kiraci Uzayli): boing (yay), pop (balon), sniff (Hugo kokluyor), munch (Tobi yiyor), zip (uzayli antenleri),
+# knock (kapi vurusu), whistle_up / whistle_down (kayan duduk: kalkma, dusme)
+def boing(d=0.7):
+    t = tt(d); f = 180 + 260 * np.exp(-t * 5) * (1 + 0.35 * np.sin(2 * np.pi * 14 * t))
+    return (np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 4.5) * np.minimum(1, t / 0.004)).astype(np.float32) * 0.5
+def pop():
+    t = tt(0.12); return (np.sin(2 * np.pi * (700 * np.exp(-t * 30) + 200) * t) * np.exp(-t * 50) + 0.3 * highpass(RNG.standard_normal(len(t)).astype(np.float32), 2000) * np.exp(-t * 80)).astype(np.float32) * 0.6
+def sniff(n=3):
+    y = np.zeros(int((0.2 * n + 0.3) * SR), dtype=np.float32); th = tt(0.16)
+    for k in range(n):
+        x = lowpass(highpass(RNG.standard_normal(len(th)).astype(np.float32), 900), 4200) * np.sin(np.pi * np.arange(len(th)) / len(th)) ** 2
+        put(y, x * 0.5, k * 0.2)
+    return y
+def munch(n=4):
+    y = np.zeros(int((0.24 * n + 0.3) * SR), dtype=np.float32); th = tt(0.12)
+    for k in range(n):
+        x = lowpass(RNG.standard_normal(len(th)).astype(np.float32), 2400) * np.exp(-th * 30) + 0.4 * np.sin(2 * np.pi * 90 * th) * np.exp(-th * 25)
+        put(y, x.astype(np.float32) * 0.6, k * 0.24 + RNG.uniform(0, 0.03))
+    return y
+def zip_(d=0.5):
+    t = tt(d); f = 900 + 1600 * (t / d); return (np.sin(2 * np.pi * np.cumsum(f) / SR) * (0.5 + 0.5 * np.sin(2 * np.pi * 30 * t)) * env(d, 0.02, 0.1)).astype(np.float32) * 0.25
+def knock(n=3):
+    y = np.zeros(int((0.26 * n + 0.3) * SR), dtype=np.float32); th = tt(0.18)
+    for k in range(n):
+        x = np.sin(2 * np.pi * 120 * th) * np.exp(-th * 35) + 0.5 * lowpass(RNG.standard_normal(len(th)).astype(np.float32), 1200) * np.exp(-th * 60)
+        put(y, x.astype(np.float32) * 0.7, k * 0.26)
+    return y
+def whistle_up(d=0.6):
+    t = tt(d); f = 600 * 3 ** (t / d); return (np.sin(2 * np.pi * np.cumsum(f) / SR) * env(d, 0.03, 0.08)).astype(np.float32) * 0.3
+def whistle_down(d=0.8):
+    t = tt(d); f = 1800 / 3 ** (t / d); return (np.sin(2 * np.pi * np.cumsum(f) / SR) * env(d, 0.03, 0.1)).astype(np.float32) * 0.3
+
+FX = dict(hum=hum, rumble=rumble, snap=snap, tick=tick, whoosh=whoosh, chime=chime, buzz=buzz, ding=ding, slide=slide, steps=steps, ring=ring,
+          boing=boing, pop=pop, sniff=sniff, munch=munch, zip=zip_, knock=knock, whistle_up=whistle_up, whistle_down=whistle_down)
 
 
 # ---------- muzik: gerilim (minor, seyrek piyano + uzak muzik kutusu) / sicak (major, muzik kutusu melodisi + yumusak piyano) ----------
-# mix_plan(T) donusune 'music': [(bas, bit, mod, kazanc)] eklenirse calar. mod: 'gerilim' | 'sicak' | 'gizem'.
+# mix_plan(T) donusune 'music': [(bas, bit, mod, kazanc)] eklenirse calar. mod: 'gerilim' | 'sicak' | 'gizem' | 'komik' | 'sinsi'.
 # Ayni anda pads de calabilir ama ton catisir: muzik kullanan bolumde pads'i bos birak ya da ayni tonda tut (gerilim D minor, sicak F major).
 def _note(f, d, partials, decay, attack=0.004):
     t = tt(d); x = np.zeros(len(t))
@@ -345,6 +378,15 @@ FMAJ_M = [65, 67, 69, 70, 72, 74, 76, 77]                    # F major (F4..F5)
 MEL = [(0, 1), (2, 1), (4, 1), (5, 2), (4, 1), (2, 1), (1, 1), (2, 2), (0, 1), (2, 1), (4, 1), (7, 2), (5, 1), (4, 1), (2, 1), (4, 3),
        (5, 1), (4, 1), (2, 1), (1, 2), (2, 1), (0, 1), (1, 1), (2, 2), (4, 1), (2, 1), (1, 1), (0, 3)]
 CHORDS_F = [(53, 57, 60), (48, 52, 55), (50, 53, 57), (46, 50, 53)]   # F, C, Dm, Bb
+# komedi (Kiraci Uzayli, 26 Kasim 2026): komik (C major, hoplayan bas + pizzicato melodi) ve sinsi (D minor, parmak ucu pizzicato:
+# saklanma, gizlice yurume, Hugo'nun koklamasi)
+def pluck(f, d=0.36, vel=1.0):
+    return lowpass(_note(f, d, [(1, 1.0, 1.0), (2.0, 0.45, 1.8), (3.0, 0.2, 2.6)], 9.0, 0.002), 3200) * 0.34 * vel
+def bassn(f, d=0.32, vel=1.0):
+    return lowpass(_note(f, d, [(1, 1.0, 1.0), (2.0, 0.35, 2.0), (3.0, 0.12, 3.0)], 7.0, 0.003), 900) * 0.55 * vel
+CMAJ = [60, 62, 64, 65, 67, 69, 71, 72, 74]
+KOMIK_MEL = [4, -1, 4, 5, 4, -1, 2, -1, 0, 2, 4, -1, 5, -1, 4, -1, 7, -1, 5, 4, 2, -1, 4, -1, 2, 1, 0, -1, 1, -1, 0, -1]
+KOMIK_BAS = [(48, 55), (53, 60), (55, 50), (48, 55)]           # C, F, G, C: kok + besli
 def music_bed(a, b, mode, seed=0):
     d = b - a; out = np.zeros(int(d * SR) + SR * 3, dtype=np.float32); R = np.random.default_rng(seed)
     if mode == 'gerilim':
@@ -362,6 +404,24 @@ def music_bed(a, b, mode, seed=0):
         seq = [7, 5, 4, 2, 4, 5, 4, 0]
         while t < d - 0.4:
             put(out, musicbox(hz(DMIN[seq[i % len(seq)]] + 12), 2.0, 0.8), t); t += beat * (2 if i % 4 == 3 else 1); i += 1
+    elif mode == 'komik':
+        beat = 0.30; t = 0.1; i = 0
+        while t < d - 0.3:
+            bar = (i // 8) % 4; r, f5 = KOMIK_BAS[bar]
+            if i % 4 == 0: put(out, bassn(hz(r - 12), vel=0.8), t)     # um
+            elif i % 4 == 2: put(out, bassn(hz(f5 - 12), vel=0.65), t) # pa
+            if i % 4 in (1, 3): put(out, pluck(hz(r + 12), 0.2, 0.35), t)
+            m = KOMIK_MEL[i % len(KOMIK_MEL)]
+            if m >= 0: put(out, pluck(hz(CMAJ[m] + 12), 0.36, 0.6 + 0.15 * R.random()), t)
+            t += beat; i += 1
+    elif mode == 'sinsi':
+        beat = 0.34; t = 0.1; i = 0
+        walk = [50, 49, 48, 47, 46, 45, 46, 47]                        # D'den inen kromatik parmak ucu
+        while t < d - 0.3:
+            put(out, pluck(hz(walk[(i // 2) % len(walk)]), 0.3, 0.9), t)
+            if i % 2 == 1: put(out, pluck(hz(walk[(i // 2) % len(walk)] + 7), 0.25, 0.5), t)
+            if i % 16 == 12: put(out, musicbox(hz(DMIN[int(R.integers(4, 8))] + 12), 1.6, 0.5), t)
+            t += beat; i += 1
     else:                                                     # sicak
         beat = 0.70; t = 0.25; i = 0; bar = 0
         while t < d - 0.4:

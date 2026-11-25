@@ -1,0 +1,221 @@
+{
+"words": [
+{
+"word": "Burada",
+"start": 0.0,
+"end": 0.554,
+"spk": "H",
+"line": "h1",
+"hl": false
+},
+{
+"word": "bir",
+"start": 0.554,
+"end": 0.782,
+"spk": "H",
+"line": "h1",
+"hl": false
+},
+{
+"word": "uzay",
+"start": 0.782,
+"end": 1.173,
+"spk": "H",
+"line": "h1",
+"hl": true
+},
+{
+"word": "kokusu",
+"start": 1.173,
+"end": 1.727,
+"spk": "H",
+"line": "h1",
+"hl": true
+},
+{
+"word": "var!",
+"start": 1.727,
+"end": 1.955,
+"spk": "H",
+"line": "h1",
+"hl": false
+},
+{
+"word": "Koku",
+"start": 2.315,
+"end": 2.615,
+"spk": "T",
+"line": "t1",
+"hl": false
+},
+{
+"word": "benim",
+"start": 2.615,
+"end": 2.915,
+"spk": "T",
+"line": "t1",
+"hl": false
+},
+{
+"word": "cipsimden",
+"start": 2.915,
+"end": 3.341,
+"spk": "T",
+"line": "t1",
+"hl": true
+},
+{
+"word": "geliyor,",
+"start": 3.341,
+"end": 3.766,
+"spk": "T",
+"line": "t1",
+"hl": false
+},
+{
+"word": "Bay",
+"start": 3.766,
+"end": 3.941,
+"spk": "T",
+"line": "t1",
+"hl": false
+},
+{
+"word": "Hugo!",
+"start": 3.941,
+"end": 4.241,
+"spk": "T",
+"line": "t1",
+"hl": false
+},
+{
+"word": "Tobi,",
+"start": 4.541,
+"end": 5.007,
+"spk": "L",
+"line": "l1",
+"hl": false
+},
+{
+"word": "sessiz",
+"start": 5.007,
+"end": 5.473,
+"spk": "L",
+"line": "l1",
+"hl": false
+},
+{
+"word": "ol!",
+"start": 5.473,
+"end": 5.745,
+"spk": "L",
+"line": "l1",
+"hl": false
+},
+{
+"word": "Zip",
+"start": 5.745,
+"end": 6.017,
+"spk": "L",
+"line": "l1",
+"hl": false
+},
+{
+"word": "buzdolabının",
+"start": 6.017,
+"end": 7.066,
+"spk": "L",
+"line": "l1",
+"hl": true
+},
+{
+"word": "içinde.",
+"start": 7.066,
+"end": 7.726,
+"spk": "L",
+"line": "l1",
+"hl": false
+},
+{
+"word": "Kılavuz",
+"start": 8.866,
+"end": 9.555,
+"spk": "Z",
+"line": "z1",
+"hl": false
+},
+{
+"word": "diyor",
+"start": 9.555,
+"end": 10.041,
+"spk": "Z",
+"line": "z1",
+"hl": false
+},
+{
+"word": "ki:",
+"start": 10.041,
+"end": 10.325,
+"spk": "Z",
+"line": "z1",
+"hl": false
+},
+{
+"word": "misafire",
+"start": 10.325,
+"end": 11.217,
+"spk": "Z",
+"line": "z1",
+"hl": false
+},
+{
+"word": "gülümse!",
+"start": 11.217,
+"end": 11.906,
+"spk": "Z",
+"line": "z1",
+"hl": true
+},
+{
+"word": "Hmm.",
+"start": 12.266,
+"end": 12.62,
+"spk": "H",
+"line": "h2",
+"hl": false
+},
+{
+"word": "Çilek",
+"start": 12.62,
+"end": 13.228,
+"spk": "H",
+"line": "h2",
+"hl": false
+},
+{
+"word": "ve",
+"start": 13.228,
+"end": 13.582,
+"spk": "H",
+"line": "h2",
+"hl": false
+},
+{
+"word": "yıldız",
+"start": 13.582,
+"end": 14.19,
+"spk": "H",
+"line": "h2",
+"hl": true
+},
+{
+"word": "tozu...",
+"start": 14.19,
+"end": 14.797,
+"spk": "H",
+"line": "h2",
+"hl": true
+}
+],
+"duration": 16.717
+}

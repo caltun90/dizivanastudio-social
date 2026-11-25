@@ -1,0 +1,116 @@
+# Yumurta stili videoyu parçalara bölüp aynı anda birçok makinede render eder, birleştirir, sesi ekler.
+# Tetikleme (REST; gh workflow run çalışmaz): gh api -X POST repos/<owner>/<repo>/actions/workflows/yumurta-render.yml/dispatches
+#   -f ref=main -f 'inputs[story]=<yumurta/stories altındaki klasör>' [-f 'inputs[parts]=8'] [-f 'inputs[dal]=render/short']
+# Çıktı: <dal> dalında tek commit, içinde <story>.mp4 (100 MB üstüyse <story>.mp4.part00, part01...). Dal her seferinde
+# üzerine yazılır; aynı dalı kullanan iki render aynı anda çalıştırılmaz. Ayrıca 7 gün duran "final" artifact.
+# Önce görev, hikâyenin klasörünü (story.js, voice/, audio/mix.m4a) main'e push etmiş olmalı.
+# dizivanastudio: aynı hikâye iki kez render edilir: -f 'inputs[aspect]=9:16' -f 'inputs[dal]=render/dikey' ve
+# -f 'inputs[aspect]=16:9' -f 'inputs[dal]=render/yatay' (iki çalıştırma aynı anda başlatılabilir).
+name: yumurta-render
+run-name: render ${{ inputs.story }} ${{ inputs.aspect }} (${{ inputs.parts }} parça)
+on:
+  workflow_dispatch:
+    inputs:
+      story: { description: 'yumurta/stories altındaki hikâye klasörü', required: true }
+      parts: { description: 'paralel parça sayısı (Short 6-10, uzun video 20)', required: false, default: '8' }
+      scale: { description: 'çözünürlük çarpanı (1 = tam)', required: false, default: '1' }
+      crf: { description: 'x264 kalite (düşük = daha iyi)', required: false, default: '18' }
+      dal: { description: 'bitmiş videonun konacağı dal (her seferinde üzerine yazılır)', required: false, default: 'render/dikey' }
+      aspect: { description: '9:16 (dikey) ya da 16:9 (yatay)', required: false, default: '9:16' }
+permissions:
+  contents: read
+concurrency:
+  group: render-${{ inputs.story }}-${{ inputs.aspect }}
+  cancel-in-progress: false
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      parts: ${{ steps.p.outputs.parts }}
+    steps:
+      - id: p
+        run: python3 -c "import json;n=int('${{ inputs.parts }}');print('parts='+json.dumps(list(range(n))))" >> "$GITHUB_OUTPUT"
+  render:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        part: ${{ fromJson(needs.plan.outputs.parts) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: yumurta
+          filter: blob:none
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: paketler
+        run: |
+          # apt ile ffmpeg kurmak 10+ dakika sürebiliyor: ffmpeg PyPI'deki hazır ikili dosyadan gelir
+          python3 -m pip install -q --break-system-packages imageio-ffmpeg && sudo ln -sf "$(python3 -c 'import imageio_ffmpeg as m; print(m.get_ffmpeg_exe())')" /usr/local/bin/ffmpeg
+          sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends mesa-vulkan-drivers fonts-noto-core > /dev/null
+          cd yumurta/engine && npm ci --ignore-scripts --no-audit --no-fund
+      - name: parçayı render et
+        shell: bash
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+          CHROME_ARGS: --use-angle=vulkan --enable-features=Vulkan --enable-unsafe-swiftshader
+          NO_MUX: '1'
+        run: |
+          cd yumurta/engine
+          S="${{ inputs.story }}"; P=${{ matrix.part }}; NAME=part_$(printf %03d $P)
+          # parçalar kare sayısına göre değil render maliyetine göre (hareket bulanıklığı kareleri pahalı) eşit bölünür
+          for try in 1 2 3; do OUT=$(node render.mjs "$S" --aspect=${{ inputs.aspect }} --split=${{ inputs.parts }} --part=$P 2>&1) && break; echo "deneme $try olmadı"; sleep 5; done
+          read -r _ FROM TO _ <<< "$(echo "$OUT" | grep '^SPLIT')"
+          [ -n "$FROM" ] || { echo "$OUT" | grep -v "404 (Not Found)" | tail -30; exit 1; }
+          echo "parça $P: $FROM - $TO sn"
+          for try in 1 2; do node render.mjs "$S" --aspect=${{ inputs.aspect }} --from=$FROM --to=$TO --scale=${{ inputs.scale }} --crf=${{ inputs.crf }} --name=$NAME 2>&1 | grep -v "404 (Not Found)" && break; echo "render denemesi $try olmadı"; sleep 5; done
+          test -s "../stories/$S/out/$NAME.mp4"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: part-${{ matrix.part }}
+          path: yumurta/stories/${{ inputs.story }}/out/part_*.mp4
+          if-no-files-found: error
+          retention-days: 2
+  join:
+    needs: render
+    runs-on: ubuntu-latest
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: yumurta
+          filter: blob:none
+      - uses: actions/download-artifact@v4
+        with: { pattern: part-*, path: parts, merge-multiple: true }
+      - name: birleştir ve sesi ekle
+        run: |
+          python3 -m pip install -q --break-system-packages imageio-ffmpeg && sudo ln -sf "$(python3 -c 'import imageio_ffmpeg as m; print(m.get_ffmpeg_exe())')" /usr/local/bin/ffmpeg
+          for f in $(ls parts/part_*.mp4 | sort); do echo "file '$PWD/$f'" >> list.txt; done
+          cat list.txt
+          ffmpeg -y -loglevel error -f concat -safe 0 -i list.txt -c copy silent.mp4
+          MIX=yumurta/stories/${{ inputs.story }}/audio/mix.m4a; [ -f "$MIX" ] || MIX=yumurta/stories/${{ inputs.story }}/audio/mix.wav
+          mkdir -p final
+          if [ -f "$MIX" ]; then
+            ffmpeg -y -loglevel error -i silent.mp4 -i "$MIX" -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 192k -af "loudnorm=I=-14:TP=-1.5:LRA=11" -shortest -movflags +faststart "final/${{ inputs.story }}.mp4"
+          else
+            cp silent.mp4 "final/${{ inputs.story }}.mp4"
+          fi
+          ls -la final; ffmpeg -hide_banner -i "final/${{ inputs.story }}.mp4" 2>&1 | grep -E "Duration|Stream" || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: final
+          path: final/*.mp4
+          retention-days: 7
+      - name: teslim dalına koy (bulut oturumu artifact indiremez, videoyu git ile alır)
+        run: |
+          S="${{ inputs.story }}"; B="${{ inputs.dal }}"
+          mkdir -p /tmp/r && cd /tmp/r && git init -q && cp "$GITHUB_WORKSPACE/final/$S.mp4" .
+          # GitHub 100 MB üstü dosya kabul etmez: büyük video (uzun video) 95 MB'lık parçalara bölünür, oturum cat ile birleştirir
+          if [ $(stat -c %s "$S.mp4") -gt 99000000 ]; then split -b 95m -d -a 2 "$S.mp4" "$S.mp4.part"; rm "$S.mp4"; fi
+          git add -A
+          git -c user.name=yumurta-render -c user.email=actions@users.noreply.github.com commit -q -m "render $S (${{ github.run_id }})"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" HEAD:refs/heads/$B
+          ls -la; echo "dal: $B"

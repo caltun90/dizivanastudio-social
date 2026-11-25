@@ -1,0 +1,73 @@
+{
+ "total": 16.717,
+ "lines": [
+  {
+   "id": "h1",
+   "spk": "H",
+   "text": "Burada bir uzay kokusu var!",
+   "hl": [
+    "uzay",
+    "kokusu"
+   ],
+   "start": 0.0,
+   "end": 1.955
+  },
+  {
+   "id": "t1",
+   "spk": "T",
+   "text": "Koku benim cipsimden geliyor, Bay Hugo!",
+   "hl": [
+    "cipsimden"
+   ],
+   "start": 2.315,
+   "end": 4.241
+  },
+  {
+   "id": "l1",
+   "spk": "L",
+   "text": "Tobi, sessiz ol! Zip buzdolabının içinde.",
+   "hl": [
+    "buzdolabının"
+   ],
+   "start": 4.541,
+   "end": 7.726
+  },
+  {
+   "id": "z1",
+   "spk": "Z",
+   "text": "Kılavuz diyor ki: misafire gülümse!",
+   "hl": [
+    "gülümse!"
+   ],
+   "start": 8.866,
+   "end": 11.906
+  },
+  {
+   "id": "h2",
+   "spk": "H",
+   "text": "Hmm. Çilek ve yıldız tozu...",
+   "hl": [
+    "yıldız",
+    "tozu..."
+   ],
+   "start": 12.266,
+   "end": 14.797
+  }
+ ],
+ "beats": {
+  "pop": [
+   7.966,
+   8.866
+  ],
+  "end": [
+   15.517,
+   16.717
+  ]
+ },
+ "scenes": {
+  "1": 0.0,
+  "2": 2.315,
+  "3": 7.966,
+  "4": 12.266
+ }
+}
