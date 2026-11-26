@@ -77,6 +77,7 @@ export const EV = {
   kanepe1: [-2.1, 0, -2.0], kanepe2: [-1.15, 0, -2.0], sehpa: [-1.6, 0, -1.2], mutfak: [2.0, 0, -2.45], buzdolabi: [3.45, 0, -2.4],
   masa1: [1.35, 0, -1.0], masa2: [2.75, 0, -1.0], kapi: [-3.75, 0, .55], kapiIci: [-3.0, 0, .35], orta: [0, 0, -1.0], on: [0, 0, .6], pencere: [-1.6, 0, -2.75],
 };
+export const PARA = [-1.4, .45, -1.3];           // bozuk para yığınının yeri (sehpanın üstü)
 function buildEv(scene, K) {
   const g = new THREE.Group(); scene.add(g); const L = new THREE.Group(); scene.add(L);
   const fl = new THREE.Mesh(new THREE.PlaneGeometry(9, 8.5), painted(woodTex({ base: '#b07a4a', plank: 64, rep: [7, 7] }))); fl.rotation.x = -Math.PI / 2; fl.position.z = .5; g.add(fl);
@@ -149,6 +150,13 @@ function buildEv(scene, K) {
   const fl2 = lamba(g, L, 2.2, 2.3, -2.5, { cord: .55, power: 3.2 });
   const moon = new THREE.DirectionalLight('#8aa0ff', 1.2); moon.position.set(-2, 4, -9); moon.target.position.set(-1, 0, 0); moon.castShadow = true; moon.shadow.mapSize.set(1024, 1024);
   Object.assign(moon.shadow.camera, { left: -6, right: 6, top: 5, bottom: -2, near: 1, far: 20 }); L.add(moon); L.add(moon.target);
+  K.dyn.evAy = moon;
+  // bozuk para yığını (Zip'in kirası): sehpanın üstünde, para(K, 0..1) ile büyür; 0 iken görünmez
+  K.dyn.para = new THREE.Group(); K.dyn.para.position.set(...PARA); g.add(K.dyn.para); K.dyn.para.visible = false;
+  { const R = rng(4), gold = [new THREE.MeshLambertMaterial({ color: '#f2c64a', emissive: '#5a4208' }), new THREE.MeshLambertMaterial({ color: '#e0a83a', emissive: '#4a3206' }), new THREE.MeshLambertMaterial({ color: '#d8d8e0', emissive: '#3a3a44' })];
+    for (let i = 0; i < 70; i++) { const r = Math.sqrt(R()) * .27, an = R() * 6.29, y = (.27 - r) * .85 * R() + .01;
+      const c = cyl(K.dyn.para, .036, .036, .012, Math.cos(an) * r, y, Math.sin(an) * r * .7, gold[i % 3], 12); c.rotation.set((R() - .5) * 1.2, R() * 3, (R() - .5) * 1.2); }
+    for (const [x, z, n] of [[.3, .12, 9], [-.31, .1, 6], [.22, .2, 4]]) for (let i = 0; i < n; i++) cyl(K.dyn.para, .036, .036, .012, x, .006 + i * .013, z, gold[(i + n) % 2], 12); }
   K.dyn.evGunes = new THREE.DirectionalLight('#ffe2b0', 0); K.dyn.evGunes.position.set(-2, 5, -9); K.dyn.evGunes.target.position.set(-1, 0, 0); L.add(K.dyn.evGunes); L.add(K.dyn.evGunes.target);
   K.sets.ev = { g, L, keys: [fl1, fl2] };
   shadows(g);
@@ -247,6 +255,11 @@ TOON_PROPS.kek = (g, x, y, s) => { g.save(); g.translate(x, y - 30); g.fillStyle
   g.beginPath(); g.moveTo(-34, 0); g.lineTo(34, 0); g.lineTo(26, 40); g.lineTo(-26, 40); g.closePath(); g.fill(); g.stroke();
   g.fillStyle = '#f6efe0'; g.beginPath(); g.ellipse(0, -4, 38, 22, 0, Math.PI, 0); g.fill(); g.stroke(); g.fillStyle = '#e04a3a'; g.beginPath(); g.arc(0, -28, 9, 0, 6.29); g.fill(); g.stroke(); g.restore(); };
 
+// el ilanı: "KİRALIK ODA" (yazı ters dönmesin diye ilanı tutan karaktere flip verme)
+TOON_PROPS.ilan = (g, x, y, s) => { g.save(); g.translate(x, y - 70); g.rotate(-.06 * s); g.fillStyle = '#fbf6ea'; g.strokeStyle = PLUM; g.lineWidth = 5;
+  g.beginPath(); g.roundRect(-92, -64, 184, 128, 8); g.fill(); g.stroke(); g.fillStyle = '#c8323a'; g.fillRect(-92, -64, 184, 16);
+  g.fillStyle = '#2a2a4a'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = '700 40px Poppins, "Arial Black", sans-serif'; g.fillText('KİRALIK', 0, -10); g.fillText('ODA', 0, 32); g.restore(); };
+
 // ---------------------------------------------------------------- KUR (story.setup içinde)
 // Sahneyi, oyuncuları ve yazı tiplerini kurar. K = { cast, sets, dyn, where }
 export async function kur(ctx) {
@@ -288,6 +301,14 @@ export function mekan(K, where) {
 }
 // ev kapısı: k 0 kapalı .. 1 açık (içeri doğru döner, arkasında merdiven koridoru görünür)
 export function kapi(K, k) { K.dyn.evKapi.rotation.y = 1.45 * Math.max(0, Math.min(1, k)); }
+// ev: gündüz (k = 1) ya da gece (k = 0). Pencerenin manzarası, güneş ve ay ışığı değişir.
+export function gunduz(K, k) {
+  K.dyn.evVista.material = k > .5 ? K.dyn.evVistaGun : K.dyn.evVistaGece;
+  K.dyn.evGunes.intensity = 2.3 * k; K.dyn.evAy.intensity = 1.2 * (1 - k);
+  K.tint = k > .5 ? [1.06, 1.03, .98] : null;
+}
+// bozuk para yığını: k 0 yok .. 1 tam (dökülürken backOut ile büyüt)
+export function para(K, k) { K.dyn.para.visible = k > .01; K.dyn.para.scale.set(Math.max(.01, k), Math.max(.01, k), Math.max(.01, k)); }
 export const mekanOf = cam => cam.position.x < 50 ? 'ev' : cam.position.x < 150 ? 'merdiven' : 'sokak';
 const KOD = Object.fromEntries(Object.entries(SPK).map(([s, k]) => [k, s]));
 const SEED = { luna: 3, tobi: 7, zip: 11, hugo: 17 };

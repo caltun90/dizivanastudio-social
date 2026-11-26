@@ -1,0 +1,702 @@
+{
+ "total": 165.583,
+ "lines": [
+  {
+   "id": "z0",
+   "spk": "Z",
+   "text": "Misafir!",
+   "hl": [
+    "Misafir!"
+   ],
+   "start": 0.8,
+   "end": 1.562
+  },
+  {
+   "id": "l1",
+   "spk": "L",
+   "text": "Tobi. Kira yine yetmiyor.",
+   "hl": [
+    "yetmiyor."
+   ],
+   "start": 4.372,
+   "end": 6.141
+  },
+  {
+   "id": "t1",
+   "spk": "T",
+   "text": "Yemekten kısarız.",
+   "hl": [
+    "Yemekten"
+   ],
+   "start": 6.581,
+   "end": 7.878
+  },
+  {
+   "id": "t2",
+   "spk": "T",
+   "text": "Yok. Kiracı bulalım.",
+   "hl": [
+    "Kiracı"
+   ],
+   "start": 9.498,
+   "end": 11.221
+  },
+  {
+   "id": "l9",
+   "spk": "L",
+   "text": "Sessiz, normal, sıradan biri olsun.",
+   "hl": [
+    "sıradan"
+   ],
+   "start": 11.721,
+   "end": 14.441
+  },
+  {
+   "id": "t15",
+   "spk": "T",
+   "text": "Az yiyen biri olsun.",
+   "hl": [
+    "Az",
+    "yiyen"
+   ],
+   "start": 14.821,
+   "end": 16.181
+  },
+  {
+   "id": "l2",
+   "spk": "L",
+   "text": "Daha asmadım.",
+   "hl": [
+    "asmadım."
+   ],
+   "start": 19.381,
+   "end": 20.301
+  },
+  {
+   "id": "z1",
+   "spk": "Z",
+   "text": "Merhaba Dünyalı! Kılavuz diyor ki: önce tanış.",
+   "hl": [
+    "Dünyalı!",
+    "tanış."
+   ],
+   "start": 22.081,
+   "end": 25.007
+  },
+  {
+   "id": "l3",
+   "spk": "L",
+   "text": "Sen kimsin?",
+   "hl": [
+    "kimsin?"
+   ],
+   "start": 25.387,
+   "end": 26.308
+  },
+  {
+   "id": "z2",
+   "spk": "Z",
+   "text": "Ben Zip. Çok uzaktan geldim.",
+   "hl": [
+    "Zip.",
+    "uzaktan"
+   ],
+   "start": 26.618,
+   "end": 28.344
+  },
+  {
+   "id": "t3",
+   "spk": "T",
+   "text": "Ankara mı?",
+   "hl": [
+    "Ankara"
+   ],
+   "start": 28.724,
+   "end": 29.564
+  },
+  {
+   "id": "z3",
+   "spk": "Z",
+   "text": "Biraz daha uzak.",
+   "hl": [
+    "daha"
+   ],
+   "start": 29.944,
+   "end": 31.239
+  },
+  {
+   "id": "t4",
+   "spk": "T",
+   "text": "Antenlerin var.",
+   "hl": [
+    "Antenlerin"
+   ],
+   "start": 32.919,
+   "end": 34.092
+  },
+  {
+   "id": "z4",
+   "spk": "Z",
+   "text": "Sağ olun. Sizin yok. Geçmiş olsun.",
+   "hl": [
+    "Geçmiş",
+    "olsun."
+   ],
+   "start": 34.472,
+   "end": 37.138
+  },
+  {
+   "id": "l4",
+   "spk": "L",
+   "text": "Çay içer misin?",
+   "hl": [
+    "Çay"
+   ],
+   "start": 38.588,
+   "end": 39.717
+  },
+  {
+   "id": "z5",
+   "spk": "Z",
+   "text": "Hayır. Kılavuz diyor ki: ilk teklif reddedilir.",
+   "hl": [
+    "Hayır.",
+    "reddedilir."
+   ],
+   "start": 40.097,
+   "end": 42.856
+  },
+  {
+   "id": "l5",
+   "spk": "L",
+   "text": "Peki.",
+   "hl": [
+    "Peki."
+   ],
+   "start": 43.236,
+   "end": 43.797
+  },
+  {
+   "id": "z6",
+   "spk": "Z",
+   "text": "İkinci teklif gelmedi.",
+   "hl": [
+    "gelmedi."
+   ],
+   "start": 46.717,
+   "end": 48.006
+  },
+  {
+   "id": "t5",
+   "spk": "T",
+   "text": "Gelmez. Ben hep ilkinde alırım.",
+   "hl": [
+    "ilkinde"
+   ],
+   "start": 48.506,
+   "end": 50.81
+  },
+  {
+   "id": "l6",
+   "spk": "L",
+   "text": "Zip. Kira peşin.",
+   "hl": [
+    "peşin."
+   ],
+   "start": 51.43,
+   "end": 52.826
+  },
+  {
+   "id": "z7",
+   "spk": "Z",
+   "text": "Hazır. Bozuk var.",
+   "hl": [
+    "Bozuk"
+   ],
+   "start": 53.206,
+   "end": 54.372
+  },
+  {
+   "id": "z8",
+   "spk": "Z",
+   "text": "Bir. İki. Üç.",
+   "hl": [
+    "Bir.",
+    "İki.",
+    "Üç."
+   ],
+   "start": 56.392,
+   "end": 58.108
+  },
+  {
+   "id": "t6",
+   "spk": "T",
+   "text": "Kaç tane var?",
+   "hl": [
+    "Kaç"
+   ],
+   "start": 58.548,
+   "end": 59.66
+  },
+  {
+   "id": "z9",
+   "spk": "Z",
+   "text": "On iki bin. Dört.",
+   "hl": [
+    "bin.",
+    "Dört."
+   ],
+   "start": 60.04,
+   "end": 61.423
+  },
+  {
+   "id": "z10",
+   "spk": "Z",
+   "text": "Dört yüz bir. Dört yüz iki.",
+   "hl": [
+    "bir.",
+    "iki."
+   ],
+   "start": 65.673,
+   "end": 67.383
+  },
+  {
+   "id": "t7",
+   "spk": "T",
+   "text": "Karnım zil çalıyor.",
+   "hl": [
+    "zil",
+    "çalıyor."
+   ],
+   "start": 67.883,
+   "end": 69.383
+  },
+  {
+   "id": "z11",
+   "spk": "Z",
+   "text": "Misafir!",
+   "hl": [
+    "Misafir!"
+   ],
+   "start": 70.753,
+   "end": 71.514
+  },
+  {
+   "id": "z12",
+   "spk": "Z",
+   "text": "Kimse yok.",
+   "hl": [
+    "yok."
+   ],
+   "start": 73.974,
+   "end": 74.873
+  },
+  {
+   "id": "t8",
+   "spk": "T",
+   "text": "Zip, o bir deyim. Yani acıktım.",
+   "hl": [
+    "deyim.",
+    "acıktım."
+   ],
+   "start": 75.373,
+   "end": 78.273
+  },
+  {
+   "id": "z13",
+   "spk": "Z",
+   "text": "Anladım. Yeni kural: zil çalarsa kapıya bakılmaz.",
+   "hl": [
+    "bakılmaz."
+   ],
+   "start": 78.653,
+   "end": 81.793
+  },
+  {
+   "id": "z14",
+   "spk": "Z",
+   "text": "Evde yokuz! Sonra gelin!",
+   "hl": [
+    "yokuz!",
+    "gelin!"
+   ],
+   "start": 83.753,
+   "end": 85.486
+  },
+  {
+   "id": "t9",
+   "spk": "T",
+   "text": "Boşuna. Ben yıllardır deniyorum.",
+   "hl": [
+    "yıllardır"
+   ],
+   "start": 86.676,
+   "end": 89.099
+  },
+  {
+   "id": "z15",
+   "spk": "Z",
+   "text": "Yokuz dedik!",
+   "hl": [
+    "dedik!"
+   ],
+   "start": 90.659,
+   "end": 91.485
+  },
+  {
+   "id": "t10",
+   "spk": "T",
+   "text": "Zip... o ben değilim.",
+   "hl": [
+    "değilim."
+   ],
+   "start": 91.925,
+   "end": 93.694
+  },
+  {
+   "id": "h1",
+   "spk": "H",
+   "text": "Hımm. Bu kapı bugün üç kez açıldı.",
+   "hl": [
+    "üç",
+    "kez"
+   ],
+   "start": 96.914,
+   "end": 100.453
+  },
+  {
+   "id": "l7",
+   "spk": "L",
+   "text": "Hugo Bey! Kira yarın, söz.",
+   "hl": [
+    "yarın,"
+   ],
+   "start": 101.603,
+   "end": 103.892
+  },
+  {
+   "id": "h8",
+   "spk": "H",
+   "text": "Bu ay on bir kez yarın dediniz.",
+   "hl": [
+    "on",
+    "bir",
+    "kez"
+   ],
+   "start": 104.272,
+   "end": 106.857
+  },
+  {
+   "id": "l10",
+   "spk": "L",
+   "text": "On iki oldu.",
+   "hl": [
+    "iki"
+   ],
+   "start": 107.297,
+   "end": 108.149
+  },
+  {
+   "id": "h2",
+   "spk": "H",
+   "text": "Kira değil. Koku. Çilek ve yıldız tozu.",
+   "hl": [
+    "Koku.",
+    "yıldız",
+    "tozu."
+   ],
+   "start": 108.769,
+   "end": 113.259
+  },
+  {
+   "id": "t11",
+   "spk": "T",
+   "text": "Cips. Çilekli.",
+   "hl": [
+    "Çilekli."
+   ],
+   "start": 113.699,
+   "end": 115.017
+  },
+  {
+   "id": "h3",
+   "spk": "H",
+   "text": "Çilekli cips mi olur?",
+   "hl": [
+    "olur?"
+   ],
+   "start": 115.397,
+   "end": 117.216
+  },
+  {
+   "id": "t12",
+   "spk": "T",
+   "text": "Olur. Ben yerim.",
+   "hl": [
+    "yerim."
+   ],
+   "start": 117.776,
+   "end": 119.014
+  },
+  {
+   "id": "h9",
+   "spk": "H",
+   "text": "Başınızın üstünde bir şey kıpırdadı.",
+   "hl": [
+    "kıpırdadı."
+   ],
+   "start": 121.064,
+   "end": 123.69
+  },
+  {
+   "id": "t16",
+   "spk": "T",
+   "text": "Saçım. Heyecanlandı.",
+   "hl": [
+    "Heyecanlandı."
+   ],
+   "start": 124.13,
+   "end": 125.703
+  },
+  {
+   "id": "h4",
+   "spk": "H",
+   "text": "Sehpada dört yüz on bozuk para var.",
+   "hl": [
+    "dört",
+    "yüz",
+    "on"
+   ],
+   "start": 126.323,
+   "end": 129.068
+  },
+  {
+   "id": "l8",
+   "spk": "L",
+   "text": "Kumbara. Kiranız için.",
+   "hl": [
+    "Kumbara."
+   ],
+   "start": 129.448,
+   "end": 131.094
+  },
+  {
+   "id": "z16",
+   "spk": "Z",
+   "text": "Dört yüz on bir.",
+   "hl": [
+    "bir."
+   ],
+   "start": 131.474,
+   "end": 132.538
+  },
+  {
+   "id": "h5",
+   "spk": "H",
+   "text": "Beni kim düzeltti?",
+   "hl": [
+    "kim"
+   ],
+   "start": 133.958,
+   "end": 136.36
+  },
+  {
+   "id": "t13",
+   "spk": "T",
+   "text": "Karnım. Bazen konuşur.",
+   "hl": [
+    "konuşur."
+   ],
+   "start": 136.86,
+   "end": 138.46
+  },
+  {
+   "id": "h10",
+   "spk": "H",
+   "text": "Soğan. Sarımsak. Dünkü mantı.",
+   "hl": [
+    "mantı."
+   ],
+   "start": 140.31,
+   "end": 143.378
+  },
+  {
+   "id": "t17",
+   "spk": "T",
+   "text": "Evvelsi günkü.",
+   "hl": [
+    "Evvelsi"
+   ],
+   "start": 143.818,
+   "end": 144.826
+  },
+  {
+   "id": "h6",
+   "spk": "H",
+   "text": "Yedinci madde: tuhaf koku yasak.",
+   "hl": [
+    "Yedinci",
+    "yasak."
+   ],
+   "start": 145.446,
+   "end": 148.768
+  },
+  {
+   "id": "t14",
+   "spk": "T",
+   "text": "Biliyoruz.",
+   "hl": [
+    "Biliyoruz."
+   ],
+   "start": 149.148,
+   "end": 149.997
+  },
+  {
+   "id": "h7",
+   "spk": "H",
+   "text": "Bu burun yanılmaz, Tobi. Yanılmaz.",
+   "hl": [
+    "yanılmaz,",
+    "Yanılmaz."
+   ],
+   "start": 150.377,
+   "end": 153.016
+  },
+  {
+   "id": "z17",
+   "spk": "Z",
+   "text": "Ben bakmıyorum.",
+   "hl": [
+    "bakmıyorum."
+   ],
+   "start": 157.366,
+   "end": 158.203
+  }
+ ],
+ "beats": {
+  "kzil": [
+   0.0,
+   0.8
+  ],
+  "title": [
+   1.872,
+   4.372
+  ],
+  "soguk": [
+   7.998,
+   9.498
+  ],
+  "yuru": [
+   16.681,
+   18.281
+  ],
+  "tak": [
+   18.281,
+   19.381
+  ],
+  "ac": [
+   20.681,
+   22.081
+  ],
+  "antenbak": [
+   31.619,
+   32.919
+  ],
+  "gecmis": [
+   37.388,
+   38.588
+  ],
+  "bekle": [
+   43.917,
+   46.717
+  ],
+  "para": [
+   54.492,
+   56.392
+  ],
+  "lunacam": [
+   61.673,
+   63.073
+  ],
+  "saat": [
+   63.073,
+   65.673
+  ],
+  "zil1": [
+   69.503,
+   70.753
+  ],
+  "kos1": [
+   71.574,
+   72.974
+  ],
+  "bos1": [
+   72.974,
+   73.974
+  ],
+  "zil2": [
+   82.353,
+   83.753
+  ],
+  "bakis": [
+   85.676,
+   86.676
+  ],
+  "zil3": [
+   89.659,
+   90.659
+  ],
+  "donma": [
+   93.814,
+   95.314
+  ],
+  "burun": [
+   95.314,
+   96.914
+  ],
+  "sakla": [
+   100.703,
+   101.603
+  ],
+  "anten": [
+   119.264,
+   121.064
+  ],
+  "duy": [
+   132.658,
+   133.958
+  ],
+  "egil": [
+   138.71,
+   140.31
+  ],
+  "kapat": [
+   153.266,
+   154.666
+  ],
+  "sessiz": [
+   154.666,
+   156.266
+  ],
+  "zil4": [
+   156.266,
+   157.366
+  ],
+  "end": [
+   158.583,
+   165.583
+  ]
+ },
+ "scenes": {
+  "1": 0.0,
+  "2": 4.372,
+  "3": 16.681,
+  "4": 38.588,
+  "5": 51.43,
+  "6": 65.673,
+  "7": 71.574,
+  "8": 75.373,
+  "9": 95.314,
+  "10": 158.583
+ }
+}

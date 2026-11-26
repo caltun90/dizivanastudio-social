@@ -1,0 +1,1653 @@
+{
+"words": [
+{
+"word": "Misafir!",
+"start": 0.8,
+"end": 1.562,
+"spk": "Z",
+"line": "z0",
+"hl": true
+},
+{
+"word": "Tobi.",
+"start": 4.372,
+"end": 4.773,
+"spk": "L",
+"line": "l1",
+"hl": false
+},
+{
+"word": "Kira",
+"start": 4.773,
+"end": 5.173,
+"spk": "L",
+"line": "l1",
+"hl": false
+},
+{
+"word": "yine",
+"start": 5.173,
+"end": 5.574,
+"spk": "L",
+"line": "l1",
+"hl": false
+},
+{
+"word": "yetmiyor.",
+"start": 5.574,
+"end": 6.141,
+"spk": "L",
+"line": "l1",
+"hl": true
+},
+{
+"word": "Yemekten",
+"start": 6.581,
+"end": 7.23,
+"spk": "T",
+"line": "t1",
+"hl": true
+},
+{
+"word": "kısarız.",
+"start": 7.23,
+"end": 7.878,
+"spk": "T",
+"line": "t1",
+"hl": false
+},
+{
+"word": "Yok.",
+"start": 9.498,
+"end": 9.792,
+"spk": "T",
+"line": "t2",
+"hl": false
+},
+{
+"word": "Kiracı",
+"start": 9.792,
+"end": 10.507,
+"spk": "T",
+"line": "t2",
+"hl": true
+},
+{
+"word": "bulalım.",
+"start": 10.507,
+"end": 11.221,
+"spk": "T",
+"line": "t2",
+"hl": false
+},
+{
+"word": "Sessiz,",
+"start": 11.721,
+"end": 12.223,
+"spk": "L",
+"line": "l9",
+"hl": false
+},
+{
+"word": "normal,",
+"start": 12.223,
+"end": 12.725,
+"spk": "L",
+"line": "l9",
+"hl": false
+},
+{
+"word": "sıradan",
+"start": 12.725,
+"end": 13.437,
+"spk": "L",
+"line": "l9",
+"hl": true
+},
+{
+"word": "biri",
+"start": 13.437,
+"end": 13.939,
+"spk": "L",
+"line": "l9",
+"hl": false
+},
+{
+"word": "olsun.",
+"start": 13.939,
+"end": 14.441,
+"spk": "L",
+"line": "l9",
+"hl": false
+},
+{
+"word": "Az",
+"start": 14.821,
+"end": 15.042,
+"spk": "T",
+"line": "t15",
+"hl": true
+},
+{
+"word": "yiyen",
+"start": 15.042,
+"end": 15.422,
+"spk": "T",
+"line": "t15",
+"hl": true
+},
+{
+"word": "biri",
+"start": 15.422,
+"end": 15.801,
+"spk": "T",
+"line": "t15",
+"hl": false
+},
+{
+"word": "olsun.",
+"start": 15.801,
+"end": 16.181,
+"spk": "T",
+"line": "t15",
+"hl": false
+},
+{
+"word": "Daha",
+"start": 19.381,
+"end": 19.762,
+"spk": "L",
+"line": "l2",
+"hl": false
+},
+{
+"word": "asmadım.",
+"start": 19.762,
+"end": 20.301,
+"spk": "L",
+"line": "l2",
+"hl": true
+},
+{
+"word": "Merhaba",
+"start": 22.081,
+"end": 22.61,
+"spk": "Z",
+"line": "z1",
+"hl": false
+},
+{
+"word": "Dünyalı!",
+"start": 22.61,
+"end": 23.139,
+"spk": "Z",
+"line": "z1",
+"hl": true
+},
+{
+"word": "Kılavuz",
+"start": 23.139,
+"end": 23.669,
+"spk": "Z",
+"line": "z1",
+"hl": false
+},
+{
+"word": "diyor",
+"start": 23.669,
+"end": 24.042,
+"spk": "Z",
+"line": "z1",
+"hl": false
+},
+{
+"word": "ki:",
+"start": 24.042,
+"end": 24.26,
+"spk": "Z",
+"line": "z1",
+"hl": false
+},
+{
+"word": "önce",
+"start": 24.26,
+"end": 24.633,
+"spk": "Z",
+"line": "z1",
+"hl": false
+},
+{
+"word": "tanış.",
+"start": 24.633,
+"end": 25.007,
+"spk": "Z",
+"line": "z1",
+"hl": true
+},
+{
+"word": "Sen",
+"start": 25.387,
+"end": 25.726,
+"spk": "L",
+"line": "l3",
+"hl": false
+},
+{
+"word": "kimsin?",
+"start": 25.726,
+"end": 26.308,
+"spk": "L",
+"line": "l3",
+"hl": true
+},
+{
+"word": "Ben",
+"start": 26.618,
+"end": 26.86,
+"spk": "Z",
+"line": "z2",
+"hl": false
+},
+{
+"word": "Zip.",
+"start": 26.86,
+"end": 27.101,
+"spk": "Z",
+"line": "z2",
+"hl": true
+},
+{
+"word": "Çok",
+"start": 27.101,
+"end": 27.343,
+"spk": "Z",
+"line": "z2",
+"hl": false
+},
+{
+"word": "uzaktan",
+"start": 27.343,
+"end": 27.93,
+"spk": "Z",
+"line": "z2",
+"hl": true
+},
+{
+"word": "geldim.",
+"start": 27.93,
+"end": 28.344,
+"spk": "Z",
+"line": "z2",
+"hl": false
+},
+{
+"word": "Ankara",
+"start": 28.724,
+"end": 29.319,
+"spk": "T",
+"line": "t3",
+"hl": true
+},
+{
+"word": "mı?",
+"start": 29.319,
+"end": 29.564,
+"spk": "T",
+"line": "t3",
+"hl": false
+},
+{
+"word": "Biraz",
+"start": 29.944,
+"end": 30.376,
+"spk": "Z",
+"line": "z3",
+"hl": false
+},
+{
+"word": "daha",
+"start": 30.376,
+"end": 30.807,
+"spk": "Z",
+"line": "z3",
+"hl": true
+},
+{
+"word": "uzak.",
+"start": 30.807,
+"end": 31.239,
+"spk": "Z",
+"line": "z3",
+"hl": false
+},
+{
+"word": "Antenlerin",
+"start": 32.919,
+"end": 33.809,
+"spk": "T",
+"line": "t4",
+"hl": true
+},
+{
+"word": "var.",
+"start": 33.809,
+"end": 34.092,
+"spk": "T",
+"line": "t4",
+"hl": false
+},
+{
+"word": "Sağ",
+"start": 34.472,
+"end": 34.773,
+"spk": "Z",
+"line": "z4",
+"hl": false
+},
+{
+"word": "olun.",
+"start": 34.773,
+"end": 35.289,
+"spk": "Z",
+"line": "z4",
+"hl": false
+},
+{
+"word": "Sizin",
+"start": 35.289,
+"end": 35.805,
+"spk": "Z",
+"line": "z4",
+"hl": false
+},
+{
+"word": "yok.",
+"start": 35.805,
+"end": 36.106,
+"spk": "Z",
+"line": "z4",
+"hl": false
+},
+{
+"word": "Geçmiş",
+"start": 36.106,
+"end": 36.622,
+"spk": "Z",
+"line": "z4",
+"hl": true
+},
+{
+"word": "olsun.",
+"start": 36.622,
+"end": 37.138,
+"spk": "Z",
+"line": "z4",
+"hl": true
+},
+{
+"word": "Çay",
+"start": 38.588,
+"end": 38.843,
+"spk": "L",
+"line": "l4",
+"hl": true
+},
+{
+"word": "içer",
+"start": 38.843,
+"end": 39.28,
+"spk": "L",
+"line": "l4",
+"hl": false
+},
+{
+"word": "misin?",
+"start": 39.28,
+"end": 39.717,
+"spk": "L",
+"line": "l4",
+"hl": false
+},
+{
+"word": "Hayır.",
+"start": 40.097,
+"end": 40.469,
+"spk": "Z",
+"line": "z5",
+"hl": true
+},
+{
+"word": "Kılavuz",
+"start": 40.469,
+"end": 40.996,
+"spk": "Z",
+"line": "z5",
+"hl": false
+},
+{
+"word": "diyor",
+"start": 40.996,
+"end": 41.368,
+"spk": "Z",
+"line": "z5",
+"hl": false
+},
+{
+"word": "ki:",
+"start": 41.368,
+"end": 41.585,
+"spk": "Z",
+"line": "z5",
+"hl": false
+},
+{
+"word": "ilk",
+"start": 41.585,
+"end": 41.802,
+"spk": "Z",
+"line": "z5",
+"hl": false
+},
+{
+"word": "teklif",
+"start": 41.802,
+"end": 42.174,
+"spk": "Z",
+"line": "z5",
+"hl": false
+},
+{
+"word": "reddedilir.",
+"start": 42.174,
+"end": 42.856,
+"spk": "Z",
+"line": "z5",
+"hl": true
+},
+{
+"word": "Peki.",
+"start": 43.236,
+"end": 43.797,
+"spk": "L",
+"line": "l5",
+"hl": true
+},
+{
+"word": "İkinci",
+"start": 46.717,
+"end": 47.193,
+"spk": "Z",
+"line": "z6",
+"hl": false
+},
+{
+"word": "teklif",
+"start": 47.193,
+"end": 47.53,
+"spk": "Z",
+"line": "z6",
+"hl": false
+},
+{
+"word": "gelmedi.",
+"start": 47.53,
+"end": 48.006,
+"spk": "Z",
+"line": "z6",
+"hl": true
+},
+{
+"word": "Gelmez.",
+"start": 48.506,
+"end": 48.967,
+"spk": "T",
+"line": "t5",
+"hl": false
+},
+{
+"word": "Ben",
+"start": 48.967,
+"end": 49.236,
+"spk": "T",
+"line": "t5",
+"hl": false
+},
+{
+"word": "hep",
+"start": 49.236,
+"end": 49.504,
+"spk": "T",
+"line": "t5",
+"hl": false
+},
+{
+"word": "ilkinde",
+"start": 49.504,
+"end": 50.157,
+"spk": "T",
+"line": "t5",
+"hl": true
+},
+{
+"word": "alırım.",
+"start": 50.157,
+"end": 50.81,
+"spk": "T",
+"line": "t5",
+"hl": false
+},
+{
+"word": "Zip.",
+"start": 51.43,
+"end": 51.745,
+"spk": "L",
+"line": "l6",
+"hl": false
+},
+{
+"word": "Kira",
+"start": 51.745,
+"end": 52.286,
+"spk": "L",
+"line": "l6",
+"hl": false
+},
+{
+"word": "peşin.",
+"start": 52.286,
+"end": 52.826,
+"spk": "L",
+"line": "l6",
+"hl": true
+},
+{
+"word": "Hazır.",
+"start": 53.206,
+"end": 53.657,
+"spk": "Z",
+"line": "z7",
+"hl": false
+},
+{
+"word": "Bozuk",
+"start": 53.657,
+"end": 54.109,
+"spk": "Z",
+"line": "z7",
+"hl": true
+},
+{
+"word": "var.",
+"start": 54.109,
+"end": 54.372,
+"spk": "Z",
+"line": "z7",
+"hl": false
+},
+{
+"word": "Bir.",
+"start": 56.392,
+"end": 56.854,
+"spk": "Z",
+"line": "z8",
+"hl": true
+},
+{
+"word": "İki.",
+"start": 56.854,
+"end": 57.646,
+"spk": "Z",
+"line": "z8",
+"hl": true
+},
+{
+"word": "Üç.",
+"start": 57.646,
+"end": 58.108,
+"spk": "Z",
+"line": "z8",
+"hl": true
+},
+{
+"word": "Kaç",
+"start": 58.548,
+"end": 58.847,
+"spk": "T",
+"line": "t6",
+"hl": true
+},
+{
+"word": "tane",
+"start": 58.847,
+"end": 59.361,
+"spk": "T",
+"line": "t6",
+"hl": false
+},
+{
+"word": "var?",
+"start": 59.361,
+"end": 59.66,
+"spk": "T",
+"line": "t6",
+"hl": false
+},
+{
+"word": "On",
+"start": 60.04,
+"end": 60.333,
+"spk": "Z",
+"line": "z9",
+"hl": false
+},
+{
+"word": "iki",
+"start": 60.333,
+"end": 60.836,
+"spk": "Z",
+"line": "z9",
+"hl": false
+},
+{
+"word": "bin.",
+"start": 60.836,
+"end": 61.13,
+"spk": "Z",
+"line": "z9",
+"hl": true
+},
+{
+"word": "Dört.",
+"start": 61.13,
+"end": 61.423,
+"spk": "Z",
+"line": "z9",
+"hl": true
+},
+{
+"word": "Dört",
+"start": 65.673,
+"end": 65.928,
+"spk": "Z",
+"line": "z10",
+"hl": false
+},
+{
+"word": "yüz",
+"start": 65.928,
+"end": 66.182,
+"spk": "Z",
+"line": "z10",
+"hl": false
+},
+{
+"word": "bir.",
+"start": 66.182,
+"end": 66.437,
+"spk": "Z",
+"line": "z10",
+"hl": true
+},
+{
+"word": "Dört",
+"start": 66.437,
+"end": 66.692,
+"spk": "Z",
+"line": "z10",
+"hl": false
+},
+{
+"word": "yüz",
+"start": 66.692,
+"end": 66.946,
+"spk": "Z",
+"line": "z10",
+"hl": false
+},
+{
+"word": "iki.",
+"start": 66.946,
+"end": 67.383,
+"spk": "Z",
+"line": "z10",
+"hl": true
+},
+{
+"word": "Karnım",
+"start": 67.883,
+"end": 68.383,
+"spk": "T",
+"line": "t7",
+"hl": false
+},
+{
+"word": "zil",
+"start": 68.383,
+"end": 68.675,
+"spk": "T",
+"line": "t7",
+"hl": true
+},
+{
+"word": "çalıyor.",
+"start": 68.675,
+"end": 69.383,
+"spk": "T",
+"line": "t7",
+"hl": true
+},
+{
+"word": "Misafir!",
+"start": 70.753,
+"end": 71.514,
+"spk": "Z",
+"line": "z11",
+"hl": true
+},
+{
+"word": "Kimse",
+"start": 73.974,
+"end": 74.542,
+"spk": "Z",
+"line": "z12",
+"hl": false
+},
+{
+"word": "yok.",
+"start": 74.542,
+"end": 74.873,
+"spk": "Z",
+"line": "z12",
+"hl": true
+},
+{
+"word": "Zip,",
+"start": 75.373,
+"end": 75.7,
+"spk": "T",
+"line": "t8",
+"hl": false
+},
+{
+"word": "o",
+"start": 75.7,
+"end": 76.028,
+"spk": "T",
+"line": "t8",
+"hl": false
+},
+{
+"word": "bir",
+"start": 76.028,
+"end": 76.355,
+"spk": "T",
+"line": "t8",
+"hl": false
+},
+{
+"word": "deyim.",
+"start": 76.355,
+"end": 76.917,
+"spk": "T",
+"line": "t8",
+"hl": true
+},
+{
+"word": "Yani",
+"start": 76.917,
+"end": 77.478,
+"spk": "T",
+"line": "t8",
+"hl": false
+},
+{
+"word": "acıktım.",
+"start": 77.478,
+"end": 78.273,
+"spk": "T",
+"line": "t8",
+"hl": true
+},
+{
+"word": "Anladım.",
+"start": 78.653,
+"end": 79.192,
+"spk": "Z",
+"line": "z13",
+"hl": false
+},
+{
+"word": "Yeni",
+"start": 79.192,
+"end": 79.573,
+"spk": "Z",
+"line": "z13",
+"hl": false
+},
+{
+"word": "kural:",
+"start": 79.573,
+"end": 79.953,
+"spk": "Z",
+"line": "z13",
+"hl": false
+},
+{
+"word": "zil",
+"start": 79.953,
+"end": 80.175,
+"spk": "Z",
+"line": "z13",
+"hl": false
+},
+{
+"word": "çalarsa",
+"start": 80.175,
+"end": 80.715,
+"spk": "Z",
+"line": "z13",
+"hl": false
+},
+{
+"word": "kapıya",
+"start": 80.715,
+"end": 81.254,
+"spk": "Z",
+"line": "z13",
+"hl": false
+},
+{
+"word": "bakılmaz.",
+"start": 81.254,
+"end": 81.793,
+"spk": "Z",
+"line": "z13",
+"hl": true
+},
+{
+"word": "Evde",
+"start": 83.753,
+"end": 84.186,
+"spk": "Z",
+"line": "z14",
+"hl": false
+},
+{
+"word": "yokuz!",
+"start": 84.186,
+"end": 84.62,
+"spk": "Z",
+"line": "z14",
+"hl": true
+},
+{
+"word": "Sonra",
+"start": 84.62,
+"end": 85.053,
+"spk": "Z",
+"line": "z14",
+"hl": false
+},
+{
+"word": "gelin!",
+"start": 85.053,
+"end": 85.486,
+"spk": "Z",
+"line": "z14",
+"hl": true
+},
+{
+"word": "Boşuna.",
+"start": 86.676,
+"end": 87.33,
+"spk": "T",
+"line": "t9",
+"hl": false
+},
+{
+"word": "Ben",
+"start": 87.33,
+"end": 87.599,
+"spk": "T",
+"line": "t9",
+"hl": false
+},
+{
+"word": "yıllardır",
+"start": 87.599,
+"end": 88.253,
+"spk": "T",
+"line": "t9",
+"hl": true
+},
+{
+"word": "deniyorum.",
+"start": 88.253,
+"end": 89.099,
+"spk": "T",
+"line": "t9",
+"hl": false
+},
+{
+"word": "Yokuz",
+"start": 90.659,
+"end": 91.072,
+"spk": "Z",
+"line": "z15",
+"hl": false
+},
+{
+"word": "dedik!",
+"start": 91.072,
+"end": 91.485,
+"spk": "Z",
+"line": "z15",
+"hl": true
+},
+{
+"word": "Zip...",
+"start": 91.925,
+"end": 92.251,
+"spk": "T",
+"line": "t10",
+"hl": false
+},
+{
+"word": "o",
+"start": 92.251,
+"end": 92.577,
+"spk": "T",
+"line": "t10",
+"hl": false
+},
+{
+"word": "ben",
+"start": 92.577,
+"end": 92.903,
+"spk": "T",
+"line": "t10",
+"hl": false
+},
+{
+"word": "değilim.",
+"start": 92.903,
+"end": 93.694,
+"spk": "T",
+"line": "t10",
+"hl": true
+},
+{
+"word": "Hımm.",
+"start": 96.914,
+"end": 97.273,
+"spk": "H",
+"line": "h1",
+"hl": false
+},
+{
+"word": "Bu",
+"start": 97.273,
+"end": 97.632,
+"spk": "H",
+"line": "h1",
+"hl": false
+},
+{
+"word": "kapı",
+"start": 97.632,
+"end": 98.248,
+"spk": "H",
+"line": "h1",
+"hl": false
+},
+{
+"word": "bugün",
+"start": 98.248,
+"end": 98.863,
+"spk": "H",
+"line": "h1",
+"hl": false
+},
+{
+"word": "üç",
+"start": 98.863,
+"end": 99.222,
+"spk": "H",
+"line": "h1",
+"hl": true
+},
+{
+"word": "kez",
+"start": 99.222,
+"end": 99.581,
+"spk": "H",
+"line": "h1",
+"hl": true
+},
+{
+"word": "açıldı.",
+"start": 99.581,
+"end": 100.453,
+"spk": "H",
+"line": "h1",
+"hl": false
+},
+{
+"word": "Hugo",
+"start": 101.603,
+"end": 102.152,
+"spk": "L",
+"line": "l7",
+"hl": false
+},
+{
+"word": "Bey!",
+"start": 102.152,
+"end": 102.473,
+"spk": "L",
+"line": "l7",
+"hl": false
+},
+{
+"word": "Kira",
+"start": 102.473,
+"end": 103.022,
+"spk": "L",
+"line": "l7",
+"hl": false
+},
+{
+"word": "yarın,",
+"start": 103.022,
+"end": 103.572,
+"spk": "L",
+"line": "l7",
+"hl": true
+},
+{
+"word": "söz.",
+"start": 103.572,
+"end": 103.892,
+"spk": "L",
+"line": "l7",
+"hl": false
+},
+{
+"word": "Bu",
+"start": 104.272,
+"end": 104.555,
+"spk": "H",
+"line": "h8",
+"hl": false
+},
+{
+"word": "ay",
+"start": 104.555,
+"end": 104.837,
+"spk": "H",
+"line": "h8",
+"hl": false
+},
+{
+"word": "on",
+"start": 104.837,
+"end": 105.12,
+"spk": "H",
+"line": "h8",
+"hl": true
+},
+{
+"word": "bir",
+"start": 105.12,
+"end": 105.403,
+"spk": "H",
+"line": "h8",
+"hl": true
+},
+{
+"word": "kez",
+"start": 105.403,
+"end": 105.686,
+"spk": "H",
+"line": "h8",
+"hl": true
+},
+{
+"word": "yarın",
+"start": 105.686,
+"end": 106.17,
+"spk": "H",
+"line": "h8",
+"hl": false
+},
+{
+"word": "dediniz.",
+"start": 106.17,
+"end": 106.857,
+"spk": "H",
+"line": "h8",
+"hl": false
+},
+{
+"word": "On",
+"start": 107.297,
+"end": 107.489,
+"spk": "L",
+"line": "l10",
+"hl": false
+},
+{
+"word": "iki",
+"start": 107.489,
+"end": 107.819,
+"spk": "L",
+"line": "l10",
+"hl": true
+},
+{
+"word": "oldu.",
+"start": 107.819,
+"end": 108.149,
+"spk": "L",
+"line": "l10",
+"hl": false
+},
+{
+"word": "Kira",
+"start": 108.769,
+"end": 109.451,
+"spk": "H",
+"line": "h2",
+"hl": false
+},
+{
+"word": "değil.",
+"start": 109.451,
+"end": 110.133,
+"spk": "H",
+"line": "h2",
+"hl": false
+},
+{
+"word": "Koku.",
+"start": 110.133,
+"end": 110.815,
+"spk": "H",
+"line": "h2",
+"hl": true
+},
+{
+"word": "Çilek",
+"start": 110.815,
+"end": 111.497,
+"spk": "H",
+"line": "h2",
+"hl": false
+},
+{
+"word": "ve",
+"start": 111.497,
+"end": 111.895,
+"spk": "H",
+"line": "h2",
+"hl": false
+},
+{
+"word": "yıldız",
+"start": 111.895,
+"end": 112.577,
+"spk": "H",
+"line": "h2",
+"hl": true
+},
+{
+"word": "tozu.",
+"start": 112.577,
+"end": 113.259,
+"spk": "H",
+"line": "h2",
+"hl": true
+},
+{
+"word": "Cips.",
+"start": 113.699,
+"end": 114.083,
+"spk": "T",
+"line": "t11",
+"hl": false
+},
+{
+"word": "Çilekli.",
+"start": 114.083,
+"end": 115.017,
+"spk": "T",
+"line": "t11",
+"hl": true
+},
+{
+"word": "Çilekli",
+"start": 115.397,
+"end": 116.116,
+"spk": "H",
+"line": "h3",
+"hl": false
+},
+{
+"word": "cips",
+"start": 116.116,
+"end": 116.412,
+"spk": "H",
+"line": "h3",
+"hl": false
+},
+{
+"word": "mi",
+"start": 116.412,
+"end": 116.708,
+"spk": "H",
+"line": "h3",
+"hl": false
+},
+{
+"word": "olur?",
+"start": 116.708,
+"end": 117.216,
+"spk": "H",
+"line": "h3",
+"hl": true
+},
+{
+"word": "Olur.",
+"start": 117.776,
+"end": 118.255,
+"spk": "T",
+"line": "t12",
+"hl": false
+},
+{
+"word": "Ben",
+"start": 118.255,
+"end": 118.535,
+"spk": "T",
+"line": "t12",
+"hl": false
+},
+{
+"word": "yerim.",
+"start": 118.535,
+"end": 119.014,
+"spk": "T",
+"line": "t12",
+"hl": true
+},
+{
+"word": "Başınızın",
+"start": 121.064,
+"end": 121.834,
+"spk": "H",
+"line": "h9",
+"hl": false
+},
+{
+"word": "üstünde",
+"start": 121.834,
+"end": 122.43,
+"spk": "H",
+"line": "h9",
+"hl": false
+},
+{
+"word": "bir",
+"start": 122.43,
+"end": 122.675,
+"spk": "H",
+"line": "h9",
+"hl": false
+},
+{
+"word": "şey",
+"start": 122.675,
+"end": 122.92,
+"spk": "H",
+"line": "h9",
+"hl": false
+},
+{
+"word": "kıpırdadı.",
+"start": 122.92,
+"end": 123.69,
+"spk": "H",
+"line": "h9",
+"hl": true
+},
+{
+"word": "Saçım.",
+"start": 124.13,
+"end": 124.614,
+"spk": "T",
+"line": "t16",
+"hl": false
+},
+{
+"word": "Heyecanlandı.",
+"start": 124.614,
+"end": 125.703,
+"spk": "T",
+"line": "t16",
+"hl": true
+},
+{
+"word": "Sehpada",
+"start": 126.323,
+"end": 126.999,
+"spk": "H",
+"line": "h4",
+"hl": false
+},
+{
+"word": "dört",
+"start": 126.999,
+"end": 127.278,
+"spk": "H",
+"line": "h4",
+"hl": true
+},
+{
+"word": "yüz",
+"start": 127.278,
+"end": 127.556,
+"spk": "H",
+"line": "h4",
+"hl": true
+},
+{
+"word": "on",
+"start": 127.556,
+"end": 127.835,
+"spk": "H",
+"line": "h4",
+"hl": true
+},
+{
+"word": "bozuk",
+"start": 127.835,
+"end": 128.312,
+"spk": "H",
+"line": "h4",
+"hl": false
+},
+{
+"word": "para",
+"start": 128.312,
+"end": 128.79,
+"spk": "H",
+"line": "h4",
+"hl": false
+},
+{
+"word": "var.",
+"start": 128.79,
+"end": 129.068,
+"spk": "H",
+"line": "h4",
+"hl": false
+},
+{
+"word": "Kumbara.",
+"start": 129.448,
+"end": 130.056,
+"spk": "L",
+"line": "l8",
+"hl": true
+},
+{
+"word": "Kiranız",
+"start": 130.056,
+"end": 130.665,
+"spk": "L",
+"line": "l8",
+"hl": false
+},
+{
+"word": "için.",
+"start": 130.665,
+"end": 131.094,
+"spk": "L",
+"line": "l8",
+"hl": false
+},
+{
+"word": "Dört",
+"start": 131.474,
+"end": 131.74,
+"spk": "Z",
+"line": "z16",
+"hl": false
+},
+{
+"word": "yüz",
+"start": 131.74,
+"end": 132.006,
+"spk": "Z",
+"line": "z16",
+"hl": false
+},
+{
+"word": "on",
+"start": 132.006,
+"end": 132.272,
+"spk": "Z",
+"line": "z16",
+"hl": false
+},
+{
+"word": "bir.",
+"start": 132.272,
+"end": 132.538,
+"spk": "Z",
+"line": "z16",
+"hl": true
+},
+{
+"word": "Beni",
+"start": 133.958,
+"end": 134.759,
+"spk": "H",
+"line": "h5",
+"hl": false
+},
+{
+"word": "kim",
+"start": 134.759,
+"end": 135.226,
+"spk": "H",
+"line": "h5",
+"hl": true
+},
+{
+"word": "düzeltti?",
+"start": 135.226,
+"end": 136.36,
+"spk": "H",
+"line": "h5",
+"hl": false
+},
+{
+"word": "Karnım.",
+"start": 136.86,
+"end": 137.328,
+"spk": "T",
+"line": "t13",
+"hl": false
+},
+{
+"word": "Bazen",
+"start": 137.328,
+"end": 137.797,
+"spk": "T",
+"line": "t13",
+"hl": false
+},
+{
+"word": "konuşur.",
+"start": 137.797,
+"end": 138.46,
+"spk": "T",
+"line": "t13",
+"hl": true
+},
+{
+"word": "Soğan.",
+"start": 140.31,
+"end": 141.005,
+"spk": "H",
+"line": "h10",
+"hl": false
+},
+{
+"word": "Sarımsak.",
+"start": 141.005,
+"end": 141.989,
+"spk": "H",
+"line": "h10",
+"hl": false
+},
+{
+"word": "Dünkü",
+"start": 141.989,
+"end": 142.683,
+"spk": "H",
+"line": "h10",
+"hl": false
+},
+{
+"word": "mantı.",
+"start": 142.683,
+"end": 143.378,
+"spk": "H",
+"line": "h10",
+"hl": true
+},
+{
+"word": "Evvelsi",
+"start": 143.818,
+"end": 144.409,
+"spk": "T",
+"line": "t17",
+"hl": true
+},
+{
+"word": "günkü.",
+"start": 144.409,
+"end": 144.826,
+"spk": "T",
+"line": "t17",
+"hl": false
+},
+{
+"word": "Yedinci",
+"start": 145.446,
+"end": 146.315,
+"spk": "H",
+"line": "h6",
+"hl": true
+},
+{
+"word": "madde:",
+"start": 146.315,
+"end": 146.928,
+"spk": "H",
+"line": "h6",
+"hl": false
+},
+{
+"word": "tuhaf",
+"start": 146.928,
+"end": 147.541,
+"spk": "H",
+"line": "h6",
+"hl": false
+},
+{
+"word": "koku",
+"start": 147.541,
+"end": 148.155,
+"spk": "H",
+"line": "h6",
+"hl": false
+},
+{
+"word": "yasak.",
+"start": 148.155,
+"end": 148.768,
+"spk": "H",
+"line": "h6",
+"hl": true
+},
+{
+"word": "Biliyoruz.",
+"start": 149.148,
+"end": 149.997,
+"spk": "T",
+"line": "t14",
+"hl": true
+},
+{
+"word": "Bu",
+"start": 150.377,
+"end": 150.661,
+"spk": "H",
+"line": "h7",
+"hl": false
+},
+{
+"word": "burun",
+"start": 150.661,
+"end": 151.148,
+"spk": "H",
+"line": "h7",
+"hl": false
+},
+{
+"word": "yanılmaz,",
+"start": 151.148,
+"end": 151.839,
+"spk": "H",
+"line": "h7",
+"hl": true
+},
+{
+"word": "Tobi.",
+"start": 151.839,
+"end": 152.326,
+"spk": "H",
+"line": "h7",
+"hl": false
+},
+{
+"word": "Yanılmaz.",
+"start": 152.326,
+"end": 153.016,
+"spk": "H",
+"line": "h7",
+"hl": true
+},
+{
+"word": "Ben",
+"start": 157.366,
+"end": 157.568,
+"spk": "Z",
+"line": "z17",
+"hl": false
+},
+{
+"word": "bakmıyorum.",
+"start": 157.568,
+"end": 158.203,
+"spk": "Z",
+"line": "z17",
+"hl": true
+}
+],
+"duration": 165.583
+}
