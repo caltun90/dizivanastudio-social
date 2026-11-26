@@ -288,10 +288,9 @@
   "baslik": "Son Vagon: Tüm Bölümler (Film)",
   "yatay": "videos/2026-11-26-sonvagon-film-yatay.mp4",
   "sure_sn": 838,
-  "durum": "planlandi",
+  "durum": "iptal: 26 Kasım planı geri çekildi, YouTube videosu özel ve plansız",
   "playlist": "PLSAMtowKWcOo",
   "yatay_youtube": "Pgzacs-VOhY",
-  "yayin": "2026-11-26T20:00:00+03:00",
   "yz_etiketli": [
    "Pgzacs-VOhY",
    "4Bv9zWqwOKw",
@@ -327,12 +326,10 @@
   "dikey": "videos/2026-11-26-uzayli-b01-kiralikoda-dikey.mp4",
   "yatay": "videos/2026-11-26-uzayli-b01-kiralikoda-yatay.mp4",
   "sure_sn": 166,
-  "durum": "planlandi",
+  "durum": "iptal: Cem begenmedi (26 Kasım), Buffer gönderisi silindi, YouTube videosu özel ve plansız; 1. bölüm yeniden üretilecek",
   "baslik_dikey": "Tobi'nin karnı zil çalıyor, uzaylı kiracı kapıya koşuyor | Kiracı Uzaylı 1. Bölüm",
   "playlist": "PLPs046DJ9AYI",
   "yatay_youtube": "56Gz4kP_0IM",
-  "buffer_post": "6b0806b4b56cc066e5bb06cc",
-  "yayin": "2026-11-26T18:00:00+03:00",
   "yz_etiketli": [
    "56Gz4kP_0IM",
    "Pgzacs-VOhY",
@@ -357,7 +354,6 @@
    "mjroPwABL3o",
    "YCFJU1WUSXs",
    "_lXRMiEBwQM"
-  ],
-  "yz_etiket_bekleyen": "Kiracı Uzaylı b01 Short (Buffer 18:00 yükler)"
+  ]
  }
 ]
