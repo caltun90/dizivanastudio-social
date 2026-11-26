@@ -34,7 +34,12 @@ for L in T['lines']:
     for j, w in enumerate(ws):
         words.append({'word': w, 'start': round(a + cs[j] * (b - a), 3), 'end': round(a + cs[j + 1] * (b - a), 3),
                       'spk': L['spk'], 'line': L['id'], 'hl': norm(w) in hl})
-json.dump({'words': words, 'duration': T['total']}, open(os.path.join(dst, 'voice', 'words.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
+# lines: satırların kesin aralığı (hizala.py / hizala.yml WhisperX ile kelime saatlerini gerçek sesten ölçer)
+lines = [{'text': L['text'], 'start': L['start'], 'end': L['end']} for L in T['lines'] if L['text'].split()]
+json.dump({'words': words, 'lines': lines, 'duration': T['total']}, open(os.path.join(dst, 'voice', 'words.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
+# hizalama için küçük ses kopyası (wav'lar git'e girmez; ogg ~0,5 MB/dk)
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', os.path.join(V, 'voice.wav'), '-ac', '1', '-ar', '16000', '-c:a', 'libopus', '-b:a', '48k',
+                os.path.join(dst, 'voice', 'voice.ogg')], check=False)
 
 # --- mouth envelope per speaker ---
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', os.path.join(V, 'voice.wav'), '-ac', '1', '-ar', '24000', '-f', 'f32le', '-'], capture_output=True, check=True).stdout

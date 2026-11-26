@@ -31,6 +31,8 @@ Bu dosya, bölümü üreten kişinin (çoğu zaman otomatik görev) tek kaynağ�
     - Bu kural bu dosyadaki ve `DIZI.md` dosyalarındaki diğer açılış kurallarından önce gelir; çelişirse buna uy. Kural 7'deki 1,5-2 sn sessiz tepki ilk 2 saniyeye uygulanmaz.
 
 17. **Görsel kalite (Cem, 19 Kasım 2026; hedef: film ışığı almış 2.5D çizgi film).** Her bölümde en az 6 farklı mekân ya da açı olur; ortalama 3-5 saniyede bir yeni plan gelir (aynı mekânda farklı açı da sayılır: geniş, yakın, üstten, alttan, kesit). Hiçbir plan 8 saniyeden uzun sabit kalmaz. Aynı koridoru ya da kapıyı bölümün yarısından fazlasında kullanma; her bölüm en az bir yeni mekân ekler (bina dışı gece, asansör boşluğu kesiti, uzun perspektif koridor gibi). Sinema katmanı (bölüm 6) her sahnede açıktır.
+- WHISPERX VE EFEKTLER (Cem, 27 Kasım 2026): yumurta düzeninde üretilen bölümlerde son `kopru.py`'den sonra kelime hizalama (`yumurta/README.md` 3b) yapılır; parçacık efektleri (`konfeti`, `kivilcim`, `parilti`, `toz`, `duman`) `yumurta/README.md` "story.js kuralları"ndaki gibi komik anlarda kullanılabilir. Müzik dizinin kendi `music` modlarıyla kalır (sahneye göre değişen besteler).
+
 ## 2. Depo düzeni
 ```
 KIT.md                      bu dosya

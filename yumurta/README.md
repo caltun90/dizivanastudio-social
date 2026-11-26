@@ -23,6 +23,13 @@ yumurta/
 1. **Senaryo:** `diziler/<dizi>/bNN/senaryo.py`, KIT.md bölüm 4 ile aynı biçim (SEQ, GROUPS, VOICES, NAMES, mix_plan...). Konuşmacı kodları `kadro.js` içindeki `SPK` ile aynıdır (Kiracı Uzaylı: L Luna, T Tobi, Z Zip, H Hugo, N anlatıcı). Sahne numaraları (`('scene', n)`) story.js'te kamera ve mekân değişimine bağlanır.
 2. **Ses:** bölüm klasöründe KIT.md bölüm 5 (tts, gaps, check, build). Önce `ses.py dry` ile taslak süre.
 3. **Köprü:** depo kökünden `python3 yumurta/tools/kopru.py diziler/<dizi>/bNN yumurta/stories/<dizi>-bNN`. Her `build`'den sonra tekrar çalıştır. (Taslak sesle de çalışır: görüntüyü sesten önce kurabilirsin; gerçek ses gelince yeniden çalıştır, saatler kendiliğinden kayar.)
+3b. **Kelime hizalama (WhisperX, Cem 27 Kasım 2026, son `build` + `kopru`'dan sonra):** `kopru.py` kelimeleri satır içinde hecelerle TAHMİN eder; WhisperX her kelimenin sesteki gerçek yerini ölçer (altyazı ve kelimeye bağlı olaylar tam oturur). Bulut oturumu HuggingFace'e ulaşamadığı için GitHub Actions'ta çalışır. `kopru.py` artık `voice/voice.ogg` ve `words.json` içine satır aralıklarını yazar; hikâye klasörünü commit edip main'e push et, sonra:
+   ```bash
+   gh api -X POST repos/caltun90/dizivanastudio-social/actions/workflows/hizala.yml/dispatches -f ref=main -f 'inputs[klasor]=yumurta/stories/<dizi>-bNN'
+   # 2-4 dakika; bitince:
+   git fetch -q --depth 1 origin hizalama/<dizi>-bNN && git show FETCH_HEAD:words.json > yumurta/stories/<dizi>-bNN/voice/words.json && git show FETCH_HEAD:hizalama.txt | head -3
+   ```
+   `kopru.py`'yi bundan sonra yeniden çalıştırırsan ölçüm silinir, hizalamayı tekrarla. İş başarısız olursa ya da 8 dakikada bitmezse tahmini words.json ile devam et ve raporda yaz.
 4. **Hikâye:** `yumurta/stories/<dizi>-bNN/story.js`. `stories/uzayli-b00/story.js` dosyasını kopyala, `NAME` değiştir, sahneleri bu bölüme göre yeniden kur. Kurallar aşağıda.
 5. **Kare kontrolü** (yarım çözünürlük, hızlı; motor klasöründen):
    ```bash
