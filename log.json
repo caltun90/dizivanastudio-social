@@ -162,7 +162,7 @@
   "yatay_youtube": "uOjpf5JVHKo",
   "buffer_post": "6b016c1d510276624512f517",
   "yayin": "2026-11-21T18:00:00+03:00",
-  "yz_etiket_bekleyen": "Son Vagon b02 Short (Buffer 18:00 yükler)"
+  "dikey_youtube": "Wg1auYumb3w"
  },
  {
   "tarih": "2026-11-23",
@@ -277,6 +277,44 @@
   "yatay_youtube": "YCFJU1WUSXs",
   "buffer_post": "6b06b1b07daa40c6fc706181",
   "yayin": "2026-11-25T18:00:00+03:00",
-  "yz_etiket_bekleyen": "Son Vagon b05 Short (Buffer 18:00 yükler)"
+  "dikey_youtube": "4Bv9zWqwOKw"
+ },
+ {
+  "tarih": "2026-11-26",
+  "dizi": "sonvagon",
+  "bolum": "film",
+  "ad": "Tüm Bölümler (Film)",
+  "slug": "film",
+  "baslik": "Son Vagon: Tüm Bölümler (Film)",
+  "yatay": "videos/2026-11-26-sonvagon-film-yatay.mp4",
+  "sure_sn": 838,
+  "durum": "planlandi",
+  "playlist": "PLSAMtowKWcOo",
+  "yatay_youtube": "Pgzacs-VOhY",
+  "yayin": "2026-11-26T20:00:00+03:00",
+  "yz_etiketli": [
+   "Pgzacs-VOhY",
+   "4Bv9zWqwOKw",
+   "XMg7aymK0GM",
+   "fxemykPHAxo",
+   "EdoS3lPjFdI",
+   "p2eoZMjz4mw",
+   "AUi-l13JyVw",
+   "cPPHrwoXDpc",
+   "fatxK9-e89g",
+   "ie4givl7GJ8",
+   "wqGH4N87JMw",
+   "mCiLyUTywCE",
+   "FXQrqOvsypc",
+   "hlGa0Ocx-2o",
+   "uOjpf5JVHKo",
+   "mW027MqJ89c",
+   "pYLTDBYhR0I",
+   "Wg1auYumb3w",
+   "n0Vu86LHzM8",
+   "mjroPwABL3o",
+   "YCFJU1WUSXs",
+   "_lXRMiEBwQM"
+  ]
  }
 ]
